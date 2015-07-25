@@ -11,7 +11,9 @@
     <mvc:resources mapping="/images/**" location="/images/"/>
     <mvc:resources mapping="/m8/**" location="/m8/"/>
     <mvc:resources mapping="/theme/**" location="/theme/"/>-->
-
+<mvc:interceptors>
+    <bean class="com.efeiyi.ec.personal.tenant.interceptor.BaseTenantInterceptor"/>
+</mvc:interceptors>
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
