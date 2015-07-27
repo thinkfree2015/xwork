@@ -1,3 +1,4 @@
+
 package com.ming800.core.base.controller;
 
 
@@ -8,12 +9,9 @@ import com.ming800.core.p.controller.WordValueController;
 import com.ming800.core.p.model.Banner;
 import com.ming800.core.base.service.BaseManager;
 import com.ming800.core.does.model.XQuery;
+import com.ming800.core.util.DESEncryptUtil;
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import javax.annotation.Resource;
 
@@ -30,11 +28,8 @@ import org.springframework.ui.ModelMap;
 import java.util.List;
 
 
-/**
- * Created by kayson on 2015/7/14.
- *
- *
- */
+
+
 
 @SuppressWarnings("unchecked")
 //@Transactional
@@ -71,11 +66,17 @@ public class BannerControllerTest {
     @Before
     public void init() {
           logger.info("加载spring配置开始 ............");
-	      /* ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml"); */
-        /*ApplicationContext applicationContext = new FileSystemXmlApplicationContext(new String[]{
+
+
+/* ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");*/
+
+
+
+/*ApplicationContext applicationContext = new FileSystemXmlApplicationContext(new String[]{
                 "src/main/webapp//WEB-INF/applicationContext-*.xml",
                 "src/main/webapp//WEB-INF/spring-servlet.xml"});*/
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{
+
+       /* ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{
                 "classpath*:config/applicationContext-*.xml",
                 "classpath*:config/spring-servlet.xml"});
          logger.info("加载spring配置结束.............");
@@ -84,12 +85,12 @@ public class BannerControllerTest {
         response = new MockHttpServletResponse();
         request.setCharacterEncoding("UTF-8");
         //bannerController = new BannerController();
-        baseManager=(BaseManagerImpl)applicationContext.getBean("baseManagerImpl");
+        //baseManager=(BaseManagerImpl)applicationContext.getBean("baseManagerImpl");
         bannerController = (BannerController)applicationContext.getBean("bannerController");
         documentController = (DocumentController)applicationContext.getBean("documentController");
 
 
-        wordValueController = (WordValueController)applicationContext.getBean("wordValueController");
+        wordValueController = (WordValueController)applicationContext.getBean("wordValueController");*/
     }
     @Test
     public void demo1() {
@@ -107,12 +108,15 @@ public class BannerControllerTest {
             logger.info("no banners be found,plase confirm again!");
 
         }else{
-           /* banners.parallelStream()
+
+
+ /*banners.parallelStream()
                     .sorted((a, b) -> a.getBannerOrder() > b.getBannerOrder())
-                    .forEach(e -> System.out::println);*/
+                    .forEach(e -> System.out::println);
+
             for(Banner banner:banners){
                 System.out.println(banner.getImageUrl());
-            }
+            }*/
         }
     }
 
@@ -120,8 +124,11 @@ public class BannerControllerTest {
     public void demo2()throws  Exception{
 
         bannerController.getBannerByGroupId(request);
-       /* Assert.assertNotNull(mv);
-        Assert.assertEquals(response.getStatus(), 200);*/
+
+
+         //Assert.assertNotNull(mv);
+        //Assert.assertEquals(response.getStatus(), 200);
+
     }
     @Test
     public void demo3()throws  Exception{
@@ -145,4 +152,22 @@ public class BannerControllerTest {
         wordValueController.test();
     }
 
+    @Test
+    public void demo5() throws Exception {
+        String key = "i am key,let me encrypt you! 1234haha";
+        String src = "Yxhy1234";
+
+        logger.debug("密钥:" + key);
+        logger.debug("明文:" + src);
+
+        String strEnc = DESEncryptUtil.encrypt(src, key);
+        System.out.println(strEnc);
+        logger.debug("加密�?,密文:" + strEnc);
+
+        String strDes = DESEncryptUtil.decrypt(strEnc, key);
+        System.out.println(strDes);
+        logger.debug("解密�?,明文:" + strDes);
+
+    }
 }
+
