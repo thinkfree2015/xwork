@@ -35,7 +35,7 @@
         <img src="http://tenant.efeiyi.com/${tenantWork.pictureUrl}">
 
         </a>
-        <figcaption class="am-figure-capition-btm intro-text-2">${tenantWork.productDescription.content} </figcaption>
+        <figcaption class="am-figure-capition-btm intro-text-2">${tenantWork.name} </figcaption>
     </figure>
 </section>
 </c:forEach>
