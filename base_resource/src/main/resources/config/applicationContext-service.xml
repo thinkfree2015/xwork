@@ -18,15 +18,11 @@
     <context:annotation-config/>
     <context:component-scan base-package="com.ming800"/>
     <context:component-scan base-package="com.efeiyi.ec"/>
-
     <aop:config>
         <aop:advisor id="managerTx" advice-ref="txAdvice" pointcut="execution(* *..service.*Manager.*(..))"/>
     </aop:config>
-
     <tx:annotation-driven/>
-
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="get*" read-only="true" rollback-for="java.lang.Exception" propagation="REQUIRED"/>
@@ -35,23 +31,11 @@
             <tx:method name="*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
         </tx:attributes>
     </tx:advice>
-
-
-
     <bean id="jmenuManagerImpl" class="com.ming800.core.p.service.impl.JmenuManagerImpl" init-method="initMenu"
           scope="singleton"/>
-
     <bean id="moduleManagerImpl" class="com.ming800.core.does.service.impl.ModuleManagerImpl" init-method="readXmlFiles"
           scope="singleton"/>
-
-
-
     <bean id="applicationContextUtil" class="com.ming800.core.util.ApplicationContextUtil" scope="singleton"/>
-
-
     <bean id="commonManagerImpl" class="com.ming800.core.p.service.impl.CommonManagerImpl" init-method="initCommon"
           scope="singleton"/>
-
-
-
 </beans>
