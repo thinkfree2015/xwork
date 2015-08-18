@@ -60,7 +60,7 @@
         <li><a href="<c:url value='/viewCertificate.do?id=${product.id}'/>">认证信息</a></li>
         <li><a href="<c:url value='/viewProduct.do?id=${product.id}'/>">商品信息</a></li>
         <li><a href="<c:url value='/viewSource.do?id=${product.id}'/>">溯源信息</a></li>
-        <li><a href="#">DNA鉴定信息</a></li>
+        <%--<li><a href="#">DNA鉴定信息</a></li>--%>
       </ul>
     </div>
   </div>

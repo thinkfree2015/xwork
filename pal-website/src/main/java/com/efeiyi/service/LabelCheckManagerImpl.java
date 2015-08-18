@@ -4,36 +4,43 @@ import com.efeiyi.PalConst;
 import com.efeiyi.ResultBean;
 import com.efeiyi.pal.check.model.LabelCheckRecord;
 import com.efeiyi.pal.label.model.Label;
-import com.ming800.core.base.dao.XdoDao;
+import com.efeiyi.pal.product.model.Product;
 import com.ming800.core.base.service.BaseManager;
+import com.ming800.core.util.JsonUtil;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.dom4j.*;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2015/8/7.
  */
-@Transactional
-@Component
-public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabelCheckManager {
 
-    @Autowired
-    BaseManager baseManager;
+@Service
+@EnableTransactionManagement
+public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabelCheckManager {
 
     @Autowired
     @Qualifier("sessionFactory")
@@ -48,13 +55,46 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
         super.setSessionFactory(sessionFactory);
     }
 
+    /**
+     * 查询唯一标签
+     * @param labelId
+     * @return
+     */
     public Label getUniqueLabel(String labelId) {
 
-        LinkedHashMap<String, Object> qryLabParaMap = new LinkedHashMap<>();
-        qryLabParaMap.put(PalConst.getInstance().checkLabelParam1, labelId);
-        return (Label) baseManager.getUniqueObjectByConditions(PalConst.getInstance().checkLabel, qryLabParaMap);
+        LinkedHashMap<String, Object> queryParaMap = new LinkedHashMap<>();
+        queryParaMap.put(PalConst.getInstance().checkLabelParam1, labelId);
+//        return (Label) baseManager.getUniqueObjectByConditions(PalConst.getInstance().checkLabel, queryParaMap);
+        Query listQuery = this.getSession().createQuery(PalConst.getInstance().checkLabel);
+        listQuery = setQueryParams(listQuery, queryParaMap);
+        return (Label)listQuery.uniqueResult();
     }
 
+    @Override
+    public Product getUniqueProduct(String productId) {
+
+        LinkedHashMap<String, Object> queryLabParaMap = new LinkedHashMap<>();
+        queryLabParaMap.put(PalConst.getInstance().productId, productId);
+        Query listQuery = this.getSession().createQuery(PalConst.getInstance().viewProduct);
+        listQuery = setQueryParams(listQuery, queryLabParaMap);
+        return (Product)listQuery.uniqueResult();
+    }
+
+    protected Query setQueryParams(Query query, LinkedHashMap<String, Object> queryParamMap) {
+        if (queryParamMap != null && queryParamMap.size() > 0) {
+            for (String paramName : queryParamMap.keySet()) {
+                if (queryParamMap.get(paramName) instanceof Object[]) {
+                    query.setParameterList(paramName, (Object[]) queryParamMap.get(paramName));
+                } else if (queryParamMap.get(paramName) instanceof Collection) {
+                    query.setParameterList(paramName, (Collection) queryParamMap.get(paramName));
+                } else {
+                    query.setParameter(paramName, queryParamMap.get(paramName));
+                }
+            }
+        }
+
+        return query;
+    }
 
     /**
      * 更新标签状态和查询记录
@@ -63,18 +103,18 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
      * @return
      * @throws Exception
      */
-    public ModelMap updateRecord(ModelMap model, Label label) throws Exception {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateRecord(ModelMap model, Label label) throws Exception {
 
         Date date = new Date();
         label.setCheckCount(label.getCheckCount() + 1);
         //如果首次查
         if (label.getStatus().equals(PalConst.getInstance().unusedStatus)) {
 
-            //更新码状态
             label.setStatus(PalConst.getInstance().usedStatus);
             label.setFirstCheckDateTime(date);
             model.addAttribute(PalConst.getInstance().resultLabel, PalConst.getInstance().trueBean);
-            getSession().saveOrUpdate(label.getClass().getName(), label);
+
         }
         //如果非首次查
         else if (label.getStatus().equals(PalConst.getInstance().usedStatus)) {
@@ -85,8 +125,7 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
             if (timeDiffer < PalConst.getInstance().timeIncrement && label.getCheckCount() == 2) {
                 ResultBean recheckTrueBean = new ResultBean();
                 BeanUtils.copyProperties(recheckTrueBean, PalConst.getInstance().recheckTrueBean);
-                String msg = PalConst.getInstance().recheckTrueBean.getMsg();
-                msg = msg.replaceAll("#N#", Integer.toString(label.getCheckCount())).replaceAll("#TIME#", label.getLastCheckDateTime().toString());
+                String msg = getRecheckRecordMsg(label);
                 recheckTrueBean.setMsg(msg);
                 model.addAttribute(PalConst.getInstance().resultLabel, recheckTrueBean);
             }
@@ -94,20 +133,22 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
             else {
                 ResultBean recheckFakeBean = new ResultBean();
                 BeanUtils.copyProperties(recheckFakeBean, PalConst.getInstance().recheckFakeBean);
-                String msg = PalConst.getInstance().recheckFakeBean.getMsg();
-                msg = msg.replaceAll("#N#", Integer.toString(label.getCheckCount())).replaceAll("#TIME#", label.getLastCheckDateTime().toString());
+               String msg = getRecheckRecordMsg(label);
                 recheckFakeBean.setMsg(msg);
                 recheckFakeBean.setAuthenticity(PalConst.getInstance()._null);
                 model.addAttribute(PalConst.getInstance().resultLabel, recheckFakeBean);
             }
-
-            label.setLastCheckDateTime(date);
-
         }
         //如果其他状态码无效
         else {
             model.addAttribute(PalConst.getInstance().resultLabel, PalConst.getInstance().fakeBean);
         }
+
+        model.addAttribute(PalConst.getInstance().resultProduct, label.getPurchaseOrderLabel().getProduct());
+
+        //更新标签状态
+        label.setLastCheckDateTime(date);
+        getSession().saveOrUpdate(label.getClass().getName(), label);
 
 
         //插入一条查询记录
@@ -115,18 +156,34 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
         checkRecord.setCreateDatetime(date);
         checkRecord.setIP((String) model.get(PalConst.getInstance().ip));
         checkRecord.setLabel(label);
-        checkRecord.setProduct(label.getProduct());
+        checkRecord.setProduct(label.getPurchaseOrderLabel().getProduct());
+//        checkRecord.setIPAddress(getIpAddress(checkRecord.getIP()));
         getSession().saveOrUpdate(checkRecord.getClass().getName(), checkRecord);
-        model.addAttribute(PalConst.getInstance().resultProduct, label.getProduct());
-        getSession().flush();
-        return model;
+    }
+
+
+    /**
+     * 组装真伪消息的时间、地点和验证次数
+     * @param label
+     * @return
+     * @throws Exception
+     */
+    private String getRecheckRecordMsg(Label label) throws Exception{
+
+        String ip =  label.getLabelCheckRecordList().get(0).getIPAddress();
+
+        String msg = PalConst.getInstance().recheckFakeBean.getMsg().
+                replaceAll("#N#", Integer.toString(label.getCheckCount())).
+                replaceAll("#TIME#", PalConst.getInstance().dateFormat.format(label.getLastCheckDateTime())).
+                replaceAll("#IPADDRESS#", ip);
+        return msg;
     }
 
     /**
-     *处理微信服务器发来的报文
+     *处理微信公众号服务器发来的报文
      * @param request
-     * @param inXml
-     * @return
+     * @param inXml 微信公众号推送来的报文
+     * @return 推送微信公众号的报文
      * @throws IOException
      */
     @Override
@@ -173,9 +230,9 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
      * 生成返回微信服务器的报文
      * @param toUserName
      * @param fromUserName
-     * @param content
-     * @param url
-     * @return
+     * @param content 推送的文本内容
+     * @param url 图文消息的链接
+     * @return 推送微信公众号的报文
      */
     public String constructWeiXinMsg(String toUserName, String fromUserName, String content, String url) {
 
@@ -186,6 +243,7 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
         root.addElement("ToUserName").setText(toUserName);
         root.addElement("FromUserName").setText(fromUserName);
 
+        //发送文本消息
 //        root.addElement("CreateTime").setText(Long.toString(System.currentTimeMillis()));
 //        StringBuilder stringBuilder = new StringBuilder("<a href=\"")
 //                .append(url)
@@ -197,6 +255,7 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
 //        root.addElement("MsgType").add(msgTypeData);
 //        root.addElement("Content").add(contentData);
 
+        //发送图文消息
         root.addElement("CreateTime").setText(Long.toString(System.currentTimeMillis()));
         root.addElement("MsgType").add(DocumentHelper.createCDATA(PalConst.getInstance().weiXinMsgType));
         root.addElement("ArticleCount").setText("1");
@@ -209,8 +268,42 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
         return document.asXML();
     }
 
+    /**
+     * 组装通过微信公众号推送用户的消息
+     * @param label
+     * @return
+     */
     private String constructWeiXinPushContent(Label label){
 
-        return PalConst.getInstance().trueMsg + "\n\n商品：" + label.getProduct().getName() + "\n\n作者：" + label.getProduct().getTenant().getName();
+        return PalConst.getInstance().trueMsg + "\n\n商品：" + label.getPurchaseOrderLabel().getProduct().getName() + "\n\n作者：" + label.getPurchaseOrderLabel().getProduct().getTenant().getName();
+    }
+
+    /**
+     * 使用百度api查询Ip归属地
+     * @param ip
+     * @return
+     * @throws Exception
+     */
+    public String getIpAddress(String ip) throws Exception{
+
+        HttpClient httpclient = new HttpClient();
+        HttpMethod method = new GetMethod(PalConst.getInstance().baiduApiUrl);
+        httpclient.executeMethod(method);
+        String json = method.getResponseBodyAsString();
+        System.out.println(method.getResponseBodyAsString());
+        method.releaseConnection();
+        Map<?, ?> ipAddressMap = JsonUtil.parseJsonStringToMap(json);
+        String [] addresses = ((String)ipAddressMap.get("address")).split("\\|");
+        return (String)ipAddressMap.get("address");
+    }
+
+    public static void main(String [] args){
+
+        try {
+            new LabelCheckManagerImpl().getIpAddress("");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

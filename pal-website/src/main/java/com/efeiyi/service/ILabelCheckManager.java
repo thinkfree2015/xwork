@@ -1,6 +1,7 @@
 package com.efeiyi.service;
 
 import com.efeiyi.pal.label.model.Label;
+import com.efeiyi.pal.product.model.Product;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
@@ -14,9 +15,11 @@ public interface ILabelCheckManager {
 
      Label getUniqueLabel(String labelId);
 
-     String constructWeiXinMsg(String toUserName, String fromUserName, String content,String url);
+     Product getUniqueProduct(String productId);
 
-     ModelMap updateRecord(ModelMap model, Label label) throws Exception ;
+     String constructWeiXinMsg(String toUserName, String fromUserName, String content, String url);
 
-     String treatWeiXinMsg(HttpServletRequest request,String inXml)  throws IOException;
+     void updateRecord(ModelMap model, Label label) throws Exception ;
+
+     String treatWeiXinMsg(HttpServletRequest request, String inXml)  throws IOException;
 }

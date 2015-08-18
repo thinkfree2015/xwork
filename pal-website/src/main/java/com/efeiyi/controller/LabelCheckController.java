@@ -1,13 +1,10 @@
 package com.efeiyi.controller;
 
 import com.efeiyi.PalConst;
-import com.efeiyi.ResultBean;
-import com.efeiyi.pal.check.model.LabelCheckRecord;
 import com.efeiyi.pal.product.model.Product;
 import com.efeiyi.service.ILabelCheckManager;
-import com.ming800.core.base.service.BaseManager;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,16 +24,16 @@ import java.util.LinkedHashMap;
 public class LabelCheckController  {
 
     @Autowired
+    @Qualifier("labelCheckManagerImpl")
     private ILabelCheckManager iLabelCheckService;
 
-    @Autowired
-    BaseManager baseManager;
 
     @RequestMapping(value = "/checkLabel.do")
-    public ModelAndView checkLabel(HttpServletRequest request)throws Exception {
+    public ModelAndView checkLabelWap(HttpServletRequest request)throws Exception {
 
         ModelMap model = new ModelMap();
-        Label label = getLabel(request);
+        String serial = request.getParameter(PalConst.getInstance().checkLabelParam1);
+        Label label = iLabelCheckService.getUniqueLabel(serial);
 
         //label不存在
         if(label == null){
@@ -45,12 +42,19 @@ public class LabelCheckController  {
         //label存在
         else {
             model.addAttribute(PalConst.getInstance().ip,request.getRemoteHost());
-            model = iLabelCheckService.updateRecord(model, label);
+            iLabelCheckService.updateRecord(model, label);
         }
         return new ModelAndView(PalConst.getInstance().resultView, model);
     }
 
-    @RequestMapping(value = "viewCertificate.do")
+
+    @RequestMapping(value = "/checkLabelPc.do")
+    public ModelAndView checkLabelPc(HttpServletRequest request) throws Exception{
+
+        return checkLabelWap(request);
+    }
+
+    @RequestMapping(value = "/viewCertificate.do")
     public ModelAndView viewCertificate(HttpServletRequest request) throws Exception{
 
         ModelMap model = getProductModel(request);
@@ -58,7 +62,7 @@ public class LabelCheckController  {
         return new ModelAndView(PalConst.getInstance().certificateView, model);
     }
 
-    @RequestMapping(value = "viewProduct.do")
+    @RequestMapping(value = "/viewProduct.do")
     public ModelAndView viewProduct(HttpServletRequest request) throws Exception{
 
         ModelMap model = getProductModel(request);
@@ -66,7 +70,7 @@ public class LabelCheckController  {
         return new ModelAndView(PalConst.getInstance().productView, model);
     }
 
-    @RequestMapping(value = "viewSource.do")
+    @RequestMapping(value = "/viewSource.do")
     public ModelAndView viewSource(HttpServletRequest request) throws Exception{
 
         ModelMap model = getProductModel(request);
@@ -84,18 +88,9 @@ public class LabelCheckController  {
         LinkedHashMap<String, Object> queryLabParaMap = new LinkedHashMap<>();
         queryLabParaMap.put(PalConst.getInstance().productId, productId);
 
-        Product product = (Product)baseManager.getUniqueObjectByConditions(PalConst.getInstance().viewProduct, queryLabParaMap);
+        Product product  = iLabelCheckService.getUniqueProduct(productId);
         model.addAttribute(PalConst.getInstance().resultProduct, product);
-
         return model;
     }
 
-    private Label getLabel(HttpServletRequest request){
-
-        //查label是否存在
-        String serial = request.getParameter(PalConst.getInstance().checkLabelParam1);
-        LinkedHashMap<String, Object> qryLabParaMap = new LinkedHashMap<>();
-        qryLabParaMap.put(PalConst.getInstance().checkLabelParam1, serial);
-        return (Label)baseManager.getUniqueObjectByConditions(PalConst.getInstance().checkLabel, qryLabParaMap);
-    }
 }

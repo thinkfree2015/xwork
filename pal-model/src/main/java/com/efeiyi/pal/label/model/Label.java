@@ -119,6 +119,7 @@ public class Label {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "label")
+    @OrderBy(value = "createDatetime desc")
     public List<LabelCheckRecord> getLabelCheckRecordList() {
         return labelCheckRecordList;
     }

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@ taglib prefix="ming800" uri="http://java.ming800.com/taglib" %>
 <html class="no-js">
 <head>
   <meta charset="utf-8">
@@ -30,7 +31,7 @@
 </head>
 <body class="bgf7">
 <header data-am-widget="header" class="am-header am-header-default">
-  <div class="am-header-left am-header-nav"> <a href="" class="" title="返回上一步"></a> </div>
+  <div class="am-header-left am-header-nav"> <a href="javascript:history.back()" class="" title="返回上一步">返回</a> </div>
   <h1 class="am-header-title">认证信息</h1>
   <div class="am-header-right am-header-nav">购买</div>
   <!--  <em class="line"></em>-->
@@ -64,7 +65,7 @@
       </li>
       <li class="am-g am-list-item-dated">
         <strong class="am-list-info">认证结果:</strong>
-        <span class="am-list-info2">${product.tenantCertification.level}</span>
+        <span class="am-list-info2"><ming800:status name="level" dataType="PCTenantCertification.level" checkedValue="${product.tenantCertification.level}" type="normal" /></span>
       </li>
     </ul>
   </div>

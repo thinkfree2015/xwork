@@ -30,7 +30,7 @@
 </head>
 <body class="bgf7">
 <header data-am-widget="header" class="am-header am-header-default">
-  <div class="am-header-left am-header-nav"> <a href="" class="" title="返回上一步"></a> </div>
+  <div class="am-header-left am-header-nav"> <a href="javascript:history.back()" class="" title="返回上一步">返回</a> </div>
   <h1 class="am-header-title">商品信息终</h1>
   <div class="am-header-right am-header-nav">购买</div>
   <!--  <em class="line"></em>-->
