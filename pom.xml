@@ -429,7 +429,7 @@
                 <dbpath>/tmp/logs/</dbpath>
             </properties>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>flase</activeByDefault>
             </activation>
         </profile>
 
