@@ -280,26 +280,26 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
      * @return
      * @throws Exception
      */
-    public String getIpAddress(String ip) throws Exception{
+//    public String getIpAddress(String ip) throws Exception{
+//
+//        HttpClient httpclient = new HttpClient();
+//        HttpMethod method = new GetMethod(PalConst.getInstance().baiduApiUrl);
+//        httpclient.executeMethod(method);
+//        String json = method.getResponseBodyAsString();
+//        System.out.println(method.getResponseBodyAsString());
+//        method.releaseConnection();
+//        Map<?, ?> ipAddressMap = JsonUtil.parseJsonStringToMap(json);
+//        String [] addresses = ((String)ipAddressMap.get("address")).split("\\|");
+//        return (String)ipAddressMap.get("address");
+//    }
 
-        HttpClient httpclient = new HttpClient();
-        HttpMethod method = new GetMethod(PalConst.getInstance().baiduApiUrl);
-        httpclient.executeMethod(method);
-        String json = method.getResponseBodyAsString();
-        System.out.println(method.getResponseBodyAsString());
-        method.releaseConnection();
-        Map<?, ?> ipAddressMap = JsonUtil.parseJsonStringToMap(json);
-        String [] addresses = ((String)ipAddressMap.get("address")).split("\\|");
-        return (String)ipAddressMap.get("address");
-    }
-
-    public static void main(String [] args){
-
-        try {
-            new LabelCheckManagerImpl().getIpAddress("");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+//    public static void main(String [] args){
+//
+//        try {
+//            new LabelCheckManagerImpl().getIpAddress("");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 }
