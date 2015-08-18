@@ -50,20 +50,16 @@ input:-moz-placeholder {color: #dadada !important;font-size:15px;font-weight:nor
 .search-result .item li .wechat .icon {background-position:0 -120px;width:37px;height:25px;position: absolute;top:20px;left: 0;z-index: 2;}
 .search-result .item li .wechat img {border:5px #344557 solid;padding: 10px;position: absolute;top:40px;left: 0;z-index: 1;}
 /*--//End--非遗查询-详情页终--*/
-.search-result .item2 {min-height:614px;padding-top:30px;margin-bottom:120px;border-top:0}
+.search-result .item2 {height:auto;padding-top:30px;margin-bottom:120px;border-top:0}
 .search-result .item2 a.img {top:30px}
 .search-result .item2 .info {width:460px;margin-left:500px;float: right;}
 .search-result .item2 .info table {width:100%;float:left}
 .search-result .item2 .info td {height:60px;border:1px #000 solid;text-align: center;}
 .search-result .item2 .info .btn {width:200px;height:45px;line-height:45px;text-align:center;color:#000;font-size:18px;font-family:Fangsong;border: 1px #354558 solid;float: right;margin-top:36px;transition:all 0.4s;}
 .search-result .item2 .info .btn:hover {background:#000;color: #fff;}
-
-
 .search-result .item2 .info .result-title {width:100%;padding:20px 0;float: left;text-align: center;}
 .search-result .item2 .info .result-title strong {width:100%;padding:0 10px;float:left;color:#f90;font-size: 24px;font-weight:normal;}
 .search-result .item2 .info .result-title a {font-family: Fangsong;font-size:13px;color:#189aff;float: right;margin-right:60px;}
-
-
 .search-result .item-info {width:100%;float:left;padding-bottom:120px;}
 .search-result .item-info h2 {width:100%;text-align: center;font-size: 30px;font-weight: normal;float:left;margin-top:12px;margin-bottom:24px;}
 .search-result .item-info .row {width:100%;float: left;}
