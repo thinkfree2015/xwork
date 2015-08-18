@@ -8,10 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
-<%
-    String path = request.getContextPath();
-    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
-%>
+<%@ taglib prefix="ming800" uri="http://java.ming800.com/taglib" %>
+<%@include file="/layouts/public.jsp"%>
 <!doctype html>
 <html class="no-js">
 <head>
@@ -44,7 +42,7 @@
 <div class="search-list">
     <div class="search-home">
         <div class="logo">
-            <h1><a href="#"><img src="<c:url value='/resources/images/logo.png'/>" width="160" height="72" /></a></h1>
+            <h1><a href=""><img src="<c:url value='/resources/images/logo.png'/>" width="160" height="72" /></a></h1>
         </div>
         <form action="" method="post">
             <div class="title"><a class="active">真伪查询</a><span class="line"></span><a>非遗搜</a></div>
@@ -63,7 +61,7 @@
         <%--</div>--%>
         <div class="item item2">
             <c:if test="${result.authenticity != -1}">
-                <a class="img" href="http://pal.efeiyi.com/${product.imgUrl}"><img src="http://pal.efeiyi.com/${product.imgUrl}" width="460" height="580"/></a>
+                <a class="img" href="<%=imgBasePath%>${product.imgUrl}"><img src="<%=imgBasePath%>${product.imgUrl}" width="460" height="580"/></a>
             </c:if>
             <div class="info">
                 <table>
@@ -140,18 +138,18 @@
                         </tr>
                         <tr>
                             <td>非遗传承人证书</td>
-                            <td>国家级非遗传承人</td>
-                            <td><a href="${product.tenantCertification.imgUrl}" title="${product.tenantCertification.name}">查看证书</a></td>
+                            <td><ming800:status name="level" dataType="PCTenantCertification.level" checkedValue="${product.tenantCertification.level}" type="normal" /></td>
+                            <td><a href="<%=imgBasePath%>${product.tenantCertification.imgUrl}" title="${product.tenantCertification.name}">查看证书</a></td>
                         </tr>
                         <tr>
                             <td>传承项目认证</td>
-                            <td>国家级非物质文化遗产项目</td>
-                            <td><a href="${product.tenantCertification.imgUrl}" title="${product.tenantCertification.name}">查看证书</a></td>
+                            <td><ming800:status name="level" dataType="PCTenantCertification.level" checkedValue="${product.tenantCertification.level}" type="normal" /></td>
+                            <td><a href="<%=imgBasePath%>${product.tenantCertification.imgUrl}" title="${product.tenantCertification.name}">查看证书</a></td>
                         </tr>
                         <tr>
                             <td>其他获奖证书</td>
                             <td>${product.tenantCertification.name}</td>
-                            <td><a href="${product.tenantCertification.imgUrl}" title="${product.tenantCertification.name}">查看证书</a></td>
+                            <td><a href="<%=imgBasePath%>${product.tenantCertification.imgUrl}" title="${product.tenantCertification.name}">查看证书</a></td>
                         </tr>
                     </table>
                 </div>
@@ -168,18 +166,18 @@
                         </tr>
                         <tr>
                             <td>创作现场大图</td>
-                            <td>大师创作现场图，2006-06-01</td>
-                            <td><a href="创作地区：${product.tenantSource.region}</br>制作工艺：${product.tenantSource.name}</br>参与人：${product.masterName}" title="查看溯源图片">查看溯源图片</a></td>
+                            <td>大师创作现场图，<fmt:formatDate value="${product.madeYear}" pattern="yyyy-MM-dd"/></td>
+                            <td><a href="<%=imgBasePath%>${product.tenantSource.imgUrl}" title="创作地区：${product.tenantSource.region}</br>制作工艺：${product.tenantSource.name}</br>参与人：${product.masterName}">查看溯源图片</a></td>
                         </tr>
                         <tr>
                             <td>传承人视频</td>
-                            <td>大师创作现场图，2006-06-01</td>
-                            <td><a href="${product.tenantSource.imgUrl}" title="创作地区：${product.tenantSource.region}</br>制作工艺：${product.tenantSource.name}</br>参与人：${product.masterName}">查看溯源图片</a></td>
+                            <td>大师创作现场图，<fmt:formatDate value="${product.madeYear}" pattern="yyyy-MM-dd"/></td>
+                            <td><a href="<%=imgBasePath%>${product.tenantSource.imgUrl}" title="创作地区：${product.tenantSource.region}</br>制作工艺：${product.tenantSource.name}</br>参与人：${product.masterName}">查看溯源图片</a></td>
                         </tr>
                         <tr>
                             <td>文本信息</td>
                             <td>传承历史</td>
-                            <td><a href="${product.tenantSource.imgUrl}" title="创作地区：${product.tenantSource.region}</br>制作工艺：${product.tenantSource.name}</br>参与人：${product.masterName}">查看溯源图片</a></td>
+                            <td><a href="<%=imgBasePath%>${product.tenantSource.imgUrl}" title="创作地区：${product.tenantSource.region}</br>制作工艺：${product.tenantSource.name}</br>参与人：${product.masterName}">查看溯源图片</a></td>
                         </tr>
                     </table>
                 </div>
@@ -207,7 +205,7 @@
 <script src="<c:url value='http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js'/>"></script>
 <script src="<c:url value='/resources/assets/js/amazeui.ie8polyfill.min.js'/>"></script>
 <script src="<c:url value='/resources/assets/js/amazeui.min.js'/>"></script>
-<script src="<c:url value='/resources/assets/js/cpbjs.js'/>"></script>
+<%--<script src="<c:url value='/resources/assets/js/cpbjs.js'/>"></script>--%>
 <script>
     $(document).ready(function () {
         $("#serial").keydown(function (e) {
@@ -225,7 +223,7 @@
         });
         //查看证书部分
         $('.item-info .row a').click(function(){
-            $('body').append('<div class="search-dialog"><div class="content"><div class="title"><i class="icon close" title="关闭"></i><img src="images/logo.png" width="140" alt="" /></div><div class="img"><img src="'+$(this).attr('href')+'" alt="" /></div><div class="info">'+$(this).attr('title')+'</div></div><div class="overlay"></div>');
+            $('body').append('<div class="search-dialog"><div class="content"><div class="title"><i class="icon close" title="关闭"></i><img src="<c:url value='/resources/images/logo.png'/>" width="140" alt="" /></div><div class="img"><img src="'+$(this).attr('href')+'" alt="" /></div><div class="info">'+$(this).attr('title')+'</div></div><div class="overlay"></div>');
             $('.overlay, .search-dialog .close').click(function(){
                 $('.search-dialog').remove();
             })
@@ -247,8 +245,8 @@
     <c:if test="${result.authenticity != -1}">
     <%--var url = "http://api.map.baidu.com/location/ip?ak=zKrEDoOM6VCNjYDcBgpufSWR&ip=" + "${ip}";--%>
     var url = "http://api.map.baidu.com/location/ip?ak=zKrEDoOM6VCNjYDcBgpufSWR";
-//    alert("come");
-    window.onload = function () {
+//    window.onload = function () {
+//        alert("ajax");
         $.ajax({
             type: "get",
             url: url,
@@ -259,7 +257,7 @@
             success: jsonpCallback,
             error: jsonpCallback2,
         });
-    }
+//    }
     function jsonpCallback(data) {
 //        alert("success");
         var ipAddressDiv = document.getElementById("ipAddress");
@@ -285,10 +283,10 @@
 
     function autoClose() {
         var userAgent = navigator.userAgent;
-        alert(userAgent);
+//        alert(userAgent);
         if (userAgent.indexOf("Firefox") != -1
                 || userAgent.indexOf("Chrome") != -1) {
-            location.href = history.back();
+            location.href = "<c:url value='/'/>";
 //            window.open(href,"_self","");
 //            window.close();
         } else {

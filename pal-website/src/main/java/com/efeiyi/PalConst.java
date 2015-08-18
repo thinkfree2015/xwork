@@ -40,17 +40,18 @@ public class PalConst {
     public String trueMsg = "恭喜您，您查询的商品是正品";              //查询为未使用的序列号返回消息
     public String usedStatus = "9";                                   //查询为已使用的序列号状态
     public String fakeMsg = "您查询的防伪码无效，注意防伪，谨防假冒";       //码不存在，或已失效，或未激活返回消息
-//    public String recheckMsg = "第#N#次验证，上次验证时间#TIME#，地点：#IPADDRESS#，若这是您购买后首次验证，请注意伪造风险，感谢您的支持！";//第N次查询返回消息
 public String recheckMsg = "<div>第#N#次验证</div><div>上次验证时间#TIME#</div><div id=\"ipAddress\"></div><div>若这是您购买后首次验证，请注意伪造风险，感谢您的支持！</div>";//第N次查询返回消息
     public String fakeLogo = "resources/upload/fake-logo.jpg";        //查为伪的logo
     public String trueLogo = "resources/upload/true-logo.jpg";        //查为真的logo
+    public String uploadImgBaseUrl = "http://pal.efeiyi.com/";
     public int _true = 1,_false = -1,_null = 0;   //查询真伪结果, 1真 -1伪 0不显示
+    public String weiXinFakeMsg = "查询的序列号不存在";
 
 
     public String ip = "ip";                                            //访问的IP
     public Long hour = 24l;             //查码时间跨度
     public Long timeIncrement = 1000 * 3600 * 24 * hour;//时间跨度对应毫秒
-    public int timeLimit = 60000;
+    public int timeLimit = 10000;   //查询结果页有效时间秒
     public boolean isTimeLimited = true;
     public boolean isNotTimeLimited = false;
 

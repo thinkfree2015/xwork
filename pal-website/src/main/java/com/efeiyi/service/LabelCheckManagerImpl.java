@@ -121,23 +121,20 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
 
             Long timeDiffer = date.getTime() - label.getFirstCheckDateTime().getTime();
 
+            ResultBean recheckBean = new ResultBean();
             //只有24小时内查询次数为2才显示真
             if (timeDiffer < PalConst.getInstance().timeIncrement && label.getCheckCount() == 2) {
-                ResultBean recheckTrueBean = new ResultBean();
-                BeanUtils.copyProperties(recheckTrueBean, PalConst.getInstance().recheckTrueBean);
-                String msg = getRecheckRecordMsg(label);
-                recheckTrueBean.setMsg(msg);
-                model.addAttribute(PalConst.getInstance().resultLabel, recheckTrueBean);
+                BeanUtils.copyProperties(recheckBean, PalConst.getInstance().recheckTrueBean);
             }
             //否则一律不显示真伪
             else {
-                ResultBean recheckFakeBean = new ResultBean();
-                BeanUtils.copyProperties(recheckFakeBean, PalConst.getInstance().recheckFakeBean);
-               String msg = getRecheckRecordMsg(label);
-                recheckFakeBean.setMsg(msg);
-                recheckFakeBean.setAuthenticity(PalConst.getInstance()._null);
-                model.addAttribute(PalConst.getInstance().resultLabel, recheckFakeBean);
+                BeanUtils.copyProperties(recheckBean, PalConst.getInstance().recheckFakeBean);
+                recheckBean.setAuthenticity(PalConst.getInstance()._null);
             }
+
+            String msg = getRecheckRecordMsg(label);
+            recheckBean.setMsg(msg);
+            model.addAttribute(PalConst.getInstance().resultLabel, recheckBean);
         }
         //如果其他状态码无效
         else {
@@ -174,8 +171,7 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
 
         String msg = PalConst.getInstance().recheckFakeBean.getMsg().
                 replaceAll("#N#", Integer.toString(label.getCheckCount())).
-                replaceAll("#TIME#", PalConst.getInstance().dateFormat.format(label.getLastCheckDateTime())).
-                replaceAll("#IPADDRESS#", ip);
+                replaceAll("#TIME#", PalConst.getInstance().dateFormat.format(label.getLastCheckDateTime()));
         return msg;
     }
 
@@ -217,9 +213,9 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
 
         if (label != null) {
             String content = constructWeiXinPushContent(label);
-            outXml = constructWeiXinMsg(fromUserName, toUserName, content, url);
+            outXml = constructWeiXinMsg(label,fromUserName, toUserName, content, url);
         } else {
-            outXml = constructWeiXinMsg(fromUserName, toUserName, "查询的序列号不存在", url);
+            outXml = constructWeiXinMsg(label,fromUserName, toUserName, PalConst.getInstance().weiXinFakeMsg, url);
         }
 
         System.out.println(new Date(System.currentTimeMillis()) + "--outXml:\n" + outXml + "\n");
@@ -234,7 +230,7 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
      * @param url 图文消息的链接
      * @return 推送微信公众号的报文
      */
-    public String constructWeiXinMsg(String toUserName, String fromUserName, String content, String url) {
+    public String constructWeiXinMsg(Label label, String toUserName, String fromUserName, String content, String url) {
 
         Document document = DocumentHelper.createDocument();
         document.setXMLEncoding("utf-8");
@@ -262,7 +258,7 @@ public class LabelCheckManagerImpl extends HibernateDaoSupport implements ILabel
         Element item = root.addElement("Articles").addElement("item");
         item.addElement("Title").add(DocumentHelper.createCDATA("诚品宝"));
         item.addElement("Description").add(DocumentHelper.createCDATA(content));
-        item.addElement("PicUrl")/*.add(DocumentHelper.createCDATA("http://101.200.182.7/pal-website/resources/images/logo.png"))*/;
+        item.addElement("PicUrl").add(DocumentHelper.createCDATA(PalConst.getInstance().uploadImgBaseUrl + label.getPurchaseOrderLabel().getProduct().getImgUrl()));
         item.addElement("Url").add(DocumentHelper.createCDATA(url));
         root.addElement("FuncFlag").setText("1");
         return document.asXML();

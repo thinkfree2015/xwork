@@ -26,7 +26,7 @@ import java.util.Date;
  * Created by Administrator on 2015/8/6.
  */
 @Controller
-public class LabelWeiXin extends HttpServlet {
+public class LabelWeiXinController extends HttpServlet {
     @Autowired
     ILabelCheckManager iLabelCheckService;
 

@@ -17,7 +17,7 @@ public interface ILabelCheckManager {
 
      Product getUniqueProduct(String productId);
 
-     String constructWeiXinMsg(String toUserName, String fromUserName, String content, String url);
+     String constructWeiXinMsg(Label label ,String toUserName, String fromUserName, String content, String url);
 
      void updateRecord(ModelMap model, Label label) throws Exception ;
 
