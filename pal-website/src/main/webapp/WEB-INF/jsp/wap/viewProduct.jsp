@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@include file="/layouts/public.jsp"%>
 <html class="no-js">
 <head>
   <meta charset="utf-8">
@@ -38,7 +39,7 @@
 <!--//End--header-->
 <div data-am-widget="slider" class="am-slider am-slider-a1" data-am-slider='{"directionNav":false}'>
   <ul class="am-slides">
-    <li><img src="<c:url value='/resources/upload/search-exp2.jpg'/>"></li>
+    <li><img src="<%=imgBasePath%>${product.imgUrl}"></li>
     <%--<li><img src="upload/exp2.jpg"></li>--%>
     <%--<li><img src="upload/exp2.jpg"></li>--%>
     <%--<li><img src="upload/exp2.jpg"></li>--%>

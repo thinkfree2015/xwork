@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@include file="/layouts/public.jsp"%>
 <html class="no-js">
 <head>
   <meta charset="utf-8">
@@ -36,7 +37,7 @@
 <article class="eslite">
   <div class="am-paragraph-default">
     <c:if test="${result.authenticity != -1}">
-    <div class="imglogo"><img src="<c:url value='${product.imgUrl}'/>"/></div>
+    <div class="imglogo"><img src="<%=imgBasePath%><c:url value='${product.imgUrl}'/>"/></div>
     </c:if>
     <div class="tips">${result.msg}</div>
   </div>

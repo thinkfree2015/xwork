@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ taglib prefix="ming800" uri="http://java.ming800.com/taglib" %>
+<%@include file="/layouts/public.jsp"%>
 <html class="no-js">
 <head>
   <meta charset="utf-8">
@@ -39,7 +40,7 @@
 <!--//End--header-->
 <div data-am-widget="slider" class="am-slider am-slider-a1" data-am-slider='{"directionNav":false}'>
   <ul class="am-slides">
-    <li><img src="<c:url value='${product.tenantCertification.imgUrl}'/>"></li>
+    <li><img src="<%=imgBasePath%>${product.tenantCertification.imgUrl}"></li>
     <%--<li><img src="<c:url value='/resources/upload/search-exp1.jpg'/>"></li>--%>
     <%--<li><img src="<c:url value='/resources/upload/search-exp1.jpg'/>"></li>--%>
     <%--<li><img src="<c:url value='/resources/upload/search-exp1.jpg'/>"></li>--%>

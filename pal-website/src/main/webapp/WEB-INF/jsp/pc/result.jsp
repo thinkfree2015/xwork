@@ -44,10 +44,10 @@
         <div class="logo">
             <h1><a href=""><img src="<c:url value='/resources/images/logo.png'/>" width="160" height="72" /></a></h1>
         </div>
-        <form action="" method="post">
+        <form id="form" method="get" action="<c:url value='/checkLabelPc.do'/>">
             <div class="title"><a class="active">真伪查询</a><span class="line"></span><a>非遗搜</a></div>
             <label for="">
-                <input class="txt" type="text" name="" id="" value="" placeholder="请输入名称查询,如:”苏绣”" />
+                <input class="txt" type="text" name="serial" id="serial" value="" placeholder="请输入名称查询,如:”苏绣”" />
                 <input class="btn" type="submit" value="查 询"/>
             </label>
         </form>
@@ -69,6 +69,7 @@
                         <td colspan="2">
                             <div class="result-title">
                                 <strong>${result.msg}</strong>
+                                <c:if test="${result.authenticity != -1}">
                                 <a href="" title="奖励您100积分，点击领取。">奖励您100积分，点击领取。</a>
                             </div>
                         </td>
@@ -107,6 +108,7 @@
                             </tr>
                         </c:forEach>
                     </c:forEach>
+                    </c:if>
                 </table>
             </div>
 
