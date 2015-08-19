@@ -23,7 +23,7 @@ public class Product {
     private String name;
     private String serial;
     private String picture_url;
-    private Tenant tenant;
+    private Master master;
     private ProjectCategory category;
     private BigDecimal price;
     private List<ProductPicture> productPictureList;
@@ -64,14 +64,14 @@ public class Product {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id")
+    @JoinColumn(name = "master_id")
     @JsonIgnore
-    public Tenant getTenant() {
-        return tenant;
+    public Master getMaster() {
+        return master;
     }
 
-    public void setTenant(Tenant tenant) {
-        this.tenant = tenant;
+    public void setMaster(Master master) {
+        this.master = master;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

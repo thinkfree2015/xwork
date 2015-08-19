@@ -227,6 +227,7 @@ public class Master implements Serializable {
         this.logoUrl = logoUrl;
     }
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "master")
     @Where(clause = "status=1")
     public List<MasterRecommended> getMasterRecommendedList() {

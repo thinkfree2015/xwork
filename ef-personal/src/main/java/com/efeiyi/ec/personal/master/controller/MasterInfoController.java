@@ -1,5 +1,6 @@
 package com.efeiyi.ec.personal.master.controller;
 
+import com.efeiyi.ec.master.model.Master;
 import com.efeiyi.ec.master.model.MasterNews;
 import com.efeiyi.ec.tenant.model.Tenant;
 import com.ming800.core.base.service.BaseManager;
@@ -30,11 +31,11 @@ public class MasterInfoController extends BaseMasterController {
      */
     @RequestMapping("/list")
     public String listTenantInfo(HttpServletRequest request,Model model) throws Exception {
-        Tenant tenant = super.getTenantfromDomain(request);
+        Master master = super.getMasterfromDomain(request);
         XQuery xQuery = new XQuery("plistMasterNews_default",request);
-        xQuery.put("master_id", tenant.getId());
+        xQuery.put("master_id", master.getId());
         xQuery.addRequestParamToModel(model,request);
-        model.addAttribute("tenant", tenant);
+        model.addAttribute("tenant", master);
         List masterInfoList = baseManager.listPageInfo(xQuery).getList();
         model.addAttribute("tenantInfoList",masterInfoList);
 

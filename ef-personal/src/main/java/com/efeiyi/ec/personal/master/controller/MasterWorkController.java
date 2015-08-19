@@ -1,6 +1,7 @@
 package com.efeiyi.ec.personal.master.controller;
 
 
+import com.efeiyi.ec.master.model.Master;
 import com.efeiyi.ec.product.model.Product;
 import com.efeiyi.ec.tenant.model.Tenant;
 import com.efeiyi.ec.tenant.model.TenantProject;
@@ -36,12 +37,12 @@ public class MasterWorkController extends BaseMasterController {
      */
     @RequestMapping("/list")
     public String listTenantProduct(HttpServletRequest request ,Model model) throws Exception {
-        Tenant tenant = getTenantfromDomain(request);
-        XQuery xQuery = new XQuery("plistMasterWork_default",tenant.getId(),request.getParameter("sort"),request);
-        xQuery.put("master_id",tenant.getId());
+        Master master = getMasterfromDomain(request);
+        XQuery xQuery = new XQuery("plistMasterWork_default",master.getId(),request.getParameter("sort"),request);
+        xQuery.put("master_id",master.getId());
         xQuery.addRequestParamToModel(model, request);
         List WorkList = baseManager.listPageInfo(xQuery).getList();
-        model.addAttribute("tenant", tenant);
+        model.addAttribute("tenant", master);
         model.addAttribute("tenantWorkList",WorkList);
         model.addAttribute("pageMsg","3");
         return "/tenantWork/tenantWorkList";
