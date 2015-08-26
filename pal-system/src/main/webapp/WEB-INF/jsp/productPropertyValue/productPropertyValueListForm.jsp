@@ -13,20 +13,12 @@
 <html>
 <head>
     <title></title>
-    <script type="text/javascript" src="<c:url value='/resources/jquery/jquery-1.11.1.min.js'/>"></script>
 </head>
 <body>
 <div class="am-cf am-padding">
-    <c:if test="${empty product.productPropertyValueList}">
-        <div class="am-fl am-cf">
-            <strong class="am-text-primary am-text-lg">新建商品属性</strong> / <small>New ProductPropertyValue</small>
-        </div>
-    </c:if>
-    <c:if test="${!empty product.productPropertyValueList}">
-        <div class="am-fl am-cf">
-            <strong class="am-text-primary am-text-lg">编辑商品属性</strong> / <small>Edit ProductPropertyValue</small>
-        </div>
-    </c:if>
+    <div class="am-fl am-cf">
+        <strong class="am-text-primary am-text-lg">商品的非遗项目属性</strong>
+    </div>
 </div>
 
 <div class="am-g">
@@ -39,17 +31,17 @@
             <c:forEach items="${PSPNList}" var="productSeriesPropertyName">
                 <input type="hidden" name="propertyNameId<%=i %>" value="${productSeriesPropertyName.id}">
                 <div class="am-form-group">
-                    <label name="value<%=i %>" for="value<%=i %>" class="am-u-sm-3 am-form-label">${productSeriesPropertyName.name} <small>*</small></label>
+                    <label name="value<%=i %>" for="value<%=i %>" class="am-u-sm-3 am-form-label">${productSeriesPropertyName.name} <small style="color: red">*</small></label>
                     <div class="am-u-sm-9">
 
                         <c:if test="${empty PPVList}">
                             <input type="hidden" name="propertyValueId<%=i %>" id="propertyValueId<%=i %>">
-                            <input type="text" name="value<%=i %>" id="value<%=i %>" placeholder="属性值">
+                            <input type="text" name="value<%=i %>" id="value<%=i %>" placeholder="属性值" required>
                         </c:if>
                         <c:forEach items="${PPVList}" var="productPropertyValue">
                             <c:if test="${ productPropertyValue.productSeriesPropertyName.id == productSeriesPropertyName.id}">
                                 <input type="hidden" name="propertyValueId<%=i %>" id="propertyValueId<%=i %>" value="${productPropertyValue.id}">
-                                <input type="text" name="value<%=i %>" id="value<%=i %>" value="${productPropertyValue.value}">
+                                <input type="text" name="value<%=i %>" id="value<%=i %>" value="${productPropertyValue.value}" required>
                             </c:if>
                         </c:forEach>
 

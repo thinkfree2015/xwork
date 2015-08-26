@@ -1,16 +1,16 @@
 package com.efeiyi.pal.system.product.controller;
 
 import com.efeiyi.pal.organization.model.Tenant;
-import com.efeiyi.pal.organization.model.TenantCertification;
-import com.efeiyi.pal.organization.model.TenantSource;
 import com.efeiyi.pal.product.model.Product;
 import com.efeiyi.pal.product.model.ProductPropertyValue;
 import com.efeiyi.pal.product.model.ProductSeries;
-import com.ming800.core.base.dao.XdoDao;
+import com.efeiyi.pal.product.model.TenantProductSeries;
+import com.efeiyi.pal.system.product.service.ProductServiceManager;
 import com.ming800.core.base.service.BaseManager;
-import com.ming800.core.base.service.XdoManager;
 import com.ming800.core.p.service.AliOssUploadManager;
+import com.ming800.core.p.service.AutoSerialManager;
 import com.ming800.core.util.ApplicationContextUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,13 +31,15 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
+    @Autowired
+    private AutoSerialManager autoSerialManager;
+
+    private ProductServiceManager productServiceManager = (ProductServiceManager) ApplicationContextUtil.getApplicationContext().getBean("productServiceManagerImpl");
     private BaseManager baseManager = (BaseManager) ApplicationContextUtil.getApplicationContext().getBean("baseManagerImpl");
-    private XdoManager xdoManager = (XdoManager) ApplicationContextUtil.getApplicationContext().getBean("xdoManagerImpl");
-    private XdoDao xdoDao = (XdoDao) ApplicationContextUtil.getApplicationContext().getBean("xdoDaoSupport");
     private AliOssUploadManager aliOssUploadManager = (AliOssUploadManager) ApplicationContextUtil.getApplicationContext().getBean("aliOssUploadManagerImpl");
 
-    @RequestMapping("/saveProductAndNext.do")
-    public ModelAndView saveProductSeries(ModelMap modelMap, HttpServletRequest request, MultipartRequest multipartRequest) throws Exception {
+    @RequestMapping("/saveProduct.do")
+    public ModelAndView saveProduct(ModelMap modelMap, HttpServletRequest request, MultipartRequest multipartRequest) throws Exception {
         Product product = new Product();
 
         String productId = request.getParameter("id");
@@ -47,8 +48,6 @@ public class ProductController {
             type = "edit";
             product = (Product) baseManager.getObject(Product.class.getName(), productId);
         }
-//        Do tempDo = (Do) modelMap.get("tempDo");
-//        productSeries = (ProductSeries) XDoUtil.processSaveOrUpdateTempObject(tempDo, productSeries, productSeries.getClass(), request, type, xdoDao);
 
         product = setProductBaseProperty(product, request);
 
@@ -57,13 +56,29 @@ public class ProductController {
 
         baseManager.saveOrUpdate(product.getClass().getName(), product);
 
-//        productSeries = (ProductSeries) baseManager.getObject(ProductSeries.class.getName(), productSeries.getId());
+        modelMap.put("product", product);
+        modelMap.put("PPVList", product.getProductPropertyValueList());
+        modelMap.put("PSPNList", product.getProductSeries().getProductSeriesPropertyNameList());
+        modelMap.put("PSPNListSize", product.getProductSeries().getProductSeriesPropertyNameList().size());
+
+        String resultPage = "redirect:/basic/xm.do?qm=viewProduct&product=product&id=" + product.getId();
+
+        return new ModelAndView(resultPage);
+    }
+
+    @RequestMapping("/editProductSeriesProperty.do")
+    public ModelAndView editProductSeriesProperty(ModelMap modelMap, HttpServletRequest request) throws Exception {
+
+        String productId = request.getParameter("productId");
+        if (productId == null || productId.equals("")) {
+            throw new Exception("class com.efeiyi.pal.system.product.controller.ProductController editProductSeriesProperty method: productId id null ");
+        }
+        Product product = (Product) baseManager.getObject(Product.class.getName(), productId);
 
         modelMap.put("product", product);
         modelMap.put("PPVList", product.getProductPropertyValueList());
         modelMap.put("PSPNList", product.getProductSeries().getProductSeriesPropertyNameList());
         modelMap.put("PSPNListSize", product.getProductSeries().getProductSeriesPropertyNameList().size());
-//        String resultPage = "redirect:/basic/xm.do?qm=formProductSeriesPropertyName&conditions=productSeries.id:" + productSeries.getId();
 
         String resultPage = "/productPropertyValue/productPropertyValueListForm";
 
@@ -80,12 +95,11 @@ public class ProductController {
     private Product getRelationAttributeObject(Product product, HttpServletRequest request, String type){
         String productSeriesId = request.getParameter("productSeries.id");
         ProductSeries newProductSeries = (ProductSeries) baseManager.getObject(ProductSeries.class.getName(), productSeriesId);
-        Tenant tenant = newProductSeries.getTenant();
+        String tenantId = request.getParameter("tenant.id");
+        Tenant tenant = (Tenant) baseManager.getObject(Tenant.class.getName(), tenantId);
 
-        String tenantSourceId = request.getParameter("tenantSource.id");
-        String tenantCertificationId = request.getParameter("tenantCertification.id");
-        TenantSource tenantSource = (TenantSource) baseManager.getObject(TenantSource.class.getName(), tenantSourceId);
-        TenantCertification tenantCertification = (TenantCertification) baseManager.getObject(TenantCertification.class.getName(), tenantCertificationId);
+        TenantProductSeries tenantProductSeries = (TenantProductSeries) productServiceManager.getTenantProductSeriesByTenantAndProductSeries(tenant, newProductSeries);
+        product.setTenantProductSeries(tenantProductSeries);
 
         if (type.equals("new")){
             List<ProductPropertyValue> productPropertyValueList = new ArrayList();
@@ -100,8 +114,6 @@ public class ProductController {
 
         product.setProductSeries(newProductSeries);
         product.setTenant(tenant);
-        product.setTenantSource(tenantSource);
-        product.setTenantCertification(tenantCertification);
 
         return product;
     }
@@ -112,15 +124,17 @@ public class ProductController {
      * @param request
      * @return
      */
-    private Product setProductBaseProperty(Product product, HttpServletRequest request) throws ParseException {
+    private Product setProductBaseProperty(Product product, HttpServletRequest request) throws Exception {
         String name = request.getParameter("name");
         String masterName = request.getParameter("masterName");
-        String serial = request.getParameter("serial");
+//        String serial = request.getParameter("serial");
         String status = request.getParameter("status");
         String shoppingUrl = request.getParameter("shoppingUrl");
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd" );
         Date date = sdf.parse(request.getParameter("madeYear"));
+
+        String serial = autoSerialManager.nextSerial("serial");//序列号自动生成
 
         product.setName(name);
         product.setMasterName(masterName);
@@ -159,10 +173,8 @@ public class ProductController {
         String url = "product/" + identify + ".jpg";
 
         if (!multipartRequest.getFile("logo").getOriginalFilename().equals("")) {
-//            aliOssUploadManager.uploadFile(multipartRequest.getFile("logo"), "315pal", "product/logo/" + multipartRequest.getFile("logo").getOriginalFilename());
-//            product.setImgUrl("product/logo/" + multipartRequest.getFile("logo").getOriginalFilename());
             aliOssUploadManager.uploadFile(multipartRequest.getFile("logo"), "315pal", url);
-            product.setImgUrl(url);
+            product.setLogo(url);
         }
 
         return product;

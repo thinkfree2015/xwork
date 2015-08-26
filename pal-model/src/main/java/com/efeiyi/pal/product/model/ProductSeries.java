@@ -1,7 +1,7 @@
 package com.efeiyi.pal.product.model;
 
-import com.efeiyi.pal.organization.model.Tenant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
 
@@ -14,14 +14,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "product_series")
+@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","operations","roles","menus"})
 public class ProductSeries {
 
     private String id;
     private String name;
     private String serial;
-    private Tenant tenant;
     private String status;
     private List<ProductSeriesPropertyName> productSeriesPropertyNameList;
+
+    private List<TenantProductSeries> tenantProductSeriesList;
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -52,17 +54,6 @@ public class ProductSeries {
         this.serial = serial;
     }
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id")
-    public Tenant getTenant() {
-        return tenant;
-    }
-
-    public void setTenant(Tenant tenant) {
-        this.tenant = tenant;
-    }
-
     @Column(name = "status")
     public String getStatus() {
         return status;
@@ -81,6 +72,33 @@ public class ProductSeries {
 
     public void setProductSeriesPropertyNameList(List<ProductSeriesPropertyName> productSeriesPropertyNameList) {
         this.productSeriesPropertyNameList = productSeriesPropertyNameList;
+    }
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productSeries")
+    @Where(clause = "status = '1'")
+    public List<TenantProductSeries> getTenantProductSeriesList() {
+        return tenantProductSeriesList;
+    }
+
+    public void setTenantProductSeriesList(List<TenantProductSeries> tenantProductSeriesList) {
+        this.tenantProductSeriesList = tenantProductSeriesList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProductSeries that = (ProductSeries) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
 }

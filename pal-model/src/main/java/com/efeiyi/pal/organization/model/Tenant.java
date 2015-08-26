@@ -1,6 +1,8 @@
 package com.efeiyi.pal.organization.model;
 
+import com.efeiyi.pal.product.model.TenantProductSeries;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "organization_tenant")
+@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","operations","roles","menus"})
 public class Tenant {
 
     private String id;
@@ -23,8 +26,8 @@ public class Tenant {
     private String city;
     private String address;
     private String status;
-    private List<TenantSource> tenantSourceList;
     private List<TenantCertification> tenantCertificationList;
+    private List<TenantProductSeries> tenantProductSeriesList;
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -107,23 +110,39 @@ public class Tenant {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenant")
     @Where(clause = "status='1'")
-    public List<TenantSource> getTenantSourceList() {
-        return tenantSourceList;
-    }
-
-    public void setTenantSourceList(List<TenantSource> tenantSourceList) {
-        this.tenantSourceList = tenantSourceList;
-    }
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenant")
-    @Where(clause = "status='1'")
     public List<TenantCertification> getTenantCertificationList() {
         return tenantCertificationList;
     }
 
     public void setTenantCertificationList(List<TenantCertification> tenantCertificationList) {
         this.tenantCertificationList = tenantCertificationList;
+    }
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenant")
+    @Where(clause = "status='1'")
+    public List<TenantProductSeries> getTenantProductSeriesList() {
+        return tenantProductSeriesList;
+    }
+
+    public void setTenantProductSeriesList(List<TenantProductSeries> tenantProductSeriesList) {
+        this.tenantProductSeriesList = tenantProductSeriesList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tenant tenant = (Tenant) o;
+
+        return id.equals(tenant.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
 }

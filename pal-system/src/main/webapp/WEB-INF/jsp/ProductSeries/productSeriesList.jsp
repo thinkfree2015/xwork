@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2015/6/29
-  Time: 14:06
+  Date: 2015/8/19
+  Time: 14:58
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -12,7 +12,6 @@
 
 <html>
 <head>
-    <script src="<c:url value="/scripts/jquery-1.11.1.min.js"/>"></script>
     <title></title>
 </head>
 <body>

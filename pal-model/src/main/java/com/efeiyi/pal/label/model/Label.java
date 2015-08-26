@@ -33,6 +33,7 @@ public class Label {
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
+//    @GenericGenerator(name = "id", strategy = "uuid")
     @GeneratedValue(generator = "id")
     public String getId() {
         return id;
@@ -119,7 +120,6 @@ public class Label {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "label")
-    @OrderBy(value = "createDatetime desc")
     public List<LabelCheckRecord> getLabelCheckRecordList() {
         return labelCheckRecordList;
     }

@@ -2,7 +2,6 @@ package com.efeiyi.pal.system.organization.controller;
 
 import com.efeiyi.pal.organization.model.Tenant;
 import com.efeiyi.pal.organization.model.TenantCertification;
-import com.efeiyi.pal.organization.model.TenantSource;
 import com.ming800.core.base.service.BaseManager;
 import com.ming800.core.p.service.AliOssUploadManager;
 import com.ming800.core.util.ApplicationContextUtil;
@@ -14,7 +13,6 @@ import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -61,12 +59,12 @@ public class TenantCertificationController {
 
         baseManager.saveOrUpdate(tenantCertification.getClass().getName(), tenantCertification);
 
-        String resultPage = "redirect:/basic/xm.do?qm=viewTenant&id="+tenantCertification.getTenant().getId();
+        String resultPage = "redirect:/basic/xm.do?qm=viewTenant&tenant=tenant&id="+tenantCertification.getTenant().getId();
         return new ModelAndView(resultPage);
     }
 
     @RequestMapping("/removeTenantCertification.do")
-    public ModelAndView removeTenantSource(ModelMap modelMap, HttpServletRequest request) throws Exception{
+    public ModelAndView removeTenantCertification(ModelMap modelMap, HttpServletRequest request) throws Exception{
         String tenantCertificationId = request.getParameter("tenantCertificationId");
         if (tenantCertificationId == null || tenantCertificationId.trim().equals("")) {
             throw new Exception("认证信息id不能为空!");
@@ -75,12 +73,12 @@ public class TenantCertificationController {
         tenantCertification.setStatus("0");
         baseManager.saveOrUpdate(tenantCertification.getClass().getName(), tenantCertification);
 
-        String resultPage = "redirect:/basic/xm.do?qm=viewTenant&id="+tenantCertification.getTenant().getId();
+        String resultPage = "redirect:/basic/xm.do?qm=viewTenant&tenant=tenant&id="+tenantCertification.getTenant().getId();
         return new ModelAndView(resultPage);
     }
 
     /**
-     * 获取tenantSource的Form表单基本数据
+     * 获取tenantCertification的Form表单基本数据
      * @param tenantCertification
      * @param request
      * @return
@@ -129,12 +127,10 @@ public class TenantCertificationController {
         String identify = sdf.format(new Date());
         String url = "tenantCertification/" + identify + ".jpg";
 
-        if (!multipartRequest.getFile("img").getOriginalFilename().equals("")) {
-//            aliOssUploadManager.uploadFile(multipartRequest.getFile("logo"), "315pal", "product/logo/" + multipartRequest.getFile("logo").getOriginalFilename());
-//            product.setImgUrl("product/logo/" + multipartRequest.getFile("logo").getOriginalFilename());
-            aliOssUploadManager.uploadFile(multipartRequest.getFile("img"), "315pal", url);
-            tenantCertification.setImgUrl(url);
-        }
+//        if (!multipartRequest.getFile("img").getOriginalFilename().equals("")) {
+//            aliOssUploadManager.uploadFile(multipartRequest.getFile("img"), "315pal", url);
+////            tenantCertification.setImgUrl(url);
+//        }
 
         return tenantCertification;
     }

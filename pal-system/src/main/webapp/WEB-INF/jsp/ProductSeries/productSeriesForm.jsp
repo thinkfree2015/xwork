@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2015/6/29
-  Time: 15:16
+  Date: 2015/8/19
+  Time: 14:56
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -16,22 +16,14 @@
 </head>
 <body>
 <div class="am-cf am-padding">
-    <c:if test="${empty object || object.id == null || object.id==''}">
-        <div class="am-fl am-cf">
-            <strong class="am-text-primary am-text-lg">新建商品系列</strong> / <small>New ProductSeries</small>
-        </div>
-    </c:if>
-    <c:if test="${!empty object && object.id != null && object.id != '' }">
-        <div class="am-fl am-cf">
-            <strong class="am-text-primary am-text-lg">编辑商品系列</strong> / <small>Edit ProductSeries</small>
-        </div>
-    </c:if>
+    <div class="am-fl am-cf">
+        <strong class="am-text-primary am-text-lg">非遗项目信息</strong>
+    </div>
 </div>
 <hr/>
 
 <div class="am-g">
-    <%--<form action="/basic/xm.do" method="post" class="am-form am-form-horizontal">--%>
-    <form action="<c:url value='/productSeries/saveProductSeriesAndNext.do'/>" method="post" class="am-form am-form-horizontal">
+    <form action="<c:url value='/productSeries/saveProductSeries.do'/>" method="post" class="am-form am-form-horizontal">
         <input type="hidden" name="qm" value="saveOrUpdateProductSeries">
         <input type="hidden" name="id" value="${object.id}">
         <c:if test="${empty object || object.id == null || object.id==''}">
@@ -42,45 +34,22 @@
         </c:if>
 
         <div class="am-form-group">
-            <label name="name" for="name" class="am-u-sm-3 am-form-label">商品系列 <small>*</small></label>
+            <label name="name" for="name" class="am-u-sm-3 am-form-label">非遗项目名称 <small>*</small></label>
             <div class="am-u-sm-9">
-                <input type="text" name="name" id="name" placeholder="商品系列名称" value="${object.name}" required>
-            </div>
-        </div>
-        <div class="am-form-group">
-            <label name="serial" for="serial" class="am-u-sm-3 am-form-label">序列号 <small>*</small></label>
-            <div class="am-u-sm-9">
-                <input type="text" name="serial" id="serial" placeholder="序列号" value="${object.serial}" required>
-            </div>
-        </div>
-        <div class="am-form-group">
-            <label name="tenant_id" for="tenant_idName" class="am-u-sm-3 am-form-label">商户名称 <small>*</small></label>
-            <div class="am-u-sm-9">
-                <%--<input type="text" name="tenant.id" id="tenant.id" placeholder="商户名称" value="${object.tenant.id}">--%>
-                <input id="tenant_idName" placeholder="商户名称" onclick="m8uDialog.openDialog('tenant_id','tenant_idName','tenant', null)" value="${object.tenant.name}" required>
-                <input type="hidden" id="tenant_id"  name="tenant.id" value="${object.tenant.id}">
+                <input type="text" name="name" id="name" placeholder="非遗项目名称" value="${object.name}" required>
             </div>
         </div>
 
         <%--<div class="am-form-group">--%>
-            <%--<div class="am-u-sm-9 am-u-sm-push-3">--%>
-                <%--<input type="submit" class="am-btn am-btn-primary" value="保存"/>--%>
+            <%--<label name="serial" for="serial" class="am-u-sm-3 am-form-label">序列号 <small>*</small></label>--%>
+            <%--<div class="am-u-sm-9">--%>
+                <%--<input type="text" name="serial" id="serial" placeholder="序列号" value="${object.serial}" required>--%>
             <%--</div>--%>
-        <%--</div>--%>
-
-        <%--<div style="text-align: left;margin-left: 10px;" >--%>
-            <%--<input onclick="window.location.href='<c:url value="/productSeries/saveProductSeries.do"/>'"--%>
-                   <%--type="button" class="am-btn am-btn-default am-btn-xs"--%>
-                   <%--style="margin-top: 4px;margin-bottom: 6px;width: 100px;margin-left:2px;height: 35px;"--%>
-                   <%--value="下一步" />--%>
         <%--</div>--%>
 
         <div class="am-form-group">
             <div class="am-u-sm-9 am-u-sm-push-3">
-                <%--<input type="submit" class="am-btn am-btn-primary" value="保存"/>--%>
-                <input type="submit" class="am-btn am-btn-default am-btn-xs"
-                       style="margin-top: 4px;margin-bottom: 6px;width: 100px;margin-left:2px;height: 35px;"
-                       value="下一步" />
+                <input type="submit" class="am-btn am-btn-primary" value="保存"/>
             </div>
         </div>
 
