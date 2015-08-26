@@ -37,7 +37,7 @@
 <article class="eslite">
   <div class="am-paragraph-default">
     <c:if test="${result.authenticity != -1}">
-    <div class="imglogo"><img src="<%=imgBasePath%><c:url value='${product.imgUrl}'/>"/></div>
+    <div class="imglogo"><img src="<%=imgBasePath%><c:url value='${product.logo}@!pal-website-wap'/>"/></div>
     </c:if>
     <div class="tips">${result.msg}</div>
   </div>
@@ -54,7 +54,7 @@
     </div>
   </div>
   <!--//End-->
-
+<%--<c:if test="${result.authenticity == 1}">--%>
   <div class="am-paragraph-default">
     <div class="infoitem">
       <ul>
@@ -66,7 +66,8 @@
     </div>
   </div>
   <!--//End-->
-  <div class="am-list-news-ft"><a class="am-list-news-more am-btn am-btn-default" href="###">立即购买</a></div>
+  <div class="am-list-news-ft"><a class="am-list-news-more am-btn am-btn-default" href="${product.shoppingUrl}">立即购买</a></div>
+  <%--</c:if>--%>
   </c:if>
 </article>
 

@@ -34,13 +34,17 @@
 <header data-am-widget="header" class="am-header am-header-default">
   <div class="am-header-left am-header-nav"> <a href="javascript:history.back()" class="" title="返回上一步">返回</a> </div>
   <h1 class="am-header-title">认证信息</h1>
-  <div class="am-header-right am-header-nav">购买</div>
+  <div class="am-header-right am-header-nav"><a href="${product.shoppingUrl}">购买</a></div>
   <!--  <em class="line"></em>-->
 </header>
 <!--//End--header-->
 <div data-am-widget="slider" class="am-slider am-slider-a1" data-am-slider='{"directionNav":false}'>
   <ul class="am-slides">
-    <li><img src="<%=imgBasePath%>${product.tenantCertification.imgUrl}"></li>
+<c:forEach items="${product.tenant.tenantCertificationList}" var="certification" >
+  <c:forEach items="${certification.imgList}" var="img">
+    <li><img src="<%=imgBasePath%>${img.imgUrl}@!pal-website-wap"></li>
+  </c:forEach>
+  </c:forEach>
   </ul>
 </div>
 <!--//End--轮播图-->
@@ -48,26 +52,28 @@
   <!--列表标题-->
   <div class="am-list-news-bd">
     <ul class="am-list">
+      <c:forEach items="${product.tenant.tenantCertificationList}" var="certification" >
       <li class="am-g am-list-item-dated">
         <strong class="am-list-info">证书证书:</strong>
-        <span class="am-list-info2">${product.tenantCertification.name}</span>
+        <span class="am-list-info2">${certification.name}</span>
       </li>
       <li class="am-g am-list-item-dated">
         <strong class="am-list-info">认证机构:</strong>
-        <span class="am-list-info2">${product.tenantCertification.org}</span>
+        <span class="am-list-info2">${certification.org}</span>
       </li>
       <li class="am-g am-list-item-dated">
         <strong class="am-list-info">认证时间:</strong>
-        <span class="am-list-info2"> <fmt:formatDate value="${product.tenantCertification.theDate}" pattern="yyyy年MM月"/></span>
+        <span class="am-list-info2"> <fmt:formatDate value="${certification.theDate}" pattern="yyyy年MM月"/></span>
       </li>
       <li class="am-g am-list-item-dated">
         <strong class="am-list-info">认证结果:</strong>
-        <span class="am-list-info2"><ming800:status name="level" dataType="PCTenantCertification.level" checkedValue="${product.tenantCertification.level}" type="normal" /></span>
+        <span class="am-list-info2"><ming800:status name="level" dataType="PCTenantCertification.level" checkedValue="${certification.level}" type="normal" /></span>
       </li>
+      </c:forEach>
     </ul>
   </div>
 </div>
-<%--<script src="js/jquery.min.js"></script>--%>
+<script src="<c:url value='/resources/assets/js/jquery.min.js'/>"></script>
 <script src="<c:url value='/js/amazeui.min.js'/>"></script>
 <script type="text/javascript">
   $(function() {
