@@ -13,34 +13,16 @@
                 <field name="id" label="订单" inputType="text"/>
                 <field name="ptype" label="订单类型" inputType="select_status">
                     <statusType fieldName="ptype">
-                        <item label="个人写真" value="1"></item>
-                        <item label="婚纱摄影" value="2"></item>
-                        <item label="母婴-孕妇照" value="111"></item>
-                        <item label="母婴-百天照" value="112"></item>
-                        <item label="母婴-儿童照" value="113"></item>
-                        <item label="形象-证件照" value="211"></item>
-                        <item label="形象-职场照" value="212"></item>
-                        <item label="形象-商务肖像照" value="213"></item>
-                        <item label="婚礼跟拍" value="311"></item>
-                        <item label="旅游跟拍" value="312"></item>
-                        <item label="会议跟拍" value="313"></item>
                     </statusType>
                 </field>
                 <field name="theStatus" label="状态" inputType="select_status">
                     <statusType fieldName="status">
-                        <item label="假删" value="0"></item>
-                        <item label="未支付" value="1"></item>
-                        <item label="已付定金" value="2"></item>
-                        <item label="已付清" value="3"></item>
 
                     </statusType>
                 </field>
 
                 <field name="orderType" label="订单类型" dataType="int" inputType="select_status">
                     <statusType fieldName="orderType">
-                        <item label="DIY" value="0"></item>
-                        <item label="套餐" value="1"></item>
-                        <item label="私人定制" value="2"></item>
                     </statusType>
                 </field>
 
