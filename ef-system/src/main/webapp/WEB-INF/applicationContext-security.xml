@@ -19,9 +19,7 @@
     <!--</http>-->
 
     <http realm="Contacts Realm" use-expressions="true">
-        <csrf disabled="true"/>
-
-        
+       
         <anonymous key="cookie_key" username="ananoymous" granted-authority="anonymous,ROLE_ANONYMOUS"/>
         <form-login login-page="/pc/login.do" login-processing-url="/j_spring_security_check"
                     authentication-success-handler-ref="loginSuccessHandler"
