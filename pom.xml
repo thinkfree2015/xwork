@@ -4,22 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.efeiyi.ec</groupId>
-    <artifactId>p10</artifactId>
+    <groupId>com.efeiyi.ec.xw</groupId>
+    <artifactId>xwork</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <modules>
         <module>base</module>
-        <module>ef-website</module>
-        <module>ef-system</module>
-        <module>ef-model</module>
-        <module>ef-personal</module>
-        <module>ef-tenant</module>
+        <module>xw-model</module>
         <module>base_resource</module>
-        <module>ef-wiki</module>
-        <module>ef-consumer</module>
-        <module>tg-website</module>
+
     </modules>
 
     <repositories>
