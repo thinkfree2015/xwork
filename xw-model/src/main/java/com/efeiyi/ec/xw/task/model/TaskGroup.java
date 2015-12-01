@@ -1,15 +1,20 @@
 package com.efeiyi.ec.xw.task.model;
 
 import com.efeiyi.ec.xw.project.model.Project;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Administrator on 2015/12/1.
  *
  */
-public class TaskGroup {
+@Entity
+@Table(name = "xw_task_group")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+public class TaskGroup implements Serializable {
     private String id;
     private Project project;
     private String  title;

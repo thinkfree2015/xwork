@@ -1,16 +1,21 @@
 package com.efeiyi.ec.xw.task.model;
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Administrator on 2015/12/1.
  *
  */
-public class TaskActivityInstance {
+@Entity
+@Table(name = "xw_task_activity_instance")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+public class TaskActivityInstance implements Serializable {
     private String id;
     private String issue;
     private String status;   //未处理    正在处理      搁置    已完成   已放弃
@@ -52,7 +57,8 @@ public class TaskActivityInstance {
     public void setContent(String content) {
         this.content = content;
     }
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "excutor", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "excutor")
     public User getExcutor() {
         return excutor;
     }

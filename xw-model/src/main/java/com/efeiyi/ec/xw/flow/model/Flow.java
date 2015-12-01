@@ -1,15 +1,21 @@
 package com.efeiyi.ec.xw.flow.model;
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2015/12/1.
+ *
  */
-public class Flow {
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+@Entity
+@Table(name = "xw_flow")
+public class Flow implements Serializable {
     private String id;
     private String title;
     private List<FlowActivity> activityList;
@@ -36,7 +42,8 @@ public class Flow {
     }
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+    @JoinColumn(name="notify_user_id")
     public List<User> getNotifyUserList() {
         return notifyUserList;
     }
@@ -44,7 +51,8 @@ public class Flow {
     public void setNotifyUserList(List<User> notifyUserList) {
         this.notifyUserList = notifyUserList;
     }
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "flowActivity", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+    @JoinColumn(name="flow_activity_id")
     public List<FlowActivity> getActivityList() {
         return activityList;
     }

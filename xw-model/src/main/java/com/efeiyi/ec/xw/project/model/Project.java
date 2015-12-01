@@ -10,6 +10,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Created by Administrator on 2015/12/1.
+ *
  */
 @Entity
 @Table(name = "xw_project")

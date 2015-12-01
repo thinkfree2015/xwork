@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Administrator on 2015/12/1.
  */
 @Entity
-@Table(name = "organization_role")
+@Table(name = "xw_role")
 public class Role implements Serializable {
     private String id;
     private String name;

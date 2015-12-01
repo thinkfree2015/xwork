@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "xw_task")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class Task {
+public class Task implements Serializable {
     private String id;
     private String title;
     private TaskGroup taskGroup;
@@ -82,7 +83,7 @@ public class Task {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user")
+    @JoinColumn(name="notify_users")
     public List<User> getUsernotifyUserList() {
         return UsernotifyUserList;
     }
@@ -99,7 +100,8 @@ public class Task {
         this.taskAttachmentList = taskAttachmentList;
     }
 
-    @OneToOne(optional = true, cascade = CascadeType.ALL, mappedBy = "flow")
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
+    @JoinColumn(name="flow")
     public Flow getFlow() {
         return flow;
     }

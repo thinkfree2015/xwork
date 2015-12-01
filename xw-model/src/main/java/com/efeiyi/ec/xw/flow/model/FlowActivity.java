@@ -1,15 +1,20 @@
 package com.efeiyi.ec.xw.flow.model;
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Administrator on 2015/12/1.
  *
  */
-public class FlowActivity {
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+@Entity
+@Table(name = "xw_flow_activity")
+public class FlowActivity implements Serializable {
     private String id;
     private String title;
     private String type;    //one, xor, and

@@ -1,16 +1,21 @@
 package com.efeiyi.ec.xw.task.model;
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Administrator on 2015/12/1.
  *
  */
-public class TaskNote {
+@Entity
+@Table(name = "xw_task_note")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+public class TaskNote implements Serializable {
     private String id;
     private Task task;
     private String content;

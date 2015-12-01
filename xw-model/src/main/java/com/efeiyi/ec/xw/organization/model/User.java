@@ -10,11 +10,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "organization_user")
-public class User {
+@Table(name = "xw_user")
+public class User implements Serializable {
 
     private String id;
     private String username;

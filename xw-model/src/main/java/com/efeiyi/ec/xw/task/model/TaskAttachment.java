@@ -1,13 +1,19 @@
 package com.efeiyi.ec.xw.task.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Administrator on 2015/12/1.
+ *
  */
-public class TaskAttachment {
+@Entity
+@Table(name = "xw_task_attachment")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+public class TaskAttachment implements Serializable {
     private String id;
     private Task task;
     private String type;    //image,  file , link
