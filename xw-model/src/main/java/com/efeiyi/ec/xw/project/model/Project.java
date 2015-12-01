@@ -41,12 +41,13 @@ public class Project implements Serializable {
         this.title = title;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "projects", cascade = CascadeType.ALL)
-    public List getMemberList() {
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="user_id")
+    public List<User> getMemberList() {
         return memberList;
     }
 
-    public void setMemberList(List memberList) {
+    public void setMemberList(List<User> memberList) {
         this.memberList = memberList;
     }
 

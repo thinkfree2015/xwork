@@ -11,6 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 @Entity
@@ -23,7 +24,6 @@ public class User implements Serializable {
     private String password;
     private Role role;
     private String status;
-    private Project projects;
     @JsonIgnore
     @Column(name = "password")
     public String getPassword() {
@@ -98,12 +98,5 @@ public class User implements Serializable {
     public void setRole(Role role) {
         this.role = role;
     }
-    @ManyToMany
-    public Project getProjects() {
-        return projects;
-    }
 
-    public void setProjects(Project projects) {
-        this.projects = projects;
-    }
 }
