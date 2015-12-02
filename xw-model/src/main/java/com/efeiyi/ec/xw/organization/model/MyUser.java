@@ -1,9 +1,7 @@
 package com.efeiyi.ec.xw.organization.model;
 
-import com.efeiyi.ec.tenant.model.BigTenant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.ming800.core.base.model.BaseUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +20,7 @@ import java.util.*;
 @Entity
 @Table(name = "xw_user")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class MyUser implements Serializable, UserDetails ,BaseUser {
+public class MyUser implements Serializable, UserDetails {
 
     private String id;
     private String username;
@@ -52,27 +50,18 @@ public class MyUser implements Serializable, UserDetails ,BaseUser {
 
 
     private String tempPageUrl;
-    private BigTenant bigTenant;
     private Map<String, String> settingMap;
 
     private Integer utype; //总部用户，分公司用户
 
 
-    private BigUser bigUser;
 
 
     private Date lastLoginDatetime;//最后一次登陆时间
     private Date lastLogoutDatetime;//最后一次登陆时间
 
 
-    @Transient
-    public BigUser getBigUser() {
-        return bigUser;
-    }
 
-    public void setBigUser(BigUser bigUser) {
-        this.bigUser = bigUser;
-    }
 
     public MyUser() {
     }
@@ -87,16 +76,7 @@ public class MyUser implements Serializable, UserDetails ,BaseUser {
         this.role = role;
     }
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tenant_id")
-    public BigTenant getBigTenant() {
-        return bigTenant;
-    }
 
-    public void setBigTenant(BigTenant bigTenant) {
-        this.bigTenant = bigTenant;
-    }
 
     @Column(name = "type")
     public Integer getUtype() {
@@ -259,7 +239,7 @@ public class MyUser implements Serializable, UserDetails ,BaseUser {
     @Transient
     public Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> gList = new ArrayList<GrantedAuthority>();
-      if(role!=null) {
+     /* if(role!=null) {
           Permission rolePermission = new Permission();//角色即权限
           rolePermission.setAuthority(role.getName());
           gList.add(rolePermission);
@@ -271,7 +251,7 @@ public class MyUser implements Serializable, UserDetails ,BaseUser {
       }
         Permission defaultPermission = new Permission();//每个用户都默认带ROLE_USER这个权限
         defaultPermission.setAuthority("ROLE_USER");//普通用户
-        gList.add(defaultPermission);
+        gList.add(defaultPermission);*/
         return gList;
     }
 
