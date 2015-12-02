@@ -32,7 +32,7 @@ public class ModuleManagerImpl implements ModuleManager {
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Logger logger = Logger.getLogger(ModuleManagerImpl.class);
         try {
-            Resource[] xmlFiles = resolver.getResources("/system/**/*.xml");
+            Resource[] xmlFiles = resolver.getResources("/xwork/**/*.xml");
             if (xmlFiles != null) {
                 for (Resource resource : xmlFiles) {
                     logger.info("开始解析文件："+resource.getURL());

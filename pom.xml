@@ -13,6 +13,7 @@
         <module>base</module>
         <module>xw-model</module>
         <module>base_resource</module>
+        <module>xw-work</module>
 
     </modules>
 
@@ -380,13 +381,13 @@
             <properties>
                 <db-driver>com.mysql.jdbc.Driver</db-driver>
                 <db-password>yX798tcK3P5VZ7bUTbh+nQ==</db-password>
-                <db-url>jdbc:mysql://192.168.1.57/xwork?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8</db-url>
+                <db-url>jdbc:mysql://192.168.1.57/xw-work?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8</db-url>
                 <db-username>root</db-username>
                 <db-level>DEBUG</db-level>
                 <dbpath>/tmp/logs/</dbpath>
             </properties>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
 
