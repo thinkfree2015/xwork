@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Administrator on 2015/12/1.
@@ -18,7 +19,7 @@ public class FlowActivity implements Serializable {
     private String id;
     private String title;
     private String type;    //one, xor, and
-    private User user;
+    private List<User> user;
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -46,12 +47,12 @@ public class FlowActivity implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
-    public User getUser() {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "flowActivity", cascade = CascadeType.ALL)
+    public List<User> getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(List<User> user) {
         this.user = user;
     }
 }

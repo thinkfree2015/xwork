@@ -18,6 +18,7 @@ import java.util.Date;
 public class TaskActivityInstance implements Serializable {
     private String id;
     private String issue;
+    private Task activity;
     private String status;   //未处理    正在处理      搁置    已完成   已放弃
     private String content;
     private User excutor;
@@ -57,8 +58,8 @@ public class TaskActivityInstance implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "excutor")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "excutor_id")
     public User getExcutor() {
         return excutor;
     }
@@ -73,5 +74,14 @@ public class TaskActivityInstance implements Serializable {
 
     public void setCreateDatetime(Date createDatetime) {
         this.createDatetime = createDatetime;
+    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="task_id")
+    public Task getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Task activity) {
+        this.activity = activity;
     }
 }

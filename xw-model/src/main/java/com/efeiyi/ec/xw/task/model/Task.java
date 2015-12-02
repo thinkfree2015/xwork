@@ -49,7 +49,7 @@ public class Task implements Serializable {
         this.title = title;
     }
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="task")
+    @JoinColumn(name="task_group_id")
     public TaskGroup getTaskGroup() {
         return taskGroup;
     }
@@ -73,7 +73,7 @@ public class Task implements Serializable {
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "activity", cascade = CascadeType.ALL)
     public List<TaskActivityInstance> getTaskActivityList() {
         return taskActivityList;
     }
@@ -82,8 +82,8 @@ public class Task implements Serializable {
         this.taskActivityList = taskActivityList;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="notify_users")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="notify_userId")
     public List<User> getUsernotifyUserList() {
         return UsernotifyUserList;
     }
@@ -101,7 +101,7 @@ public class Task implements Serializable {
     }
 
     @OneToOne(optional = true, cascade = CascadeType.ALL)
-    @JoinColumn(name="flow")
+    @JoinColumn(name="flow_id")
     public Flow getFlow() {
         return flow;
     }

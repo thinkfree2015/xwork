@@ -4,6 +4,7 @@ package com.efeiyi.ec.xw.organization.model;
  * Created by Administrator on 2015/12/1.
  */
 
+import com.efeiyi.ec.xw.flow.model.FlowActivity;
 import com.efeiyi.ec.xw.project.model.Project;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -24,6 +25,10 @@ public class User implements Serializable {
     private String password;
     private Role role;
     private String status;
+    private FlowActivity flowActivity;
+
+
+
     @JsonIgnore
     @Column(name = "password")
     public String getPassword() {
@@ -98,5 +103,13 @@ public class User implements Serializable {
     public void setRole(Role role) {
         this.role = role;
     }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="flow_activity_id")
+    public FlowActivity getFlowActivity() {
+        return flowActivity;
+    }
 
+    public void setFlowActivity(FlowActivity flowActivity) {
+        this.flowActivity = flowActivity;
+    }
 }
