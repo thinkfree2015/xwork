@@ -3,13 +3,12 @@ package com.efeiyi.ec.xwork.flow.service.impl;
 import com.efeiyi.ec.xw.flow.model.FlowActivity;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xwork.flow.service.FlowActivityManager;
+import com.ming800.core.base.dao.XdoDao;
 import com.ming800.core.base.service.BaseManager;
-import com.ming800.core.does.model.XQuery;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,8 @@ import java.util.Map;
 public class FlowActivityManagerImpl implements FlowActivityManager {
     private static Logger logger = Logger.getLogger(FlowManagerImpl.class);
     @Autowired
-    private HttpServletRequest request;
+    private XdoDao xdoDao;
+
     @Autowired
     private BaseManager baseManager;
 
@@ -29,22 +29,30 @@ public class FlowActivityManagerImpl implements FlowActivityManager {
     @Override
     public void createFlowActivity(Map map)throws Exception{
         logger.info("create flowActivity begin");
+        int index = Integer.parseInt(map.get("sort").toString());
         FlowActivity  flowActivity = new FlowActivity();
         if (map==null){
             logger.info("args is null");
-            baseManager.saveOrUpdate(FlowActivity.class.getName(),flowActivity);
         }
-        flowActivity.setTitle(map.get("title").toString());
-        flowActivity.setType(map.get("type").toString());
-        flowActivity.setUser((List<User>) map.get("users"));
+        flowActivity.setTitle(map.get("title")!=null&& !"".equals(map.get("title").toString())?map.get("title").toString():"");
+        flowActivity.setType(map.get("type") != null && !"".equals(map.get("type").toString()) ? map.get("type").toString() : "");
+        if(map.get("sort")!=null && !"".equals(map.get("type"))){
+            flowActivity.setSort(index);
+        }
+        //获取默认任的该节点的用户
+        List<User> users = xdoDao.getObjectList("from User where group=? and status!='0' order by id desc", new Object[]{index});
+        flowActivity.setUser(users);
         baseManager.saveOrUpdate(FlowActivity.class.getName(),flowActivity);
         logger.info("create flowActivity success");
     }
-
+    /**
+     * 获取流程节点
+     * @param index is sort
+     *根据用户选择的流程创建相应节点
+     */
     @Override
-    public List<FlowActivity> getFlowActivitys() throws Exception {
-        XQuery xQuery = new XQuery("listFlowActivity_default",request);
-        return  baseManager.listObject(xQuery);
+    public List<FlowActivity> getFlowActivitys(String index) throws Exception {
+        return  xdoDao.getObjectList("from FlowActivity where sort>=? order by id desc", new Object[]{ Integer.parseInt(index)});
     }
 
 
