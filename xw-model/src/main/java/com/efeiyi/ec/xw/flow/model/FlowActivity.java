@@ -20,7 +20,7 @@ public class FlowActivity implements Serializable {
     private String title;
     private String type;    //one, xor, and
     private List<User> user;
-
+    private String status;
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
     @GeneratedValue(generator = "id")
@@ -54,5 +54,13 @@ public class FlowActivity implements Serializable {
 
     public void setUser(List<User> user) {
         this.user = user;
+    }
+    @Column(name = "thestatus")
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by Administrator on 2015/12/1.
@@ -18,6 +19,7 @@ import java.util.List;
 public class Flow implements Serializable {
     private String id;
     private String title;
+    private String type;
     private List<FlowActivity> activityList;
     private List<User> notifyUserList;
 
@@ -59,5 +61,13 @@ public class Flow implements Serializable {
 
     public void setActivityList(List<FlowActivity> activityList) {
         this.activityList = activityList;
+    }
+    @Column(name = "type")
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
