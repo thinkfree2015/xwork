@@ -53,8 +53,7 @@ public class Flow implements Serializable {
     public void setNotifyUserList(List<User> notifyUserList) {
         this.notifyUserList = notifyUserList;
     }
-    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
-    @JoinColumn(name="flow_activity_id")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "flow",cascade=CascadeType.ALL)
     public List<FlowActivity> getActivityList() {
         return activityList;
     }

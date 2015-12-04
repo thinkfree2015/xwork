@@ -1,6 +1,7 @@
 package com.efeiyi.ec.xw.task.model;
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,11 +19,12 @@ import java.util.Date;
 public class TaskActivityInstance implements Serializable {
     private String id;
     private String issue;
-    private Task activity;
+    private TaskActivityInstance fatherTaskActivityInstance;
     private String status;   //未处理    正在处理      搁置    已完成   已放弃
     private String content;
     private User excutor;
     private Date createDatetime;
+    private Task task;
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -77,11 +79,22 @@ public class TaskActivityInstance implements Serializable {
     }
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="task_id")
-    public Task getActivity() {
-        return activity;
+    public Task getTask() {
+        return task;
     }
 
-    public void setActivity(Task activity) {
-        this.activity = activity;
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="fatherTaskActivityInstance_id")
+    public TaskActivityInstance getFatherTaskActivityInstance() {
+        return fatherTaskActivityInstance;
+    }
+
+    public void setFatherTaskActivityInstance(TaskActivityInstance fatherTaskActivityInstance) {
+        this.fatherTaskActivityInstance = fatherTaskActivityInstance;
     }
 }
