@@ -50,7 +50,7 @@ public class Role implements Serializable {
 
 
 
-    @Column(name = "thestatus")
+    @Column(name = "status")
     public String  getStatus() {
         return status;
     }

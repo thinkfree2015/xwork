@@ -62,32 +62,32 @@ public class ServiceAspect {
 //    }
 
     //配置后置返回通知,使用在方法aspect()上注册的切入点
-    @AfterReturning("aspect()")
-    public void afterReturn(JoinPoint joinPoint){
-        String operation  =joinPoint.getSignature().getName();
-
-            String t = joinPoint.getArgs()[0].toString();
-            String targetName = t;
-            if (t != null) {
-                if (t.indexOf("Do@") != -1) {
-                    Do tempDo = (Do) joinPoint.getArgs()[0];
-                    t = tempDo.getXentity().getModel();
-                }
-                    if(t.indexOf("@")==-1){
-                        targetName = t.substring(t.lastIndexOf(".")+1);
-                    }else {
-                        targetName = t.substring(t.lastIndexOf(".") + 1, t.indexOf("@"));
-                }
-                try {
-                    logManager.saveLog(targetName,operation);
-                }catch (ParseException pe){
-                      pe.printStackTrace();
-                }
-
-            }
-
-
-    }
+//    @AfterReturning("aspect()")
+//    public void afterReturn(JoinPoint joinPoint){
+//        String operation  =joinPoint.getSignature().getName();
+//
+//            String t = joinPoint.getArgs()[0].toString();
+//            String targetName = t;
+//            if (t != null) {
+//                if (t.indexOf("Do@") != -1) {
+//                    Do tempDo = (Do) joinPoint.getArgs()[0];
+//                    t = tempDo.getXentity().getModel();
+//                }
+//                    if(t.indexOf("@")==-1){
+//                        targetName = t.substring(t.lastIndexOf(".")+1);
+//                    }else {
+//                        targetName = t.substring(t.lastIndexOf(".") + 1, t.indexOf("@"));
+//                }
+//                try {
+//                    logManager.saveLog(targetName,operation);
+//                }catch (ParseException pe){
+//                      pe.printStackTrace();
+//                }
+//
+//            }
+//
+//
+//    }
 
 //    //配置抛出异常后通知,使用在方法aspect()上注册的切入点
 //    @AfterThrowing(pointcut="aspect()", throwing="ex")

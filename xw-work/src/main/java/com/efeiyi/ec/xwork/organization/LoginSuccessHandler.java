@@ -1,6 +1,7 @@
 package com.efeiyi.ec.xwork.organization;
 
 
+import com.efeiyi.ec.xw.organization.model.MyUser;
 import com.ming800.core.base.service.BaseManager;
 import com.ming800.core.p.PConst;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             baseManager.saveOrUpdate(systemLog.getClass().getName(), systemLog);
         }
         bigUser.setLastLoginDatetime(new Date());
-        baseManager.saveOrUpdate(bigUser.getClass().getName(), bigUser);
+        baseManager.saveOrUpdate(bigUser.getClass().getName(), bigUser);*/
         System.out.println("登录成功");
         MyUser user = (MyUser) authentication.getPrincipal();
         try {
@@ -67,6 +68,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             } else {
                 response.sendRedirect(request.getContextPath() + request.getParameter("redirect"));
             }
-        }*/
+        }
     }
 }

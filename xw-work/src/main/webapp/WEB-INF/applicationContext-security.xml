@@ -33,17 +33,17 @@
     </http>
     <b:bean id="loginOutSuccessHandler" class="com.efeiyi.ec.xwork.organization.LoginOutSuccessHandler"/>
 
-    <authentication-manager>
-    <authentication-provider>
-    <user-service>
-    <user name="admin" password="admin" authorities="ROLE_ADMIN"/>
-    </user-service>
-    </authentication-provider>
-    </authentication-manager>
+    <!--<authentication-manager>-->
+    <!--<authentication-provider>-->
+    <!--<user-service>-->
+    <!--<user name="admin" password="admin" authorities="ROLE_ADMIN"/>-->
+    <!--</user-service>-->
+    <!--</authentication-provider>-->
+    <!--</authentication-manager>-->
 
-  <!--  <authentication-manager>
+    <authentication-manager>
         <authentication-provider user-service-ref="userManager">
             <password-encoder hash="sha"/>
         </authentication-provider>
-    </authentication-manager>-->
+    </authentication-manager>
 </b:beans>
