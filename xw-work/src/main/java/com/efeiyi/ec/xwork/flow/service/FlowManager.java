@@ -2,7 +2,6 @@ package com.efeiyi.ec.xwork.flow.service;
 
 import com.efeiyi.ec.xw.flow.model.Flow;
 import com.efeiyi.ec.xw.flow.model.FlowActivity;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
