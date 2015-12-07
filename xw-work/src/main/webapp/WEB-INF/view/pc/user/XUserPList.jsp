@@ -25,35 +25,41 @@
 </div>
 <table class="am-table am-table-bordered am-table-radius am-table-striped" >
   <tr style="text-align: left">
-    <td  width="25%">操作</td>
-    <td  width="25%">组别名称</td>
-    <td  width="15%">用户名称</td>
+    <td  width="35%">操作</td>
+    <td  width="30%">组别名称</td>
+    <td  width="35%">用户名称</td>
   </tr>
 
-
-  <c:forEach items="${requestScope.pageInfo.list}" var="project">
-    <%int i = 0;%>
-    <tr style="text-align: left">
+  <c:forEach items="${requestScope.pageInfo.list}" var="object">
+    <tr style="text-align: left" id="${object.id}">
       <td>
         <div class="am-btn-toolbar">
           <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-
-             <button onclick="removeUser(${})" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 移除</button>
-
+             <button onclick="removeUser('${object.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 移除</button>
+            <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
           </div>
         </div>
       </td>
-      <td width="20%">
-        <c:if test="${project.level == 1}">
-          <a href="<c:url value="/basic/xm.do?qm=viewProjectwiki&param=project&conditions=project.id:${project.id}&id=${project.id}"/>" >
-              ${project.name}
-          </a>
+      <td width="30%">
+        <c:if test="${!empty object.group}">
+        <c:choose>
+          <c:when test="${object.group  eq 1}">产品组</c:when>
+          <c:when test="${object.group  eq 2}">UI设计组</c:when>
+          <c:when test="${object.group  eq 3}">前端开发组</c:when>
+          <c:when test="${object.group  eq 4}">开发组</c:when>
+          <c:when test="${object.group  eq 5}">测试组</c:when>
+          <c:when test="${object.group  eq 6}">运营组</c:when>
+          <c:when test="${object.group  eq 7}">运维组</c:when>
+          <c:otherwise>尚未定义</c:otherwise>
+        </c:choose>
         </c:if>
+      </td>
+      <td width="35%">
+          ${object.username}
       </td>
 
 
     </tr>
-    <% i++;%>
   </c:forEach>
 </table>
 <div style="clear: both">
@@ -63,6 +69,32 @@
     <ming800:pcPageParam name="conditions" value="${requestScope.conditions}"/>
   </ming800:pcPageList>
 </div>
+<script>
 
+  function removeUser(userId){
+
+    $.ajax({
+      type:"post",
+      url:"<c:url value='/user/base/removeUser.do?'/>",//设置请求的脚本地址
+      data:"userId="+userId,
+      dataType:"json",
+      success:function(data){
+       if(data && data==true){
+         console.log("移除用户成功");
+        //$('.am-table-striped').removeChild($("#"+userId));
+         $("#"+userId).remove();
+       }
+      return true;
+      },
+      error:function(e){
+        alert("出错了，请联系管理员！！！");
+        return false;
+      },
+      complete:function(){
+
+      }
+    });
+  }
+</script>
 </body>
 </html>
