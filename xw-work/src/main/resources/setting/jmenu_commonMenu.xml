@@ -6,14 +6,15 @@
     <jnode id="efecOrderAndConsumer" access="admin,operational,o_operational,financial,product_manager,market" url="/main.do?jnodeId=efecOrderAndConsumer" text_zh_CN="全部动态">
 
     </jnode>
-    <jnode id="EfyProject" access="admin,operational,c_operational,o_operational,financial,product_manager" url="/basic/xm.do?qm=plistProject_default&amp;jnodeId=EfyProject" text_zh_CN="项目列表">
-        <match url="/basic/xm.do?qm=plistProject_default" ></match>
+    <jnode id="EfyProject" access="admin,operational,c_operational,o_operational,financial,product_manager" url="/basic/xm.do?qm=plistProjectUser_default&amp;jnodeId=EfyProject" text_zh_CN="项目列表">
+        <match url="/basic/xm.do?qm=plistProjectUser_default" />
+        <match url="/basic/xm.do?qm=formProject" />
     </jnode>
 
     <jnode id="ttManager" access="admin,operational,c_operational,product_manager" url="/main.do?jnodeId=ttManager" text_zh_CN="系统设置">
         <jnode url="" id="UserManager" access="admin,operational,c_operational,product_manager" state="closed" text_zh_CN="用户管理">
             <jnode url="/basic/xm.do?qm=plistUser_default" access="admin,operational,c_operational,product_manager" text_zh_CN="用户分组列表">
-                <match url="/basic/xm.do?qm=plistUser_default" ></match>
+                <match url="/basic/xm.do?qm=plistUser_default" />
             </jnode>
 
         </jnode>

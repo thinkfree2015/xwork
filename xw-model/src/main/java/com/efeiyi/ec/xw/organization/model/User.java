@@ -26,7 +26,7 @@ public class User implements Serializable {
     private Role role;
     private String status;
     private FlowActivity flowActivity;
-    private int group;
+    private Integer group;
 
 
     @JsonIgnore
@@ -113,11 +113,11 @@ public class User implements Serializable {
         this.flowActivity = flowActivity;
     }
     @Column(name = "group")
-    public int getGroup() {
+    public Integer getGroup() {
         return group;
     }
 
-    public void setGroup(int group) {
+    public void setGroup(Integer group) {
         this.group = group;
     }
 }

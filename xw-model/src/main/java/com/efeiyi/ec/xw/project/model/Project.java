@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Where;
+
 /**
  * Created by Administrator on 2015/12/1.
  *
@@ -19,7 +21,7 @@ public class Project implements Serializable {
     private String id;
     private List<User> memberList;
     private String title;
-
+    private String context;//项目简介
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -41,8 +43,11 @@ public class Project implements Serializable {
         this.title = title;
     }
 
-    @OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name="user_id")
+    @OneToMany
+    @JoinTable(name = "xw_project_user",
+            joinColumns = {@JoinColumn(name = "project_id",referencedColumnName="id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id",referencedColumnName="id")}
+            )
     public List<User> getMemberList() {
         return memberList;
     }
@@ -51,4 +56,12 @@ public class Project implements Serializable {
         this.memberList = memberList;
     }
 
+    @Column(name = "context")
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
 }

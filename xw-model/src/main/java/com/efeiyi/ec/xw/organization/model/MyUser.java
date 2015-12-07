@@ -2,6 +2,8 @@ package com.efeiyi.ec.xw.organization.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ming800.core.base.model.BaseTenant;
+import com.ming800.core.base.model.BaseUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +22,7 @@ import java.util.*;
 @Entity
 @Table(name = "xw_user")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class MyUser implements Serializable, UserDetails {
+public class MyUser implements Serializable, UserDetails,BaseUser {
 
     private String id;
     private String username;
@@ -365,5 +367,6 @@ public class MyUser implements Serializable, UserDetails {
     public void setLastLogoutDatetime(Date lastLogoutDatetime) {
         this.lastLogoutDatetime = lastLogoutDatetime;
     }
+
 
 }

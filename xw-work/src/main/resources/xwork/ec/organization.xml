@@ -283,7 +283,7 @@
         </entity>
         <entity name="User" label="用户"
                 basic="simple" others=""
-                model="com.efeiyi.ec.organization.model.User">
+                model="com.efeiyi.ec.xw.organization.model.User">
             <fields>
                 <field name="sex" label="性别" inputType="text">
                     <statusType fieldName="sex">
@@ -312,7 +312,6 @@
                 <do name="saveOrUpdateUser" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistUser_default"/>
                 <do name="listUser" label="用户列表" access="" result="/user/userList">
                     <query name="default" label="默认" type="auto" orderBy="id:desc">
-                        <condition label="主键" name="id" defaultValue="0" operation="eq"/>
                         <condition label="主键" name="status" defaultValue="1" operation="eq"/>
                     </query>
                 </do>
