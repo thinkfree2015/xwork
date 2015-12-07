@@ -1,6 +1,7 @@
 package com.efeiyi.ec.xwork.project.controller;
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.ming800.core.base.service.BaseManager;
 import com.ming800.core.does.model.XQuery;
 import com.ming800.core.does.service.DoHandler;
@@ -23,6 +24,7 @@ public class ProjectFormHandler implements DoHandler {
         XQuery xQuery = new XQuery("listUser_default",request);
         List<User> userList = baseManager.listObject(xQuery);
         modelMap.put("userList",userList);
+        modelMap.put("myUser", AuthorizationUtil.getMyUser());
         return modelMap;
     }
 }

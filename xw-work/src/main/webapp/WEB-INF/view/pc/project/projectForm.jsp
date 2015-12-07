@@ -23,12 +23,11 @@
 <hr/>
 
 <div class="am-g">
-    <form action="<c:url value="/basic/xm.do"/>"  class="am-form am-form-horizontal" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="qm" value="saveOrUpdateProject">
+    <form action="<c:url value="/project/saveProject.do"/>"  class="am-form am-form-horizontal" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" value="${object.id}">
-
+        <input type="hidden" name="resultPage" value="redirect:/basic/xm.do?qm=plistProjectUser_default">
         <div class="am-form-group">
-            <label name="name" for="user-name" class="am-u-sm-3 am-form-label">项目名称 <small>*</small></label>
+            <label name="title" for="user-name" class="am-u-sm-3 am-form-label">项目名称 <small>*</small></label>
             <div class="am-u-sm-9">
                 <input type="text" name="title" id="user-name" placeholder="项目名称" value="${object.title}" >
             </div>
@@ -43,7 +42,7 @@
         <div class="am-form-group">
             <label name="context"  class="am-u-sm-3 am-form-label">项目简介 </label>
             <div class="am-u-sm-9" style="margin-top: 10px">
-               <textarea rows="4" cols="3" placeholder="项目简介(选填)">${object.context}</textarea>
+               <textarea rows="4" cols="3" name="context" placeholder="项目简介(选填)">${object.context}</textarea>
             </div>
         </div>
         <div class="am-form-group">
@@ -51,7 +50,8 @@
             <div class="am-u-sm-9">
                 <div class="am-tabs am-margin" data-am-tabs>
                     <ul class="am-tabs-nav am-nav am-nav-tabs">
-                        <li class="am-active"><a href="#tab1">产品</a></li>
+                        <li class="am-active"><a href="#tab0">项目创建者</a></li>
+                        <li><a href="#tab1">产品</a></li>
                         <li><a href="#tab2">UI</a></li>
                         <li><a href="#tab3">前端</a></li>
                         <li><a href="#tab4">开发</a></li>
@@ -59,27 +59,32 @@
                         <li><a href="#tab6">运营</a></li>
                     </ul>
 
-                    <div class="am-tabs-bd">
+                    <div class="am-tabs-bd" style="height: 50%">
+                        <div class="am-tab-panel am-fade am-in am-active" id="tab0" style="height: 50%;">
 
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+                           <input  name="user" onclick="return false;"  type="checkbox" checked="checked" value="${myUser.id}">
+                            <a href="javascript:void (0)">${myUser.username}</a>
+                        </div>
+
+                        <div class="am-tab-panel am-fade am-in am-active" id="tab1" style="height: 50%;">
 
 
                         </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab2">
+                        <div class="am-tab-panel am-fade am-in am-active" id="tab2" style="height: 50%;">
 
                         </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab3">
-
-
-                        </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab4">
+                        <div class="am-tab-panel am-fade am-in am-active" id="tab3" style="height: 50%;">
 
 
                         </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab5">
+                        <div class="am-tab-panel am-fade am-in am-active" id="tab4" style="height: 50%;">
+
 
                         </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab6">
+                        <div class="am-tab-panel am-fade am-in am-active" id="tab5" style="height: 50%;">
+
+                        </div>
+                        <div class="am-tab-panel am-fade am-in am-active" id="tab6" style="height: 50%;">
 
                         </div>
 
@@ -142,7 +147,7 @@
         <%--</div>--%>
         <div class="am-form-group">
             <div class="am-u-sm-9 am-u-sm-push-3">
-                <input type="submit" class="am-btn am-btn-primary" value="保存"/>
+                <input type="submit" class="am-btn am-btn-primary" value="保存" />
             </div>
         </div>
     </form>
@@ -153,29 +158,38 @@
 <script type="text/javascript">
 
    <c:forEach var="user" items="${userList}">
-      var html = '<span style="margin-left: 10px;">'+
-           ' <input type="checkbox" name="user" value="${user.id}">'+
-           ' <a href="javascript:void (0)">${user.username}</a>'+
+      var html = '<span style="margin-left: 10px;">';
+            if('${myUser}'=='${user.id}'){
+                html += ' <input type="checkbox" readonly="readonly" name="user" value="${user.id}" checked="checked">';
+            }else{
+                html += ' <input type="checkbox" name="user" value="${user.id}">';
+            }
+
+           html += ' <a href="javascript:void (0)">${user.username}</a>'+
            '</span>';
-      <c:if test="${user.group==1}">
+      <c:if test="${user.groupName==1}">
          $("#tab1").append(html);
       </c:if>
-      <c:if test="${user.group==2}">
+      <c:if test="${user.groupName==2}">
          $("#tab2").append(html);
       </c:if>
-      <c:if test="${user.group==3}">
+      <c:if test="${user.groupName==3}">
          $("#tab3").append(html);
       </c:if>
-      <c:if test="${user.group==4}">
+      <c:if test="${user.groupName==4}">
          $("#tab4").append(html);
        </c:if>
-      <c:if test="${user.group==5}">
+      <c:if test="${user.groupName==5}">
          $("#tab5").append(html);
       </c:if>
-      <c:if test="${user.group==6}">
+      <c:if test="${user.groupName==6}">
          $("#tab6").append(html);
       </c:if>
    </c:forEach>
+
+    function read(){
+        return false;
+    }
 </script>
 </body>
 </html>
