@@ -41,15 +41,15 @@
         </div>
       </td>
       <td width="30%">
-        <c:if test="${!empty object.group}">
+        <c:if test="${!empty object.groupName}">
         <c:choose>
-          <c:when test="${object.group  eq 1}">产品组</c:when>
-          <c:when test="${object.group  eq 2}">UI设计组</c:when>
-          <c:when test="${object.group  eq 3}">前端开发组</c:when>
-          <c:when test="${object.group  eq 4}">开发组</c:when>
-          <c:when test="${object.group  eq 5}">测试组</c:when>
-          <c:when test="${object.group  eq 6}">运营组</c:when>
-          <c:when test="${object.group  eq 7}">运维组</c:when>
+          <c:when test="${object.groupName  eq 1}">产品组</c:when>
+          <c:when test="${object.groupName  eq 2}">UI设计组</c:when>
+          <c:when test="${object.groupName  eq 3}">前端开发组</c:when>
+          <c:when test="${object.groupName  eq 4}">开发组</c:when>
+          <c:when test="${object.groupName  eq 5}">测试组</c:when>
+          <c:when test="${object.groupName  eq 6}">运营组</c:when>
+          <c:when test="${object.groupName  eq 7}">运维组</c:when>
           <c:otherwise>尚未定义</c:otherwise>
         </c:choose>
         </c:if>

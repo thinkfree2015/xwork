@@ -31,19 +31,35 @@
       </div>
     </div>
     <div class="am-form-group">
-      <label name="name" for="name" class="am-u-sm-3 am-form-label">真实姓名 <small>*</small></label>
+      <label name="username" for="user-name" class="am-u-sm-3 am-form-label">用户所在小组 <small>*</small></label>
       <div class="am-u-sm-9">
-        <input type="text" name="name" id="name" placeholder="真实姓名" value="${object.name}">
+        <c:if test="${!empty object.groupName}">
+          <c:choose>
+            <c:when test="${object.groupName  eq 1}">产品组</c:when>
+            <c:when test="${object.groupName  eq 2}">UI设计组</c:when>
+            <c:when test="${object.groupName  eq 3}">前端开发组</c:when>
+            <c:when test="${object.groupName  eq 4}">开发组</c:when>
+            <c:when test="${object.groupName  eq 5}">测试组</c:when>
+            <c:when test="${object.groupName  eq 6}">运营组</c:when>
+            <c:when test="${object.groupName  eq 7}">运维组</c:when>
+            <c:otherwise>尚未定义</c:otherwise>
+          </c:choose>
+        </c:if>
       </div>
     </div>
     <div class="am-form-group">
-      <label name="roleId"  class="am-u-sm-3 am-form-label">角色 <small>*</small></label>
+      <label name="roleId"  class="am-u-sm-3 am-form-label">编辑用户组<small>*</small></label>
       <div class="am-u-sm-9">
-        <select name="role.id" id="roleId" class="selectValidate" >
+        <select name="groupName" id="groupName" class="selectValidate" >
           <option>请选择</option>
-          <c:forEach items="${roleList}" var="role" >
-            <option value="${role.id}">${role.cname}</option>
-          </c:forEach>
+          <option value="1">产品组</option>
+          <option value="2">UI设计组</option>
+          <option value="3">前端开发组</option>
+          <option value="4">开发组</option>
+          <option value="5">测试组</option>
+          <option value="6">运营组</option>
+          <option value="7">运维组</option>
+          <option value="0">尚未定义</option>
         </select>
 
       </div>
@@ -59,9 +75,7 @@
 <hr/>
 
 <script>
-  $(function(){
-    $("select option[value='${object.role.id}']").attr("selected","selected");
-  });
+
 </script>
 </body>
 </html>

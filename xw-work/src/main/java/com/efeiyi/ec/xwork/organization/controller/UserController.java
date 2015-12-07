@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
          boolean flag = false;
          if (UserId!=null && !"".equals(UserId)){
              User user = (User)baseManager.getObject(User.class.getName(),UserId);
-             user.setGroup(0);
+             user.setGroupName(0);
              baseManager.saveOrUpdate(User.class.getName(),user);
              flag = true;
          }
