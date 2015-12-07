@@ -20,6 +20,11 @@
                 </do>
                 <do name="formUser" label="查看" access="" result="/user/groupUserForm"/>
                 <do name="saveOrUpdateUserGroup" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistUser_default"/>
+                <do name="listUser" label="用户列表" access="" result="/user/userList">
+                    <query name="default" label="默认" type="auto" orderBy="id:desc">
+                        <condition label="主键" name="status" defaultValue="1" operation="eq"/>
+                    </query>
+                </do>
             </does>
         </entity>
     </entities>
