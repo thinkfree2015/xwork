@@ -22,12 +22,15 @@
   <div class="am-cf am-padding">
     <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">新建/编辑用户组</strong> / <small>New/Edit GroupUser</small></div>
   </div>
+
 </div>
+<jsp:include page="/do/generateTabs.do?qm=${requestScope.qm}&conditions=${requestScope.conditions}"/>
 <table class="am-table am-table-bordered am-table-radius am-table-striped" >
   <tr style="text-align: left">
-    <td  width="35%">操作</td>
-    <td  width="30%">组别名称</td>
-    <td  width="35%">用户名称</td>
+    <td  width="25%">操作</td>
+    <td  width="25%">组别名称</td>
+    <td  width="25%">用户名称</td>
+    <td  width="25%">中文姓名</td>
   </tr>
 
   <c:forEach items="${requestScope.pageInfo.list}" var="object">
@@ -40,7 +43,7 @@
           </div>
         </div>
       </td>
-      <td width="30%">
+      <td width="25%">
         <c:if test="${!empty object.groupName}">
         <c:choose>
           <c:when test="${object.groupName  eq 1}">产品组</c:when>
@@ -54,10 +57,12 @@
         </c:choose>
         </c:if>
       </td>
-      <td width="35%">
+      <td width="25%">
           ${object.username}
       </td>
-
+      <td width="25%">
+          ${object.name}
+      </td>
 
     </tr>
   </c:forEach>
