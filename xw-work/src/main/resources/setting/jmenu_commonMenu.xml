@@ -11,7 +11,12 @@
     </jnode>
 
     <jnode id="ttManager" access="admin,operational,c_operational,product_manager" url="/main.do?jnodeId=ttManager" text_zh_CN="系统设置">
+        <jnode url="" id="UserManager" access="admin,operational,c_operational,product_manager" state="closed" text_zh_CN="用户管理">
+            <jnode url="/basic/xm.do?qm=plistUser_default" access="admin,operational,c_operational,product_manager" text_zh_CN="用户分组列表">
+                <match url="/basic/xm.do?qm=plistUser_default" ></match>
+            </jnode>
 
+        </jnode>
     </jnode>
 
 
