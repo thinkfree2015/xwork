@@ -22,6 +22,7 @@ public class Flow implements Serializable {
     private String type;
     private List<FlowActivity> activityList;
     private List<User> notifyUserList;
+    private String status;
 
 
     @Id
@@ -45,7 +46,10 @@ public class Flow implements Serializable {
 
 
     @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
-    @JoinColumn(name="notify_user_id")
+    @JoinTable(name = "xw_flow_user",
+            joinColumns = {@JoinColumn(name = "flow_id",referencedColumnName="id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id",referencedColumnName="id")}
+    )
     public List<User> getNotifyUserList() {
         return notifyUserList;
     }
@@ -68,5 +72,13 @@ public class Flow implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+    @Column(name = "status")
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
