@@ -35,7 +35,7 @@ public class FlowManagerImpl implements FlowManager {
         Flow flow = new Flow();
         if (map!=null || map.size()==0){
             List<FlowActivity> flowActivities=null;
-            //标准流程 添加标准的5个节点   产品 ui 前端 开发 测试
+            //标准流程 添加标准的5个节点   产品 ui 前端 开发 测试 运维 运营
           if(map.get("begin")!=null&& !"".equals(map.get("begin"))){
                flowActivities = flowActivityManager.getFlowActivitys(map.get("begin").toString());
           }
@@ -43,6 +43,8 @@ public class FlowManagerImpl implements FlowManager {
             flow.setTitle(map.get("title")!=null && !"".equals(map.get("title")) ? map.get("title").toString():"");
             List<User> users = xdoDao.getObjectList("FROM User where status!='0' ", new LinkedHashMap<String, Object>());
             flow.setNotifyUserList(users);//默认为流程添加所有成员
+            flow.setStatus("1");//立即生效
+            flow.setType(map.get("begin").toString());//扩展字段
         }
         baseManager.saveOrUpdate(Flow.class.getName(),flow);
     }
