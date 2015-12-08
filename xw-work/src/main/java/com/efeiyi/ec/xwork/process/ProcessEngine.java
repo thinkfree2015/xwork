@@ -6,6 +6,7 @@ import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.task.model.Task;
 import com.efeiyi.ec.xw.task.model.TaskActivityInstance;
 import com.efeiyi.ec.xwork.flow.service.FlowManager;
+import com.efeiyi.ec.xwork.flow.service.impl.FlowActivityManagerImpl;
 import com.efeiyi.ec.xwork.flow.service.impl.FlowManagerImpl;
 import com.efeiyi.ec.xwork.util.ContextUtils;
 import com.ming800.core.base.dao.XdoDao;
@@ -36,10 +37,18 @@ public class ProcessEngine implements WebApplicationInitializer,ApplicationConte
     /**
      * 创建流程实例
      * @param map
-     * @return "/wiki/everyArt"
+     * @return
      */
     public void createFlow(Map map) throws  Exception{
         ((FlowManagerImpl)ContextUtils.getBean("flowManagerImpl")).createFlow(map);
+    }
+    /**
+     * 创建流程节点实例
+     * @param map
+     * @return
+     */
+    public void createFlowActivity(Map map)throws Exception{
+        ((FlowActivityManagerImpl)ContextUtils.getBean("flowActivityManagerImpl")).createFlowActivity(map);
     }
     /**
      * 为任务搭建匹配的流程实例

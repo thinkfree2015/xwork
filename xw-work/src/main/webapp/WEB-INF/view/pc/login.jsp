@@ -41,9 +41,9 @@
                     <input type="password" name="password" id="password" placeholder="输入密码">
                 </div>
             </div>
-            <div class="">
-                    <label for="remember-me" class="am-u-sm-2 am-form-label">自动登录</label>
-                    <input id="remember-me" name="remember-me" type="checkbox" value="true"/>
+            <div style="width: 100%;text-align: center">
+                    <label for="remember-me" class="am-u-sm-2 am-form-label" style="display: inline-block;float: none;font-size: 14px;padding-right: 0;padding-left: 0">自动登录</label>
+                    <input id="remember-me" name="remember-me" type="checkbox" value="true" style="display: inline-block"/>
             </div>
 
             <div class="am-form-group">

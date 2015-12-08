@@ -3,7 +3,7 @@
 <module name="xwork" label="系统-流程" version="" package="com.efeiyi.ec.xw" path="">
 
     <entities>
-        <entity name="Flow" label="用户"
+        <entity name="Flow" label="流程"
                 basic="simple" others=""
                 model="com.efeiyi.ec.xw.flow.model.Flow">
             <does>
@@ -21,6 +21,32 @@
                     </query>
                 </do>
             </does>
-        </entity>+
+        </entity>
+        <entity name="FlowActivity" label="流程节点实例"
+                basic="simple" others=""
+                model="com.efeiyi.ec.xw.flow.model.FlowActivity">
+            <fields>
+                <field name="sort" label="类型" inputType="select">
+                    <statusType fieldName="type">
+                        <item label="产品组" value="1"/>
+                        <item label="UI设计组" value="2"/>
+                        <item label="前端开发组" value="3"/>
+                        <item label="开发组" value="4"/>
+                        <item label="测试组" value="5"/>
+                        <item label="运营组" value="6"/>
+                        <item label="运维组" value="7"/>
+                    </statusType>
+                </field>
+            </fields>
+            <does>
+                <do name="plistFlowActivity" access="" label="FlowActivity列表"
+                    result="/flow/flowActivityPList">
+                    <query name="default" label="默认" type="auto" orderBy="id:desc">
+                        <condition  name="id" defaultValue="xx" operation="ne" />
+                    </query>
+                </do>
+
+            </does>
+        </entity>
     </entities>
 </module>
