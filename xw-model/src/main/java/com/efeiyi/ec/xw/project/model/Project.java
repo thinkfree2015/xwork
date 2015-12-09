@@ -43,7 +43,7 @@ public class Project implements Serializable {
         this.title = title;
     }
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "xw_project_user",
             joinColumns = {@JoinColumn(name = "project_id",referencedColumnName="id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id",referencedColumnName="id")}

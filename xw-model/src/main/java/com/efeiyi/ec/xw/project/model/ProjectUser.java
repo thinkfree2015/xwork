@@ -32,7 +32,7 @@ public class ProjectUser implements Serializable {
     public void setId(String id) {
         this.id = id;
     }*/
-    @Id
+    @EmbeddedId
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     public User getUser() {

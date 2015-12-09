@@ -21,7 +21,7 @@ public class FlowUser implements Serializable {
     private Flow flow;
 
 
-    @Id
+    @EmbeddedId
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     public User getUser() {
@@ -31,7 +31,7 @@ public class FlowUser implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-
+    @EmbeddedId
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="flow_id")
 

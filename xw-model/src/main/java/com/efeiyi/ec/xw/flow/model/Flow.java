@@ -45,7 +45,7 @@ public class Flow implements Serializable {
     }
 
 
-    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
     @JoinTable(name = "xw_flow_user",
             joinColumns = {@JoinColumn(name = "flow_id",referencedColumnName="id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id",referencedColumnName="id")}
