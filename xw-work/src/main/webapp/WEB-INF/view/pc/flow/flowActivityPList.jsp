@@ -15,22 +15,22 @@
 
 <html>
 <head>
-  <title>uesr group</title>
+  <title>流程实例列表</title>
 </head>
 <body>
 <div style="text-align: left;margin-left: 10px;" >
   <div class="am-cf am-padding">
-    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">新建/编辑用户组</strong> / <small>New/Edit GroupUser</small></div>
+    <a href="<c:url value="/flow/newFlowActivity.do" /> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建流程实例节点</a>
+    <%--<div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">新建/编辑流程</strong> / <small>New/Edit Flow</small></div>--%>
   </div>
 
 </div>
 <jsp:include page="/do/generateTabs.do?qm=${requestScope.qm}&conditions=${requestScope.conditions}"/>
 <table class="am-table am-table-bordered am-table-radius am-table-striped" >
   <tr style="text-align: left">
-    <td  width="25%">操作</td>
-    <td  width="25%">组别名称</td>
-    <td  width="25%">用户名称</td>
-    <td  width="25%">中文姓名</td>
+    <td  width="35%">操作</td>
+    <td  width="35%">流程节点</td>
+    <td  width="30%">节点所属小组</td>
   </tr>
 
   <c:forEach items="${requestScope.pageInfo.list}" var="object">
@@ -38,30 +38,29 @@
       <td>
         <div class="am-btn-toolbar">
           <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-             <button onclick="removeUser('${object.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 移除</button>
+            <button onclick="removeUser('${object.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
             <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
           </div>
         </div>
       </td>
-      <td width="25%">
-        <c:if test="${!empty object.groupName}">
-        <c:choose>
-          <c:when test="${object.groupName  eq 1}">产品组</c:when>
-          <c:when test="${object.groupName  eq 2}">UI设计组</c:when>
-          <c:when test="${object.groupName  eq 3}">前端开发组</c:when>
-          <c:when test="${object.groupName  eq 4}">开发组</c:when>
-          <c:when test="${object.groupName  eq 5}">测试组</c:when>
-          <c:when test="${object.groupName  eq 6}">运营组</c:when>
-          <c:when test="${object.groupName  eq 7}">运维组</c:when>
-          <c:otherwise>尚未定义</c:otherwise>
-        </c:choose>
+      <td width="35%">
+        <c:if test="${!empty object.title}">
+          ${object.title}
         </c:if>
       </td>
-      <td width="25%">
-          ${object.username}
-      </td>
-      <td width="25%">
-          ${object.name}
+      <td width="30%">
+        <c:if test="${!empty object.sort}">
+          <c:choose>
+            <c:when test="${object.sort  eq 1}">产品组</c:when>
+            <c:when test="${object.sort  eq 2}">UI设计组</c:when>
+            <c:when test="${object.sort  eq 3}">前端开发组</c:when>
+            <c:when test="${object.sort  eq 4}">开发组</c:when>
+            <c:when test="${object.sort  eq 5}">测试组</c:when>
+            <c:when test="${object.sort  eq 6}">运营组</c:when>
+            <c:when test="${object.sort  eq 7}">运维组</c:when>
+            <c:otherwise>尚未定义</c:otherwise>
+          </c:choose>
+        </c:if>
       </td>
 
     </tr>
@@ -76,20 +75,19 @@
 </div>
 <script>
 
-  function removeUser(userId){
+  function removeUser(flowActivityId){
 
     $.ajax({
-      type:"post",
-      url:"<c:url value='/user/base/removeUser.do?'/>",//设置请求的脚本地址
-      data:"userId="+userId,
+      type:"get",
+      url:"<c:url value='/flow/removeFlowActivity/'/>"+flowActivityId,//设置请求的脚本地址
+      data:"",
       dataType:"json",
       success:function(data){
-       if(data && data==true){
-         console.log("移除用户成功");
-        //$('.am-table-striped').removeChild($("#"+userId));
-         $("#"+userId).remove();
-       }
-      return true;
+        if(data && data=="succ"){
+          console.log("废除流程成功");
+          $("#"+flowActivityId).remove();
+        }
+        return true;
       },
       error:function(e){
         alert("出错了，请联系管理员！！！");

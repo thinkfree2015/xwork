@@ -1,37 +1,26 @@
-package com.efeiyi.ec.xw.project.model;
+package com.efeiyi.ec.xw.flow.model;
 
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.efeiyi.ec.xw.project.model.Project;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by Administrator on 2015/12/1.
  *
  */
 @Entity
-@Table(name = "xw_project_user")
+@Table(name = "xw_flow_user")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
-public class ProjectUser implements Serializable {
-    //private String id;
+public class FlowUser implements Serializable {
     private User user;
-    private Project project;
+    private Flow flow;
 
 
-  /*  @Id
-    @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
-    @GeneratedValue(generator = "id")
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }*/
     @EmbeddedId
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
@@ -42,14 +31,15 @@ public class ProjectUser implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-
+    @EmbeddedId
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="project_id")
-    public Project getProject() {
-        return project;
+    @JoinColumn(name ="flow_id")
+
+    public Flow getFlow() {
+        return flow;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setFlow(Flow flow) {
+        this.flow = flow;
     }
 }

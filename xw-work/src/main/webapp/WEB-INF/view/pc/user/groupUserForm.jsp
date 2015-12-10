@@ -31,6 +31,12 @@
       </div>
     </div>
     <div class="am-form-group">
+      <label name="name" for="name" class="am-u-sm-3 am-form-label">中文姓名 <small>*</small></label>
+      <div class="am-u-sm-9">
+        <input type="text" name="name" id="name" placeholder="中文姓名" value="${object.name}">
+      </div>
+    </div>
+    <div class="am-form-group">
       <label name="username" for="user-name" class="am-u-sm-3 am-form-label">用户所在小组 <small>*</small></label>
       <div class="am-u-sm-9">
         <c:if test="${!empty object.groupName}">

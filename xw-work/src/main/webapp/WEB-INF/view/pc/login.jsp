@@ -25,6 +25,7 @@
     <div class="am-u-md-12" style="box-shadow: 0px 0px 2px #626262;">
         <div class="am-u-md-12" style="text-align: center ;"><h2 style=" margin-top: 1.6rem;">e飞蚁 任务流平台</h2></div>
         <form class="am-form am-form-horizontal" action="<c:url value="/j_spring_security_check"/>" method="post">
+
             <div class="am-form-group">
                 <label for="username" class="am-u-sm-2 am-form-label">用户名</label>
 
@@ -39,6 +40,10 @@
                 <div class="am-u-sm-10">
                     <input type="password" name="password" id="password" placeholder="输入密码">
                 </div>
+            </div>
+            <div style="width: 100%;text-align: center">
+                    <label for="remember-me" class="am-u-sm-2 am-form-label" style="display: inline-block;float: none;font-size: 14px;padding-right: 0;padding-left: 0">自动登录</label>
+                    <input id="remember-me" name="remember-me" type="checkbox" value="true" style="display: inline-block"/>
             </div>
 
             <div class="am-form-group">
