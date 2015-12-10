@@ -2,6 +2,8 @@ package com.efeiyi.ec.xw.project.model;
 
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.efeiyi.ec.xw.task.model.TaskGroup;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import java.io.Serializable;
 import java.util.List;
@@ -22,6 +24,7 @@ public class Project implements Serializable {
     private List<User> memberList;
     private String title;
     private String context;//项目简介
+    private List<TaskGroup> taskGroupList;//任务清单
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -63,5 +66,15 @@ public class Project implements Serializable {
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "project")
+    public List<TaskGroup> getTaskGroupList() {
+        return taskGroupList;
+    }
+
+    public void setTaskGroupList(List<TaskGroup> taskGroupList) {
+        this.taskGroupList = taskGroupList;
     }
 }
