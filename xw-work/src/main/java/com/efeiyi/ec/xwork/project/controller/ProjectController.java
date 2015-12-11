@@ -1,6 +1,8 @@
 package com.efeiyi.ec.xwork.project.controller;
 
+import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.project.model.Project;
+import com.efeiyi.ec.xw.task.model.Task;
 import com.efeiyi.ec.xw.task.model.TaskGroup;
 import com.efeiyi.ec.xwork.project.service.ProjectManager;
 import com.ming800.core.base.controller.BaseController;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -47,5 +51,37 @@ public class ProjectController extends BaseController {
        return taskGroup.getId();
     }
 
+    @RequestMapping("/addTask.do")
+    @ResponseBody
+    public  String addTask(String taskGroupId,String title){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date = sdf.format(new Date());
+        Task task = new Task();
+        try {
+            task.setTitle(title);
+            task.setCreateDatetime(sdf.parse(date));
+            task.setTaskGroup((TaskGroup)baseManager.getObject(TaskGroup.class.getName(),taskGroupId));
+            baseManager.saveOrUpdate(Task.class.getName(),task);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return task.getId();
+    }
+    @RequestMapping("/sendUser.do")
+    @ResponseBody
+    public  String sendUser(String taskId,String userId){
+        try {
+            Task task = (Task)baseManager.getObject(Task.class.getName(),taskId);
+            if("null".equals(userId)){
+                task.setCurrentUser(null);
+            }else {
+                task.setCurrentUser((User)baseManager.getObject(User.class.getName(),userId));
+            }
+            baseManager.saveOrUpdate(Task.class.getName(),task);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return taskId;
+    }
 
 }
