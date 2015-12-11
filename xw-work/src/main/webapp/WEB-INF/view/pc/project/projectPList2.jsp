@@ -28,17 +28,22 @@
         </div>
     </div>
 </div>
+<fieldset>
+    <legend></legend>
+    <c:if test="${not empty requestScope.pageInfo.list}">
 <ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list  " style="margin-top: 7%;">
     <c:forEach items="${requestScope.pageInfo.list}" var="projectUser">
         <li style="padding-bottom: 5%">
                 <%--<a href="#" class="am-text-success"><span class="am-icon-btn am-icon-briefcase"></span><br/><br/>${project.title}<br/></a>--%>
-            <a href="#" class="am-text-success"><img src="<c:url value="/scripts/image/project2.png"/>"/><br/><br/>${projectUser.project.title}<br/></a>
+            <a href="<c:url value="/basic/xm.do?qm=viewProject&id=${projectUser.project.id}"/> " class="am-text-success"><img src="<c:url value="/scripts/image/project2.png"/>"/><br/><br/>${projectUser.project.title}<br/></a>
             <%--<c:forEach var="user" items="${projectUser.project.memberList}">--%>
                 <%--<a href="javascript:void (0);">${user.username}</a>--%>
             <%--</c:forEach>--%>
         </li>
     </c:forEach>
 </ul>
+    </c:if>
+</fieldset>
 <%--<div style="text-align: left;margin-left: 10px;">--%>
 <%--<security:authorize ifAnyGranted="admin,operational,c_operational">--%>
 <%--<input onclick="window.location.href='<c:url--%>

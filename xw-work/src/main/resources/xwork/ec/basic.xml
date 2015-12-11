@@ -36,6 +36,9 @@
                 <do name="formProject" label="保存项目" access=""
                     execute="com.efeiyi.ec.xwork.project.controller.ProjectFormHandler"
                        result="/project/projectForm"/>
+                <do name="viewProject" label="项目查看" access=""
+                    execute="com.efeiyi.ec.xwork.project.controller.ProjectFormHandler"
+                    result="/project/projectView2"/>
                 <do name="saveOrUpdateProject" label="保存banner" access=""
                     result="redirect:/basic/xm.do?qm=plistProjectUser_default"
                     />
@@ -122,6 +125,27 @@
 
             </does>
         </entity>
+        <entity name="Task" label="任务"
+                basic="simple" others=""
+                model="com.efeiyi.ec.xw.task.model.Task">
+            <does>
+                <do name="plistTask" access="" label="任务列表"
+                    result="/task/taskPList">
+                    <query name="default" label="默认" type="auto" orderBy="id:desc">
+                        <condition name="id" defaultValue="1" operation="eq"/>
+                    </query>
+                </do>
 
+                <do name="removeTask" label="删除任务" access="" result="json"/>
+                <do name="formTask" label="编辑任务" access="" result="/task/taskForm"/>
+                <do name="saveOrUpdateTask" label="保存任务" access="" result="/task/taskSaveSuccess"/>
+                <do name="listTask" label="任务列表" access="" result="/task/taskList">
+                    <query name="default" label="默认" type="auto" orderBy="id:desc">
+                        <condition label="菜单项主键" name="id" defaultValue="1" operation="eq"/>
+                    </query>
+                </do>
+
+            </does>
+        </entity>
     </entities>
 </module>

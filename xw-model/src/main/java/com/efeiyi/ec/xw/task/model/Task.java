@@ -19,7 +19,7 @@ import java.util.List;
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class Task implements Serializable {
     private String id;
-    private String title;
+ //   private String title;
     private TaskGroup taskGroup;
     private String content;
     private User currentUser;
@@ -40,14 +40,14 @@ public class Task implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-    @Column(name = "title")
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
+//    @Column(name = "title")
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="task_group_id")
     public TaskGroup getTaskGroup() {
@@ -117,7 +117,7 @@ public class Task implements Serializable {
     public void setAuthor(User author) {
         this.author = author;
     }
-    @Column(name = "createDatetime")
+    @Column(name = "create_datetime")
     public Date getCreateDatetime() {
         return createDatetime;
     }
