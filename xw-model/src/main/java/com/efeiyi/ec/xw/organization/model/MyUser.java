@@ -62,7 +62,7 @@ public class MyUser implements Serializable, UserDetails,BaseUser {
     private Date lastLoginDatetime;//最后一次登陆时间
     private Date lastLogoutDatetime;//最后一次登陆时间
 
-
+    private  Integer groupName;
 
 
     public MyUser() {
@@ -368,5 +368,12 @@ public class MyUser implements Serializable, UserDetails,BaseUser {
         this.lastLogoutDatetime = lastLogoutDatetime;
     }
 
+    @Column(name = "groupName")
+    public Integer getGroupName() {
+        return groupName;
+    }
 
+    public void setGroupName(Integer groupName) {
+        this.groupName = groupName;
+    }
 }

@@ -58,7 +58,7 @@
 
 
             <div class="am-margin">
-                <a href="javascript:void (0);" onclick="toSubmitZH('2');" class="am-btn am-btn-primary am-btn-xs">保存</a>
+                <a href="javascript:void (0);" onclick="toSubmitZH('2');" class="am-btn am-btn-primary am-btn-xs">发表评论</a>
             </div>
         </form>
     </fieldset>

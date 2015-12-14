@@ -49,9 +49,8 @@
         </c:if>
       </td>
       <td width="30%">
-        <c:if test="${!empty object.activityList}">
-          ${object.activityList[0].title}
-        </c:if>
+          <ming800:status name="type" dataType="FlowActivity.type" checkedValue="${object.type}" type="normal"/>
+
       </td>
 
     </tr>
