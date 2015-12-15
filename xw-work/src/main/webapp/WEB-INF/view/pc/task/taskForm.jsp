@@ -47,12 +47,37 @@
                 </select>
 
             </div>
+
+            <p style="text-indent:2em">
+                <span id="OldContent">${object.content}</span>
+                <small style="margin-left: 85%">
+                    <a href="javascript:void (0);" onclick="editTask('${object.id}')" class="a"> 编辑</a>
+                </small>
+            </p>
+            <div style="width: 100%;display: none" id="EditContent">
+            <p style="text-indent:2em">
+                <textarea rows="3" cols="4" style="width: 78%" id="TextContent">${object.content}</textarea>
+                <div class="am-margin" style="margin-left: 40px;">
+                <a href="javascript:void (0);" onclick="saveContent('2');" class="am-btn am-btn-primary am-btn-xs">保存</a>
+                <a href="javascript:void (0);" onclick="cancelContent('2');" class="am-btn am-btn-primary am-btn-xs">取消</a>
+                </div>
+            </p>
+            </div>
+
+
         </legend>
+        <c:forEach var="taskActivity" items="${object.taskActivityList}">
+              <div>
+                  <fmt:formatDate value="${taskActivity.createDatetime}" pattern="yyyy-MM-dd hh:mm" type="both"/>
+                  &nbsp;&nbsp;${taskActivity.excutor.username}&nbsp;&nbsp;<ming800:status name="status" dataType="FlowActivity.statusType" checkedValue="${taskActivity.status}" type="normal"/>这条任务
+              </div>
+
+        </c:forEach>
+        <hr>
         <form action="<c:url value="/project/saveProject.do"/>"  class="am-form am-form-horizontal" method="post" enctype="multipart/form-data">
 
              <textarea  name="content" class="ckeditor" id="content"
-                        placeholder="任务描述" required>
-                 ${object.content}
+                        placeholder="任务描述">
 
              </textarea>
 
@@ -69,9 +94,24 @@
 
 <script type="text/javascript">
 $(function(){
-    CKEDITOR.replace('content', {height: '440px', width: '1000px'});
+    CKEDITOR.replace('content', {height: '300px', width: '1000px'});
 });
 
+
+    function editTask(){
+          $("#EditContent").css({"display":"block"});
+          $("#OldContent").css({"display":"none"});
+        $("#TextContent").val()
+    }
+    function saveContent(){
+        $("#EditContent").css({"display":"none"});
+        $("#OldContent").text($("#TextContent").val());
+        $("#OldContent").css({"display":"block"});
+    }
+function cancelContent(){
+    $("#EditContent").css({"display":"none"});
+    $("#OldContent").css({"display":"block"});
+}
 </script>
 </body>
 </html>

@@ -42,6 +42,16 @@
                         <item label="运维组" value="7"/>
                     </statusType>
                 </field>
+                <field name="statusType" label="类型" inputType="select">
+                    <statusType fieldName="statusType">
+                        <item label="未处理" value="1"/>
+                        <item label="正在处理" value="2"/>
+                        <item label="搁置" value="3"/>
+                        <item label="已完成" value="4"/>
+                        <item label="已放弃" value="5"/>
+
+                    </statusType>
+                </field>
             </fields>
             <does>
                 <do name="plistFlowActivity" access="" label="FlowActivity列表"

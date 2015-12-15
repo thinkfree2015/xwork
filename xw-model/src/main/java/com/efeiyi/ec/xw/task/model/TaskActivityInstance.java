@@ -44,7 +44,7 @@ public class TaskActivityInstance implements Serializable {
     public void setIssue(String issue) {
         this.issue = issue;
     }
-    @Column(name="thestatus")
+    @Column(name="status")
     public String getStatus() {
         return status;
     }
@@ -69,7 +69,7 @@ public class TaskActivityInstance implements Serializable {
     public void setExcutor(User excutor) {
         this.excutor = excutor;
     }
-    @Column(name="createDatetime")
+    @Column(name="create_datetime")
     public Date getCreateDatetime() {
         return createDatetime;
     }
