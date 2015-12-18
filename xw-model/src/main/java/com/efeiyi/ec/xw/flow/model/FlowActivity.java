@@ -21,7 +21,7 @@ public class FlowActivity implements Serializable {
     private String type;    //one, xor, and
     private List<User> user;
     private String status;
-    private int sort;
+    private Integer sort;
     private Flow flow;
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -65,14 +65,18 @@ public class FlowActivity implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
     @Column(name = "sort")
-    public int getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(int sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
+
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="flow_id")
     public Flow getFlow() {
