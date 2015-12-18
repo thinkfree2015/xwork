@@ -49,7 +49,12 @@ public class FlowActivity implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "flowActivity", cascade = CascadeType.ALL)
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+    @JoinTable(name = "xw_flow_user",
+            joinColumns = {@JoinColumn(name = "flow_activity_id",referencedColumnName="id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id",referencedColumnName="id")}
+    )
     public List<User> getUser() {
         return user;
     }
@@ -57,6 +62,9 @@ public class FlowActivity implements Serializable {
     public void setUser(List<User> user) {
         this.user = user;
     }
+
+
+
     @Column(name = "thestatus")
     public String getStatus() {
         return status;
