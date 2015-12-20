@@ -11,5 +11,5 @@ import java.util.Map;
 public interface FlowActivityManager {
 
     void createFlowActivity(Map map)throws Exception;
-    List<FlowActivity> getFlowActivitys(String index)throws Exception;
+    FlowActivity getFlowActivity(String index)throws Exception;
 }

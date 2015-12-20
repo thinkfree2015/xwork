@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +35,9 @@ public class FlowManagerImpl implements FlowManager {
     public void createFlow(Map map) throws Exception{
         Flow flow = new Flow();
         if (map!=null || map.size()==0){
-            List<FlowActivity> flowActivities=null;
-            //标准流程 添加标准的5个节点   产品 ui 前端 开发 测试 运维 运营
+            List<FlowActivity> flowActivities=new ArrayList<FlowActivity>();
           if(map.get("begin")!=null&& !"".equals(map.get("begin"))){
-               flowActivities = flowActivityManager.getFlowActivitys(map.get("begin").toString());
+               flowActivities.add(flowActivityManager.getFlowActivity(map.get("begin").toString())) ;
           }
             flow.setActivityList(flowActivities);
             flow.setTitle(map.get("title")!=null && !"".equals(map.get("title")) ? map.get("title").toString():"");
