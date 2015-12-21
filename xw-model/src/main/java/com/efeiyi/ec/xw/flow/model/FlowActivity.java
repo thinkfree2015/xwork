@@ -95,7 +95,7 @@ public class FlowActivity implements Serializable {
     public void setFlow(Flow flow) {
         this.flow = flow;
     }
-    @Column(name = "groupName")
+    @Column(name = "group_name")
 
     public int getGroup() {
         return group;

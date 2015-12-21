@@ -21,59 +21,61 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by Administrator on 2015/12/2.
- *
  */
 @Service
 public class FlowManagerImpl implements FlowManager {
     private static Logger logger = Logger.getLogger(FlowManagerImpl.class);
     @Autowired
     private BaseManager baseManager;
+
     @Override
-    public void createFlow(Map map) throws Exception{
+    public void createFlow(Map map) throws Exception {
         Flow flow;
-        if (StringTools.isEmpty(map.get("flowId"))){
+        if (StringTools.isEmpty(map.get("flowId"))) {
             flow = new Flow();
-        }else{
-            flow = (Flow) baseManager.getObject(Flow.class.getName(),String.valueOf(map.get("id")));
+        } else {
+            flow = (Flow) baseManager.getObject(Flow.class.getName(), String.valueOf(map.get("id")));
         }
-        if (map.size() > 0){
-            flow.setTitle(map.get("title")!=null && !"".equals(map.get("title")) ? map.get("title").toString():"");
+        if (map.size() > 0) {
+            flow.setTitle(map.get("title") != null && !"".equals(map.get("title")) ? map.get("title").toString() : "");
             List<User> users = (List<User>) map.get("users");
             flow.setNotifyUserList(users);//为流程选择成员
             flow.setStatus("1");//立即生效
         }
-        baseManager.saveOrUpdate(Flow.class.getName(),flow);
+        baseManager.saveOrUpdate(Flow.class.getName(), flow);
     }
 
     @Override
-    public Flow getFlow(String taskId)throws Exception {
-        Task task =  (Task)baseManager.getObject(Task.class.getName(), taskId);
+    public Flow getFlow(String taskId) throws Exception {
+        Task task = (Task) baseManager.getObject(Task.class.getName(), taskId);
         return task.getFlow();
     }
 
     @Override
-    public List<Flow> getAllFlows() throws Exception{
+    public List<Flow> getAllFlows() throws Exception {
         return null;
     }
 
     @Override
-    public void updateFlow(String old)throws Exception {
+    public void updateFlow(String old) throws Exception {
 
     }
-    private ConcurrentLinkedQueue<FlowActivity> createFlowActivitys(){
+
+    private ConcurrentLinkedQueue<FlowActivity> createFlowActivitys() {
         return null;
     }
+
     @Override
     public FlowActivity getFlowActivity(String taskId) throws Exception {
-        Task task =null;
-        if (taskId!=null && !"".equals(taskId)){
-             task =  (Task)baseManager.getObject(Task.class.getName(), taskId);
+        Task task = null;
+        if (taskId != null && !"".equals(taskId)) {
+            task = (Task) baseManager.getObject(Task.class.getName(), taskId);
         }
         List<FlowActivity> flowActivityList = task.getFlow().getActivityList();
-        for (FlowActivity flowActivity :flowActivityList){
+        for (FlowActivity flowActivity : flowActivityList) {
             if ("1".equals(flowActivity.getStatus()))//状态为1是激活
-              break;
-            return  flowActivity;
+                break;
+            return flowActivity;
 
         }
         logger.info("pleale check no active  FlowActivity find");
