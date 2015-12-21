@@ -6,22 +6,33 @@
         <entity name="Flow" label="流程"
                 basic="simple" others=""
                 model="com.efeiyi.ec.xw.flow.model.Flow">
+            <!--<fields>-->
+                <!--<field name="sort" label="类型" inputType="select">-->
+                    <!--<statusType fieldName="sort">-->
+                        <!--<item label="运营组" value="1"/>-->
+                        <!--<item label="产品组" value="2"/>-->
+                        <!--<item label="UI设计组" value="3"/>-->
+                        <!--<item label="前端开发组" value="4"/>-->
+                        <!--<item label="开发组" value="5"/>-->
+                        <!--<item label="测试组" value="6"/>-->
+                        <!--<item label="运维组" value="7"/>-->
+                    <!--</statusType>-->
+                <!--</field>-->
+            <!--</fields>-->
             <does>
                 <do name="plistFlow" access="" label="Flow列表"
                     result="/flow/flowPList">
                     <query name="default" label="默认" type="auto" orderBy="id:desc">
-                        <condition  name="id" defaultValue="xx" operation="ne" />
+                        <condition label="主键" name="status" defaultValue="1" operation="eq"/>
                     </query>
                 </do>
+                <do name="formFlow" label="查看" access="" execute="com.efeiyi.ec.xwork.flow.controller.FlowHandle" result="/flow/flowFrom"/>
+                <!--<do name="saveOrUpdateFlow" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>-->
+                <do name="removeFlow" label="删除" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>
                 <do name="formUser" label="查看" access="" result="/user/groupUserForm"/>
                 <do name="saveOrUpdateUserGroup" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistUser_default"/>
                 <do name="listUser" label="用户列表" access="" result="/user/userList">
                     <query name="default" label="默认" type="auto" orderBy="id:desc">
-                        <condition label="主键" name="status" defaultValue="1" operation="eq"/>
-                    </query>
-                </do>
-                <do name="listUser" label="用户列表" access="" result="/user/userList">
-                    <query name="default2" label="默认" type="auto" orderBy="id:desc">
                         <condition label="主键" name="status" defaultValue="1" operation="eq"/>
                     </query>
                 </do>
@@ -31,25 +42,22 @@
                 basic="simple" others=""
                 model="com.efeiyi.ec.xw.flow.model.FlowActivity">
             <fields>
-                <field name="type" label="类型" inputType="select">
-                    <statusType fieldName="type">
-                        <item label="产品组" value="1"/>
-                        <item label="UI设计组" value="2"/>
-                        <item label="前端开发组" value="3"/>
-                        <item label="开发组" value="4"/>
-                        <item label="测试组" value="5"/>
-                        <item label="运营组" value="6"/>
+                <field name="sort" label="类型" inputType="select">
+                    <statusType fieldName="sort">
+                        <item label="运营组" value="1"/>
+                        <item label="产品组" value="2"/>
+                        <item label="UI设计组" value="3"/>
+                        <item label="前端开发组" value="4"/>
+                        <item label="开发组" value="5"/>
+                        <item label="测试组" value="6"/>
                         <item label="运维组" value="7"/>
                     </statusType>
                 </field>
-                <field name="statusType" label="类型" inputType="select">
-                    <statusType fieldName="statusType">
-                        <item label="未处理" value="1"/>
-                        <item label="正在处理" value="2"/>
-                        <item label="搁置" value="3"/>
-                        <item label="已完成" value="4"/>
-                        <item label="已放弃" value="5"/>
-
+                <field name="type" label="类型" inputType="select">
+                    <statusType fieldName="type">
+                        <item label="one" value="1"/>
+                        <item label="xor" value="2"/>
+                        <item label="and" value="3"/>
                     </statusType>
                 </field>
             </fields>
@@ -60,7 +68,10 @@
                         <condition  name="id" defaultValue="xx" operation="ne" />
                     </query>
                 </do>
-
+                <do name="removeFlowActivity" label="删除" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>
+                <do name="formFlowActivity" label="查看" execute="com.efeiyi.ec.xwork.flow.controller.FlowActivityHandle" access="" result="/flow/flowActivityFrom"/>
+                <do name="saveOrUpdateFlowActivity" label="编辑" execute="com.efeiyi.ec.xwork.flow.controller.FlowActivityHandle" access=""
+                    result="redirect:/basic/xm.do?qm=plistFlow_default"/>
             </does>
         </entity>
     </entities>

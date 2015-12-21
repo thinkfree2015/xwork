@@ -1,9 +1,13 @@
 package com.efeiyi.ec.xwork.flow.controller;
 
 import com.efeiyi.ec.xw.flow.model.Flow;
+import com.efeiyi.ec.xw.organization.model.MyUser;
+import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xwork.model.Flow.FlowParamBean;
+import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.process.ProcessEngine;
 import com.ming800.core.base.service.BaseManager;
+import org.hibernate.envers.internal.tools.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,25 +32,39 @@ public class FlowController {
     private ProcessEngine processEngine;
     @Autowired
     private BaseManager baseManager;
-       @RequestMapping({"/flow/createFlow.do"})
-    private String createFlow(FlowParamBean paramBean)throws  Exception{
-        Map<String,Object> map = new HashMap<String,Object>();
+    @RequestMapping({"/flow/createFlow.do"})
+    private String createFlow(FlowParamBean paramBean,HttpServletRequest request)throws  Exception{
+        Map<String,Object> map = new HashMap<>();
         map.put("title",paramBean.getTitle());
-        map.put("begin",paramBean.getBegin());
+        String[] args = request.getParameterValues("user");
+        List<User> list = new ArrayList<>();
+        if (!StringTools.isEmpty(args) && args.length > 0){
+            for(int i = 0;i<args.length;i++){
+                User user = (User) baseManager.getObject(User.class.getName(),String.valueOf(args[i]));
+                list.add(user);
+            }
+        }
+        paramBean.setNotifyUserList(list);
+        if (!StringTools.isEmpty(paramBean.getId())){
+            map.put("flowId",paramBean.getId());
+        }
+        map.put("users",paramBean.getNotifyUserList());
         processEngine.createFlow(map);
-        return "/flow/flowPList";
+        return "redirect:/basic/xm.do?qm=plistFlow_default";
     }
 
-    @ResponseBody
-    @RequestMapping({"/flow/removeFlow/{flowId}"})
-    private String removeFlow(@PathVariable String flowId, HttpServletRequest request)throws  Exception{
-        baseManager.remove(Flow.class.getName(),flowId);
-        return "succ";
-    }
-
-    @RequestMapping({"/flow/newFlow.do"})
-    private String showNewFlowFrom()throws  Exception{
-        return "/flow/flowFrom";
-    }
+//    @ResponseBody
+//    @RequestMapping({"/flow/removeFlow/{flowId}"})
+//    private String removeFlow(@PathVariable String flowId, HttpServletRequest request)throws  Exception{
+//        baseManager.remove(Flow.class.getName(),flowId);
+//        return "succ";
+//    }
+//
+//    @RequestMapping({"/flow/newFlow.do"})
+//    private String showNewFlowFrom(ModelMap modelMap)throws  Exception{
+//        MyUser user = AuthorizationUtil.getMyUser();
+//        modelMap.addAttribute("myUser",user);
+//        return "/flow/flowFrom";
+//    }
 
 }

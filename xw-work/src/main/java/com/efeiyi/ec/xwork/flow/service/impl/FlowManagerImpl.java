@@ -9,6 +9,7 @@ import com.efeiyi.ec.xwork.flow.service.FlowManager;
 import com.ming800.core.base.dao.XdoDao;
 import com.ming800.core.base.service.BaseManager;
 import org.apache.log4j.Logger;
+import org.hibernate.envers.internal.tools.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,26 +26,21 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class FlowManagerImpl implements FlowManager {
     private static Logger logger = Logger.getLogger(FlowManagerImpl.class);
     @Autowired
-    private XdoDao xdoDao;
-    @Autowired
     private BaseManager baseManager;
-    @Autowired
-    private FlowActivityManager flowActivityManager;
     @Override
     public void createFlow(Map map) throws Exception{
-        Flow flow = new Flow();
+        Flow flow;
+        if (StringTools.isEmpty(map.get("flowId"))){
+            flow = new Flow();
+        }else{
+            flow = (Flow) baseManager.getObject(Flow.class.getName(),String.valueOf(map.get("flowId")));
+        }
         if (map!=null || map.size()==0){
-            List<FlowActivity> flowActivities=null;
             //标准流程 添加标准的5个节点   产品 ui 前端 开发 测试 运维 运营
-          if(map.get("begin")!=null&& !"".equals(map.get("begin"))){
-               flowActivities = flowActivityManager.getFlowActivitys(map.get("begin").toString());
-          }
-            flow.setActivityList(flowActivities);
             flow.setTitle(map.get("title")!=null && !"".equals(map.get("title")) ? map.get("title").toString():"");
-            List<User> users = xdoDao.getObjectList("FROM User where status!='0' ", new LinkedHashMap<String, Object>());
-            flow.setNotifyUserList(users);//默认为流程添加所有成员
+            List<User> users = (List<User>) map.get("users");
+            flow.setNotifyUserList(users);//为流程选择成员
             flow.setStatus("1");//立即生效
-            flow.setType(map.get("begin").toString());//扩展字段
         }
         baseManager.saveOrUpdate(Flow.class.getName(),flow);
     }
