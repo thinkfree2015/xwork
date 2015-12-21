@@ -120,28 +120,32 @@ public class ProcessEngine implements WebApplicationInitializer,ApplicationConte
 
     /**
      * 流转处理
-     * @param taskId ,next
+     * @param taskId ,next 下一流程节点
      * @return nextFlowActivity
      */
     public FlowActivity flowRule(String taskId,String next)throws  Exception{
 
         if(taskId==null && !"".equals(taskId) && next==null && !"".equals(next)){
-
             log.info("args is null,please check again");
             return null;
          }
-        int nexts = Integer.parseInt(next);//下一流程节点
+        //int nexts = Integer.parseInt(next);//
         //获取当前流程节点
         FlowActivity flowActivity = getFlowActivity(taskId);
-        int location = flowActivity.getSort();
         Flow flow = flowActivity.getFlow();
         //目前简化流转规则
-        //结束当前节点，激活指定节点  <--- or --->
+        //结束当前节点，激活指定节点
         flowActivity.setStatus("0");
-        FlowActivity nextFlowActivity = flow.getActivityList().get(nexts);
+        FlowActivity nextFlowActivity =((FlowActivityManagerImpl)ContextUtils.getBean("flowActivityManagerImpl")).getFlowActivity(next);
+        //FlowActivity nextFlowActivity = flow.getActivityList().get(nexts);
+        List<FlowActivity> flowActivities = flow.getActivityList();
+        flowActivities.add(nextFlowActivity);
         nextFlowActivity.setStatus("1");
+        nextFlowActivity.setSort(flowActivity.getSort()+1);
+        flow.setActivityList(flowActivities);
         xdoDao.saveOrUpdateObject(FlowActivity.class.getName(),flowActivity);
         xdoDao.saveOrUpdateObject(FlowActivity.class.getName(),nextFlowActivity);
+        xdoDao.saveOrUpdateObject(Flow.class.getName(),flow);
 
         return nextFlowActivity;
     }

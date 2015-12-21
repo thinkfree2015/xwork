@@ -20,12 +20,11 @@
 <body>
 <div style="text-align: left;margin-left: 10px;" >
   <div class="am-cf am-padding">
-    <a href="<c:url value="/flow/newFlowActivity.do" /> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建流程实例节点</a>
-    <%--<div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">新建/编辑流程</strong> / <small>New/Edit Flow</small></div>--%>
+    <%--<a href="<c:url value="/flow/newFlowActivity.do" /> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建流程实例节点</a>--%>
   </div>
 
 </div>
-<jsp:include page="/do/generateTabs.do?qm=${requestScope.qm}&conditions=${requestScope.conditions}"/>
+<%--<jsp:include page="/do/generateTabs.do?qm=${requestScope.qm}&conditions=${requestScope.conditions}"/>--%>
 <table class="am-table am-table-bordered am-table-radius am-table-striped" >
   <tr style="text-align: left">
     <td  width="35%">操作</td>
@@ -38,8 +37,8 @@
       <td>
         <div class="am-btn-toolbar">
           <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-            <button onclick="removeUser('${object.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
-            <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
+            <button onclick="removeFlow('${object.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
+            <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formFlowActivity&param=formFlowActivity&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
           </div>
         </div>
       </td>
@@ -49,15 +48,15 @@
         </c:if>
       </td>
       <td width="30%">
-        <c:if test="${!empty object.sort}">
+        <c:if test="${!empty object.group}">
           <c:choose>
-            <c:when test="${object.sort  eq 1}">产品组</c:when>
-            <c:when test="${object.sort  eq 2}">UI设计组</c:when>
-            <c:when test="${object.sort  eq 3}">前端开发组</c:when>
-            <c:when test="${object.sort  eq 4}">开发组</c:when>
-            <c:when test="${object.sort  eq 5}">测试组</c:when>
-            <c:when test="${object.sort  eq 6}">运营组</c:when>
-            <c:when test="${object.sort  eq 7}">运维组</c:when>
+            <c:when test="${object.group  eq 1}">产品组</c:when>
+            <c:when test="${object.group  eq 2}">UI设计组</c:when>
+            <c:when test="${object.group  eq 3}">前端开发组</c:when>
+            <c:when test="${object.group  eq 4}">开发组</c:when>
+            <c:when test="${object.group  eq 5}">测试组</c:when>
+            <c:when test="${object.group  eq 6}">运营组</c:when>
+            <c:when test="${object.group  eq 7}">运维组</c:when>
             <c:otherwise>尚未定义</c:otherwise>
           </c:choose>
         </c:if>
@@ -75,7 +74,7 @@
 </div>
 <script>
 
-  function removeUser(flowActivityId){
+  function removeFlow(flowActivityId){
 
     $.ajax({
       type:"get",

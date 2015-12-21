@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ public class FlowActivityManagerImpl implements FlowActivityManager {
 
 
     @Override
-    public void createFlowActivity(Map map)throws Exception{
+    public void createFlowActivity(Map map)throws Exception{//测试使用
         logger.info("create flowActivity begin");
         int index = Integer.parseInt(map.get("sort").toString());
         FlowActivity  flowActivity = new FlowActivity();
@@ -40,19 +42,53 @@ public class FlowActivityManagerImpl implements FlowActivityManager {
             flowActivity.setSort(index);
         }
         //获取默认任的该节点的用户
-        List<User> users = xdoDao.getObjectList("from User where group=? and status!='0' order by id desc", new Object[]{index});
+        List<User> users = xdoDao.getObjectList("from User where groupName=? and status!='0' order by id desc", new Object[]{index});
         flowActivity.setUser(users);
         baseManager.saveOrUpdate(FlowActivity.class.getName(),flowActivity);
         logger.info("create flowActivity success");
     }
     /**
-     * 获取流程节点
+     * 生成流程节点   默认
      * @param index is sort
      *根据用户选择的流程创建相应节点
      */
     @Override
-    public List<FlowActivity> getFlowActivitys(String index) throws Exception {
-        return  xdoDao.getObjectList("from FlowActivity where sort>=? order by id desc", new Object[]{ Integer.parseInt(index)});
+    public FlowActivity getFlowActivity(String index) throws Exception {
+        //return  xdoDao.getObjectList("from FlowActivity where sort>=? order by id desc", new Object[]{ Integer.parseInt(index)});
+
+        int begin = Integer.parseInt(index);
+            FlowActivity  flowActivity = new FlowActivity();
+            String title;
+           switch (begin){
+               case 1:
+                   title="运营组";
+                   break;
+               case 2:
+                   title="产品组";
+                   break;
+               case 3:
+                   title="UI设计组";
+                   break;
+               case 4:
+                   title="前端开发组";
+                   break;
+               case 5:
+                   title="开发组";
+                   break;
+               case 6:
+                   title="测试组";
+                   break;
+             default:title="运维组";
+            }
+            flowActivity.setTitle(title);
+            flowActivity.setType("one");
+            flowActivity.setSort(1);
+            flowActivity.setStatus("1");
+            //获取默认任的该节点的用户
+            List<User> users = xdoDao.getObjectList("from User where groupName=? and status!='0' order by id desc", new Object[]{index});
+            flowActivity.setUser(users);
+            baseManager.saveOrUpdate(FlowActivity.class.getName(),flowActivity);
+        return  flowActivity;
     }
 
 
