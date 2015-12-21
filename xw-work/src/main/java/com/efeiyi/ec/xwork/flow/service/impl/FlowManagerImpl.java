@@ -9,9 +9,11 @@ import com.efeiyi.ec.xwork.flow.service.FlowManager;
 import com.ming800.core.base.dao.XdoDao;
 import com.ming800.core.base.service.BaseManager;
 import org.apache.log4j.Logger;
+import org.hibernate.envers.internal.tools.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,15 +34,9 @@ public class FlowManagerImpl implements FlowManager {
         if (StringTools.isEmpty(map.get("flowId"))){
             flow = new Flow();
         }else{
-            flow = (Flow) baseManager.getObject(Flow.class.getName(),String.valueOf(map.get("flowId")));
+            flow = (Flow) baseManager.getObject(Flow.class.getName(),String.valueOf(map.get("id")));
         }
-        if (map!=null || map.size()==0){
-            List<FlowActivity> flowActivities=null;
-            //标准流程 添加标准的5个节点   产品 ui 前端 开发 测试 运维 运营
-          if(map.get("begin")!=null&& !"".equals(map.get("begin"))){
-               flowActivities = flowActivityManager.getFlowActivitys(map.get("begin").toString());
-          }
-            flow.setActivityList(flowActivities);
+        if (map.size() > 0){
             flow.setTitle(map.get("title")!=null && !"".equals(map.get("title")) ? map.get("title").toString():"");
             List<User> users = (List<User>) map.get("users");
             flow.setNotifyUserList(users);//为流程选择成员
@@ -53,7 +49,7 @@ public class FlowManagerImpl implements FlowManager {
     public Flow getFlow(String taskId)throws Exception {
         Task task =  (Task)baseManager.getObject(Task.class.getName(), taskId);
         return task.getFlow();
-}
+    }
 
     @Override
     public List<Flow> getAllFlows() throws Exception{

@@ -6,19 +6,6 @@
         <entity name="Flow" label="流程"
                 basic="simple" others=""
                 model="com.efeiyi.ec.xw.flow.model.Flow">
-            <!--<fields>-->
-                <!--<field name="sort" label="类型" inputType="select">-->
-                    <!--<statusType fieldName="sort">-->
-                        <!--<item label="运营组" value="1"/>-->
-                        <!--<item label="产品组" value="2"/>-->
-                        <!--<item label="UI设计组" value="3"/>-->
-                        <!--<item label="前端开发组" value="4"/>-->
-                        <!--<item label="开发组" value="5"/>-->
-                        <!--<item label="测试组" value="6"/>-->
-                        <!--<item label="运维组" value="7"/>-->
-                    <!--</statusType>-->
-                <!--</field>-->
-            <!--</fields>-->
             <does>
                 <do name="plistFlow" access="" label="Flow列表"
                     result="/flow/flowPList">
@@ -28,6 +15,7 @@
                 </do>
                 <do name="formFlow" label="查看" access="" execute="com.efeiyi.ec.xwork.flow.controller.FlowHandle" result="/flow/flowFrom"/>
                 <!--<do name="saveOrUpdateFlow" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>-->
+                <do name="viewFlow" label="删除" access="" result="/flow/viewFrom"/>
                 <do name="removeFlow" label="删除" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>
                 <do name="formUser" label="查看" access="" result="/user/groupUserForm"/>
                 <do name="saveOrUpdateUserGroup" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistUser_default"/>
