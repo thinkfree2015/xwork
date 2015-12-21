@@ -34,7 +34,7 @@ public class FlowManagerImpl implements FlowManager {
         if (StringTools.isEmpty(map.get("flowId"))) {
             flow = new Flow();
         } else {
-            flow = (Flow) baseManager.getObject(Flow.class.getName(), String.valueOf(map.get("id")));
+            flow = (Flow) baseManager.getObject(Flow.class.getName(), String.valueOf(map.get("flowId")));
         }
         if (map.size() > 0) {
             flow.setTitle(map.get("title") != null && !"".equals(map.get("title")) ? map.get("title").toString() : "");

@@ -50,28 +50,52 @@ public class FlowHandle implements DoHandler {
                 Map<User,String> map = new HashMap<>();
                 String flagg;
                 if ("1".equals(String.valueOf(user.getGroupName()))) {
-                    flagg = equal(user);
-                    map.put(user,flagg);
+                    if (flow != null && flow.getId() != null){
+                        flagg = equal(user);
+                        map.put(user,flagg);
+                    }else{
+                        map.put(user,"");
+                    }
                     proList.add(map);
                 } else if ("2".equals(String.valueOf(user.getGroupName()))) {
-                    flagg = equal(user);
-                    map.put(user,flagg);
+                    if (flow != null && flow.getId() != null){
+                        flagg = equal(user);
+                        map.put(user,flagg);
+                    }else{
+                        map.put(user,"");
+                    }
                     uiList.add(map);
                 } else if ("3".equals(String.valueOf(user.getGroupName()))) {
-                    flagg = equal(user);
-                    map.put(user,flagg);
+                    if (flow != null && flow.getId() != null){
+                        flagg = equal(user);
+                        map.put(user,flagg);
+                    }else{
+                        map.put(user,"");
+                    }
                     webList.add(map);
                 } else if ("4".equals(String.valueOf(user.getGroupName()))) {
-                    flagg = equal(user);
-                    map.put(user,flagg);
+                    if (flow != null && flow.getId() != null){
+                        flagg = equal(user);
+                        map.put(user,flagg);
+                    }else{
+                        map.put(user,"");
+                    }
                     devList.add(map);
                 } else if ("5".equals(String.valueOf(user.getGroupName()))) {
-                    flagg = equal(user);
-                    map.put(user,flagg);
+                    if (flow != null && flow.getId() != null){
+                        flagg = equal(user);
+                        map.put(user,flagg);
+                    }else{
+                        map.put(user,"");
+                    }
                     testList.add(map);
                 } else if ("6".equals(String.valueOf(user.getGroupName()))) {
-                    flagg = equal(user);
-                    map.put(user,flagg);
+                    if (flow != null && flow.getId() != null){
+                        flagg = equal(user);
+                        map.put(user,flagg);
+                    }else{
+                        map.put(user,"");
+                    }
                     operateList.add(map);
                 }
             }

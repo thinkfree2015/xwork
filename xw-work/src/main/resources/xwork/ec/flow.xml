@@ -15,7 +15,7 @@
                 </do>
                 <do name="formFlow" label="查看" access="" execute="com.efeiyi.ec.xwork.flow.controller.FlowHandle" result="/flow/flowFrom"/>
                 <!--<do name="saveOrUpdateFlow" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>-->
-                <do name="viewFlow" label="删除" access="" result="/flow/viewFrom"/>
+                <do name="viewFlow" label="删除" access="" execute="com.efeiyi.ec.xwork.flow.controller.FlowHandle" result="/flow/flowView"/>
                 <do name="removeFlow" label="删除" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>
                 <do name="formUser" label="查看" access="" result="/user/groupUserForm"/>
                 <do name="saveOrUpdateUserGroup" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistUser_default"/>
