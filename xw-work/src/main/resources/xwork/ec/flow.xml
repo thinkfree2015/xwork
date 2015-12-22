@@ -20,8 +20,8 @@
                         <condition label="主键" name="status" defaultValue="1" operation="eq"/>
                     </query>
                 </do>
-                <do name="listUser" label="用户列表" access="" result="/user/userList">
-                    <query name="default2" label="默认" type="auto" orderBy="id:desc">
+                <do name="listFlow" label="用户列表" access="" result="/user/userList">
+                    <query name="default1" label="默认" type="auto" orderBy="id:desc">
                         <condition label="主键" name="status" defaultValue="1" operation="eq"/>
                     </query>
                 </do>
@@ -33,6 +33,7 @@
             <fields>
                 <field name="type" label="类型" inputType="select">
                     <statusType fieldName="type">
+                        <item label="请选择" value="100"/>
                         <item label="产品组" value="1"/>
                         <item label="UI设计组" value="2"/>
                         <item label="前端开发组" value="3"/>

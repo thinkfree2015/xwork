@@ -23,7 +23,7 @@ public class FlowActivity implements Serializable {
     private String status;
     private Integer sort;
     private Flow flow;
-    private int group;
+    private Integer group;
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
     @GeneratedValue(generator = "id")
@@ -95,13 +95,12 @@ public class FlowActivity implements Serializable {
     public void setFlow(Flow flow) {
         this.flow = flow;
     }
-    @Column(name = "groupName")
-
-    public int getGroup() {
+    @Column(name = "group_name")
+    public Integer getGroup() {
         return group;
     }
 
-    public void setGroup(int group) {
+    public void setGroup(Integer group) {
         this.group = group;
     }
 }

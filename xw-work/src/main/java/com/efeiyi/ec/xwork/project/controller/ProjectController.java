@@ -1,5 +1,6 @@
 package com.efeiyi.ec.xwork.project.controller;
 
+import com.efeiyi.ec.xw.flow.model.Flow;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.project.model.Project;
 import com.efeiyi.ec.xw.task.model.Task;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,6 +32,14 @@ public class ProjectController extends BaseController {
 
     @Autowired
     private ProjectManager projectManager;
+
+    /**
+     * 保存项目爱
+     * @param request
+     * @param project
+     * @param resultPage
+     * @return
+     */
     @RequestMapping("/saveProject.do")
     public  String saveProject(HttpServletRequest request,Project project,String resultPage){
         String [] memberList = request.getParameterValues("user");
@@ -39,6 +51,12 @@ public class ProjectController extends BaseController {
         return  resultPage;
     }
 
+    /**
+     * 添加任务清单
+     * @param taskGroup
+     * @param projectId
+     * @return
+     */
     @RequestMapping("/addTaskGroup.do")
     @ResponseBody
     public  String addTaskGroup(TaskGroup taskGroup,String projectId){
@@ -51,22 +69,26 @@ public class ProjectController extends BaseController {
        return taskGroup.getId();
     }
 
+    /**
+     * 添加任务
+     * @param taskGroupId
+     * @param title
+     * @param flowId
+     * @return
+     */
     @RequestMapping("/addTask.do")
     @ResponseBody
-    public  String addTask(String taskGroupId,String title){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String date = sdf.format(new Date());
-        Task task = new Task();
-        try {
-            task.setTitle(title);
-            task.setCreateDatetime(sdf.parse(date));
-            task.setTaskGroup((TaskGroup)baseManager.getObject(TaskGroup.class.getName(),taskGroupId));
-            baseManager.saveOrUpdate(Task.class.getName(),task);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public  String addTask(String taskGroupId,String title,String flowId){
+        Task task = projectManager.saveTask(taskGroupId,title,flowId);
         return task.getId();
     }
+
+    /**
+     * 分配任务
+     * @param taskId
+     * @param userId
+     * @return
+     */
     @RequestMapping("/sendUser.do")
     @ResponseBody
     public  String sendUser(String taskId,String userId){
@@ -83,5 +105,21 @@ public class ProjectController extends BaseController {
         }
         return taskId;
     }
+
+
+    @RequestMapping("/changeActivity.do")
+    @ResponseBody
+    public   Map<String,List> changeActivity(String flowId){
+        Map<String,List> map = new HashMap<>();
+        try {
+            Flow flow = (Flow)baseManager.getObject(Flow.class.getName(),flowId);
+            map.put("users",flow.getActivityList().get(0).getUser());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return map;
+    }
+
 
 }

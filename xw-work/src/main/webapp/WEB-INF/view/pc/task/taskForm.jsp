@@ -15,6 +15,45 @@
     <title></title>
     <script src="<c:url value="/scripts/task.js" />"></script>
     <script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>
+    <style type="text/css">
+        .todo-content {
+            display: inline-block;
+            width: 465px;
+            padding: 0 35px 0 0;
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+            vertical-align: top;
+            word-break: break-all;
+        }
+        .no-border {
+            border: none;
+            border-bottom: 1px dashed #cccccc;
+            border-radius: 0;
+        }
+
+        textarea{
+            outline: 0 none;
+            font-family: monospace;
+            overflow-y:visible;
+            -webkit-appearance: textarea;
+            background-color: white;
+            -webkit-rtl-ordering: logical;
+            -webkit-user-select: text;
+            flex-direction: column;
+            white-space: pre-wrap;
+            text-rendering: auto;
+            color: initial;
+            letter-spacing: normal;
+            word-spacing: normal;
+            text-transform: none;
+            text-indent: 0px;
+            text-shadow: none;
+            text-align: start;
+            -webkit-writing-mode: horizontal-tb;
+            box-shadow: none;
+        }
+    </style>
 </head>
 <body>
 <div class="am-cf am-padding">
@@ -23,79 +62,155 @@
 
 
 <div class="am-g">
-    <fieldset>
-        <legend>
+    <div class="project">
+        <div>
+            <span>项目:项目一</span>
+            <span>清单</span>
+            <span>流程:${object.flow.title}</span>
+            <span>当前节点:${object.currentInstance.flowActivity.title}</span>
+        </div>
+        <div>
+            <ul>
+                <li class="todo">
+                    <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
+                        <div  style="padding-left: 10px;">
+                            <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
+                            <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>
+                            <a href="javascript:void (0);"></a>
+                        </div>
+                    </div>
+                    <div class="todo-wrap" style="position:relative ;left: 10px;">
+                         <span>
+                              <a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${object.title}</a>
+                         </span>
 
-            <div>
-                <input type="checkbox">
-                <div class="am-dropdown" data-am-dropdown>
-                    <a  href="javascript:void (0);" class="am-dropdown-toggle" data-am-dropdown-toggle><img src="<c:url value="/scripts/image/taskDown2.png"/>" alt="编辑"/>
-                        <ul class="am-dropdown-content">
-                            <li><a href="#"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/> 编辑</a></li>
-                            <li><a href="#"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/> 删除</a></li>
-                        </ul>
-                    </a>
-                </div>
-                ${object.title}
-
-                <select  onchange="sendUser(this,'${object.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%">
-                    <option value="null" <c:if test="${empty object.currentUser}">selected="selected"</c:if>>未指派</option>
-                    <c:forEach var="member" items="${userList}">
-                        <option value="${member.user.id}" <c:if test="${member.user.id==object.currentUser.id}">selected="selected"</c:if>>${member.user.username}</option>
-                    </c:forEach>
-
-                </select>
-
-            </div>
-
-            <p style="text-indent:2em">
-                <span id="OldContent">${object.content}</span>
-                <small style="margin-left: 85%">
-                    <a href="javascript:void (0);" onclick="editTask('${object.id}')" class="a"> 编辑</a>
-                </small>
-            </p>
-            <div style="width: 100%;display: none" id="EditContent">
-            <p style="text-indent:2em">
-                <textarea rows="3" cols="4" style="width: 78%" id="TextContent">${object.content}</textarea>
-                <div class="am-margin" style="margin-left: 40px;">
-                <a href="javascript:void (0);" onclick="saveContent('2');" class="am-btn am-btn-primary am-btn-xs">保存</a>
-                <a href="javascript:void (0);" onclick="cancelContent('2');" class="am-btn am-btn-primary am-btn-xs">取消</a>
-                </div>
-            </p>
-            </div>
-
-
-        </legend>
-        <c:forEach var="taskActivity" items="${object.taskActivityList}">
-              <div>
-                  <fmt:formatDate value="${taskActivity.createDatetime}" pattern="yyyy-MM-dd hh:mm" type="both"/>
-                  &nbsp;&nbsp;${taskActivity.excutor.username}&nbsp;&nbsp;<ming800:status name="status" dataType="FlowActivity.statusType" checkedValue="${taskActivity.status}" type="normal"/>这条任务
-              </div>
+                         <span>
+ 　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">
+                             　　　　<option value="null">请选择成员</option>
+                             　　　　　<c:forEach var="user" items="${object.currentInstance.flowActivity.user}">
+                             　　　　　　　<option value="${user.id}" <c:if test="${object.currentUser.id==user.id}">selected="selected"</c:if>>${user.title}</option>
+                             　　　　　</c:forEach>
+                             　　</select>
+                         </span>
+                    </div>
+                </li>
+            </ul>
+            <small>
+                <a href="javascript:void (0);">添加/编辑任务描述</a>
+            </small>
+        </div>
+        <div>
+            任务描述
+        </div>
+    </div>
+    <hr/>
+    <div class="">
+        <c:forEach var="dynamic" items="${object.taskDynamicList}">
 
         </c:forEach>
-        <hr>
-        <form action="<c:url value="/project/saveProject.do"/>"  class="am-form am-form-horizontal" method="post" enctype="multipart/form-data">
+        <div>动态一</div>
+        <div>动态二</div>
+        <div>动态三</div>
+        <div>动态四</div>
+    </div>
+    <hr/>
+    <div class="">
+        <c:forEach var="taskNote" items="${object.taskNoteList}">
 
-             <textarea  name="content" class="ckeditor" id="content"
-                        placeholder="任务描述">
+        </c:forEach>
+        <div>评论一</div>
+        <div>评论二</div>
+        <div>评论三</div>
+        <div>评论四</div>
+    </div>
+    <hr/>
+    <div class="pinglun">
+        <label>发表评论:</label>
+        <textarea class="" style="width: 65%;" rows="3" cols="4"></textarea>
+    </div>
 
-             </textarea>
 
 
-            <div class="am-margin">
-                <a href="javascript:void (0);" onclick="toSubmitZH('2');" class="am-btn am-btn-primary am-btn-xs">发表评论</a>
-            </div>
-        </form>
-    </fieldset>
+    <%--<fieldset>--%>
+        <%--<legend>--%>
+
+            <%--<div>--%>
+                <%--<input type="checkbox">--%>
+                <%--<div class="am-dropdown" data-am-dropdown>--%>
+                    <%--<a  href="javascript:void (0);" class="am-dropdown-toggle" data-am-dropdown-toggle><img src="<c:url value="/scripts/image/taskDown2.png"/>" alt="编辑"/>--%>
+                        <%--<ul class="am-dropdown-content">--%>
+                            <%--<li><a href="#"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/> 编辑</a></li>--%>
+                            <%--<li><a href="#"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/> 删除</a></li>--%>
+                        <%--</ul>--%>
+                    <%--</a>--%>
+                <%--</div>--%>
+                <%--${object.title}--%>
+
+                <%--<select  onchange="sendUser(this,'${object.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%">--%>
+                    <%--<option value="null" <c:if test="${empty object.currentUser}">selected="selected"</c:if>>未指派</option>--%>
+                    <%--<c:forEach var="member" items="${userList}">--%>
+                        <%--<option value="${member.user.id}" <c:if test="${member.user.id==object.currentUser.id}">selected="selected"</c:if>>${member.user.username}</option>--%>
+                    <%--</c:forEach>--%>
+
+                <%--</select>--%>
+
+            <%--</div>--%>
+
+            <%--<p style="text-indent:2em">--%>
+                <%--<span id="OldContent">${object.content}</span>--%>
+                <%--<small style="margin-left: 85%">--%>
+                    <%--<a href="javascript:void (0);" onclick="editTask('${object.id}')" class="a"> 编辑</a>--%>
+                <%--</small>--%>
+            <%--</p>--%>
+            <%--<div style="width: 100%;display: none" id="EditContent">--%>
+            <%--<p style="text-indent:2em">--%>
+                <%--<textarea rows="3" cols="4" style="width: 78%" id="TextContent">${object.content}</textarea>--%>
+                <%--<div class="am-margin" style="margin-left: 40px;">--%>
+                <%--<a href="javascript:void (0);" onclick="saveContent('2');" class="am-btn am-btn-primary am-btn-xs">保存</a>--%>
+                <%--<a href="javascript:void (0);" onclick="cancelContent('2');" class="am-btn am-btn-primary am-btn-xs">取消</a>--%>
+                <%--</div>--%>
+            <%--</p>--%>
+            <%--</div>--%>
+
+
+        <%--</legend>--%>
+        <%--<c:forEach var="taskActivity" items="${object.taskActivityList}">--%>
+              <%--<div>--%>
+                  <%--<fmt:formatDate value="${taskActivity.createDatetime}" pattern="yyyy-MM-dd hh:mm" type="both"/>--%>
+                  <%--&nbsp;&nbsp;${taskActivity.excutor.username}&nbsp;&nbsp;<ming800:status name="status" dataType="FlowActivity.statusType" checkedValue="${taskActivity.status}" type="normal"/>这条任务--%>
+              <%--</div>--%>
+
+        <%--</c:forEach>--%>
+        <%--<hr>--%>
+        <%--<form action="<c:url value="/project/saveProject.do"/>"  class="am-form am-form-horizontal" method="post" enctype="multipart/form-data">--%>
+
+             <%--<textarea  name="content" class="ckeditor" id="content"--%>
+                        <%--placeholder="任务描述">--%>
+
+             <%--</textarea>--%>
+
+
+            <%--<div class="am-margin">--%>
+                <%--<a href="javascript:void (0);" onclick="toSubmitZH('2');" class="am-btn am-btn-primary am-btn-xs">发表评论</a>--%>
+            <%--</div>--%>
+        <%--</form>--%>
+    <%--</fieldset>--%>
 
 </div>
 <!-- content end -->
 <hr/>
 
 <script type="text/javascript">
-$(function(){
-    CKEDITOR.replace('content', {height: '300px', width: '1000px'});
-});
+    //初始化操作
+    $(function(){
+        $(".todo").hover(function(){
+            $(this).find(".todo-action").css({"display":"block"});
+        },function(){
+            $(this).find(".todo-action").css({"display":"none"});
+        });
+        CKEDITOR.replace('content', {height: '300px', width: '1000px'});
+
+    });
 
 
     function editTask(){
