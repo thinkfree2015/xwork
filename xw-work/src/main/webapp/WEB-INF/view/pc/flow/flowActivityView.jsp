@@ -16,7 +16,7 @@
 </head>
 <body>
 <div class="am-cf am-padding">
-    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">新建/编辑流程节点</strong> / <small>New/Edit FlowActivity</small></div>
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">查看流程节点</strong> / <small>View FlowActivity</small></div>
 </div>
 <hr/>
 
@@ -30,13 +30,13 @@
         <div class="am-form-group">
             <label name="title" for="title" class="am-u-sm-3 am-form-label">流程节点标题 <small>*</small></label>
             <div class="am-u-sm-9">
-                <input type="text" name="title" id="title" placeholder="流程节点标题" value="${object.title}">
+                <input type="text" name="title" id="title" disabled="disabled" placeholder="流程节点标题" value="${object.title}">
             </div>
         </div>
         <div class="am-form-group">
             <label name="group"  class="am-u-sm-3 am-form-label">流程节点所属小组 <small>*</small></label>
             <div class="am-u-sm-9">
-                <ming800:status name="sort" dataType="FlowActivity.sort" checkedValue="${object.sort}" onchange="setCheckbox();" type="select"/>
+                <ming800:status name="sort" dataType="FlowActivity.sort" onclick="return false;" checkedValue="${object.sort}" onchange="setCheckbox();" type="select"/>
             </div>
         </div>
         <div class="am-form-group">
@@ -60,7 +60,7 @@
         </div>
         <div class="am-form-group">
             <div class="am-u-sm-9 am-u-sm-push-3">
-                <input type="submit" class="am-btn am-btn-primary" value="保存"/>
+                <input type="submit" class="am-btn am-btn-primary" disabled="disabled" value="保存"/>
             </div>
         </div>
     </form>
@@ -104,9 +104,9 @@
                 for(var i in data){
                     var keyVal = i.substring(16, i.length);
                     if(keyVal == "true"){
-                        sub += "<input name=\"user\" checked='checked' type=\"checkbox\" value=\""+data[i].id+"\"/>";
+                        sub += "<input name=\"user\" checked='checked' disabled=\"disabled\" type=\"checkbox\" value=\""+data[i].id+"\"/>";
                     }else if(keyVal == "false"){
-                        sub += "<input name=\"user\" type=\"checkbox\" value=\""+data[i].id+"\"/>";
+                        sub += "<input name=\"user\" type=\"checkbox\" disabled=\"disabled\" value=\""+data[i].id+"\"/>";
                     }
                     sub += "<a href=\"javascript:void (0)\">"+data[i].name+"</a>";
                 }

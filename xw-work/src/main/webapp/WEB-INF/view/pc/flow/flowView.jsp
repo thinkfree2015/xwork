@@ -21,7 +21,7 @@
 </div>
 
 <div class="am-cf am-padding">
-    <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}"/> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
+    <a onclick="return false;" href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}"/> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
 </div>
 <hr/>
 <div class="am-g">
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="am-form-group">
-            <label name="context"  class="am-u-sm-3 am-form-label">成员 </label>
+            <label name="context" class="am-u-sm-3 am-form-label">成员 </label>
             <div class="am-u-sm-9">
                 <div class="am-tabs am-margin" data-am-tabs>
                     <ul class="am-tabs-nav am-nav am-nav-tabs">
@@ -173,13 +173,13 @@
                     <td>
                         <div class="am-btn-toolbar">
                             <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-                                <button disabled="disabled" onclick="removeUser('${pop.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
+                                <button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
                                 <button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
                             </div>
                         </div>
                     </td>
                     <td width="35%">
-                        <a href="<c:url value='/basic/xm.do?qm=formFlowActivity&id=${pop.id}'/>">
+                        <a href="<c:url value='/basic/xm.do?qm=viewFlowActivity&id=${pop.id}'/>">
                             <c:if test="${!empty pop.title}">
                                 ${pop.title}
                             </c:if>
