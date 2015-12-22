@@ -1,9 +1,11 @@
 package com.efeiyi.ec.xw.task.model;
 
+import com.efeiyi.ec.xw.flow.model.FlowActivity;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.loader.plan.spi.Fetch;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,6 +27,8 @@ public class TaskActivityInstance implements Serializable {
     private User excutor;
     private Date createDatetime;
     private Task task;
+    private FlowActivity flowActivity;
+    private String activate;//0 :未激活 1 : 激活
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -96,5 +100,24 @@ public class TaskActivityInstance implements Serializable {
 
     public void setFatherTaskActivityInstance(TaskActivityInstance fatherTaskActivityInstance) {
         this.fatherTaskActivityInstance = fatherTaskActivityInstance;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "flow_activity_id")
+    public FlowActivity getFlowActivity() {
+        return flowActivity;
+    }
+
+    public void setFlowActivity(FlowActivity flowActivity) {
+        this.flowActivity = flowActivity;
+    }
+
+    @Column(name = "activate")
+    public String getActivate() {
+        return activate;
+    }
+
+    public void setActivate(String activate) {
+        this.activate = activate;
     }
 }

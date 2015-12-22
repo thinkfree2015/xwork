@@ -26,9 +26,12 @@ public class Task implements Serializable {
     private List<TaskActivityInstance> taskActivityList;
     private List<User> UsernotifyUserList;//   发起者/管理者
     private List<TaskAttachment> taskAttachmentList;
+    private List<TaskNote> taskNoteList;//评论及回复
+    private List<TaskDynamic> taskDynamicList;//动态
     private Flow flow;
     private User author;
     private Date createDatetime;
+    private TaskActivityInstance currentInstance;
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -125,5 +128,35 @@ public class Task implements Serializable {
 
     public void setCreateDatetime(Date createDatetime) {
         this.createDatetime = createDatetime;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
+    public List<TaskDynamic> getTaskDynamicList() {
+        return taskDynamicList;
+    }
+
+    public void setTaskDynamicList(List<TaskDynamic> taskDynamicList) {
+        this.taskDynamicList = taskDynamicList;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
+    public List<TaskNote> getTaskNoteList() {
+        return taskNoteList;
+    }
+
+    public void setTaskNoteList(List<TaskNote> taskNoteList) {
+        this.taskNoteList = taskNoteList;
+    }
+
+    @Transient
+    public TaskActivityInstance getCurrentInstance(){
+        TaskActivityInstance TAI = null;
+       for(TaskActivityInstance taskActivityInstance : taskActivityList){
+           if(taskActivityInstance.getActivate().equals("1")){
+               TAI = taskActivityInstance;
+               break;
+           }
+       }
+        return  TAI;
     }
 }

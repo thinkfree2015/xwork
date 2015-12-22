@@ -23,7 +23,7 @@ public class FlowActivity implements Serializable {
     private String status;
     private Integer sort;
     private Flow flow;
-    private int group;
+    private Integer group;
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
     @GeneratedValue(generator = "id")
@@ -52,7 +52,7 @@ public class FlowActivity implements Serializable {
     }
 
     @ManyToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
-    @JoinTable(name = "xw_flow_user",
+    @JoinTable(name = "xw_activity_user",
             joinColumns = {@JoinColumn(name = "activity_id",referencedColumnName="id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id",referencedColumnName="id")}
     )
@@ -96,12 +96,11 @@ public class FlowActivity implements Serializable {
         this.flow = flow;
     }
     @Column(name = "group_name")
-
-    public int getGroup() {
+    public Integer getGroup() {
         return group;
     }
 
-    public void setGroup(int group) {
+    public void setGroup(Integer group) {
         this.group = group;
     }
 }
