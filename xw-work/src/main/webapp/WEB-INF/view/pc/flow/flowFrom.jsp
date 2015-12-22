@@ -1,5 +1,3 @@
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -29,7 +27,7 @@
         <input type="hidden" name="id" value="${object.id}">
         <input type="hidden" name="status" value="1">
         <div class="am-form-group">
-            <label for="title" class="am-u-sm-3 am-form-label">流程标题 <small>*</small></label>
+            <label name="title" for="title" class="am-u-sm-3 am-form-label">流程标题 <small>*</small></label>
             <div class="am-u-sm-9">
                 <input type="text" name="title" id="title" placeholder="流程标题" value="${object.title}">
             </div>

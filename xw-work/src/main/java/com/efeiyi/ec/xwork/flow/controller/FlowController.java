@@ -1,20 +1,13 @@
 package com.efeiyi.ec.xwork.flow.controller;
 
-import com.efeiyi.ec.xw.flow.model.Flow;
-import com.efeiyi.ec.xw.organization.model.MyUser;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xwork.model.Flow.FlowParamBean;
-import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.process.ProcessEngine;
 import com.ming800.core.base.service.BaseManager;
 import org.hibernate.envers.internal.tools.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -35,7 +28,7 @@ public class FlowController {
     @RequestMapping({"/flow/createFlow.do"})
     private String createFlow(FlowParamBean paramBean,HttpServletRequest request)throws  Exception{
         Map<String,Object> map = new HashMap<>();
-        map.put("title",paramBean.getTitle());
+        map.put("title",request.getParameter("title"));
         String[] args = request.getParameterValues("user");
         List<User> list = new ArrayList<>();
         if (!StringTools.isEmpty(args) && args.length > 0){

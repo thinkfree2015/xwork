@@ -21,9 +21,10 @@
 <hr/>
 
 <div class="am-g">
-    <form action="<c:url value="/basic/xm.do"/>" method="post"  class="am-form am-form-horizontal">
-        <input type="hidden" name="id" value="${object.id}">
+    <form action="<c:url value="/flow/saveOrUpdateFlowActivity.do"/>" method="post"  class="am-form am-form-horizontal">
+        <input type="hidden" id="id" name="id" value="${object.id}">
         <input type="hidden" name="flow.id" value="${flowId}">
+        <input type="hidden" id="userList">
         <input type="hidden" name="qm" value="saveOrUpdateFlowActivity">
         <input type="hidden" name="status" value="1">
         <div class="am-form-group">
@@ -35,7 +36,7 @@
         <div class="am-form-group">
             <label name="group"  class="am-u-sm-3 am-form-label">流程节点所属小组 <small>*</small></label>
             <div class="am-u-sm-9">
-                <ming800:status name="group" dataType="FlowActivity.group" checkedValue="${object.group}" type="select"/>
+                <ming800:status name="sort" dataType="FlowActivity.sort" checkedValue="${object.sort}" onchange="setCheckbox();" type="select"/>
             </div>
         </div>
         <div class="am-form-group">
@@ -49,62 +50,10 @@
             <div class="am-u-sm-9">
                 <div class="am-tabs am-margin" data-am-tabs>
                     <ul class="am-tabs-nav am-nav am-nav-tabs">
-                        <li class="am-active"><a href="#tab1">产品</a></li>
-                        <li><a href="#tab2">UI</a></li>
-                        <li><a href="#tab3">前端</a></li>
-                        <li><a href="#tab4">开发</a></li>
-                        <li><a href="#tab5">测试</a></li>
-                        <li><a href="#tab6">运营</a></li>
+                        <li class="am-active"><a href="#tab1" name="tab1" about="pro">产品</a></li>
                     </ul>
-                    <div class="am-tabs-bd" style="height: 30%">
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab1" style="height: 30%;">
-                            <c:if test="${!empty proList}">
-                                <c:forEach items="${proList}" var="myUser">
-                                    <input name="user" onclick="return false;"  type="checkbox" checked="checked" value="${myUser.id}"/>
-                                    <a href="javascript:void (0)">${myUser.username}</a>
-                                </c:forEach>
-                            </c:if>
-                        </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab2" style="height: 30%;">
-                            <c:if test="${!empty uiList}">
-                                <c:forEach items="${uiList}" var="myUser">
-                                    <input name="user" onclick="return false;"  type="checkbox" checked="checked" value="${myUser.id}"/>
-                                    <a href="javascript:void (0)">${myUser.username}</a>
-                                </c:forEach>
-                            </c:if>
-                        </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab3" style="height: 30%;">
-                            <c:if test="${!empty webList}">
-                                <c:forEach items="${webList}" var="myUser">
-                                    <input name="user" onclick="return false;"  type="checkbox" checked="checked" value="${myUser.id}"/>
-                                    <a href="javascript:void (0)">${myUser.username}</a>
-                                </c:forEach>
-                            </c:if>
-                        </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab4" style="height: 30%;">
-                            <c:if test="${!empty devList}">
-                                <c:forEach items="${devList}" var="myUser">
-                                    <input name="user" onclick="return false;"  type="checkbox" checked="checked" value="${myUser.id}"/>
-                                    <a href="javascript:void (0)">${myUser.username}</a>
-                                </c:forEach>
-                            </c:if>
-                        </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab5" style="height: 30%;">
-                            <c:if test="${!empty testList}">
-                                <c:forEach items="${testList}" var="myUser">
-                                    <input name="user" onclick="return false;"  type="checkbox" checked="checked" value="${myUser.id}"/>
-                                    <a href="javascript:void (0)">${myUser.username}</a>
-                                </c:forEach>
-                            </c:if>
-                        </div>
-                        <div class="am-tab-panel am-fade am-in am-active" id="tab6" style="height: 30%;">
-                            <c:if test="${!empty operateList}">
-                                <c:forEach items="${operateList}" var="myUser">
-                                    <input name="user" onclick="return false;"  type="checkbox" checked="checked" value="${myUser.id}"/>
-                                    <a href="javascript:void (0)">${myUser.username}</a>
-                                </c:forEach>
-                            </c:if>
-                        </div>
+                    <div class="am-tabs-bd" style="height: 30%" id="box">
+
                     </div>
                 </div>
             </div>
@@ -118,9 +67,57 @@
 </div>
 <!-- content end -->
 <hr/>
-
 <script>
-
+    function setCheckbox(){
+        var value = $("select[name='sort']").val();
+        var id = $("#id").val();
+        var box = $("#box");
+        var sub = "";
+        if(value == 6){
+            $("a[name='tab1']").html("运营");
+        }else if(value == 1){
+            $("a[name='tab1']").html("产品");
+        }else if(value == 2){
+            $("a[name='tab1']").html("UI");
+        }else if(value == 3){
+            $("a[name='tab1']").html("前端");
+        }else if(value == 4){
+            $("a[name='tab1']").html("开发");
+        }else if(value == 5){
+            $("a[name='tab1']").html("测试");
+        }
+        getUsers(id,value);
+//        var attr = $("#userList").val();
+//        for(var i in attr){
+//            console.log(attr[i]);
+//        }
+    }
+    function getUsers(id,groupName){
+        $.ajax({
+            type: "post",//设置get请求方式
+            url: "<c:url value='/flow/getUsers/'/>"+groupName,//设置请求的脚本地址
+            data: "id="+id,//设置请求的数据
+            async: false,
+            dataType: "json",//设置请求返回的数据格式
+            success: function (data) {
+                console.log(data);
+                var box = $("#box");
+                box.empty();
+                var sub = "<div class=\"am-tab-panel am-fade am-in am-active\" id=\"tab1\" style=\"height: 30%;\">";
+                for(var i in data){
+                    var keyVal = i.substring(16, i.length);
+                    if(keyVal == "true"){
+                        sub += "<input name=\"user\" checked='checked' type=\"checkbox\" value=\""+data[i].id+"\"/>";
+                    }else if(keyVal == "false"){
+                        sub += "<input name=\"user\" type=\"checkbox\" value=\""+data[i].id+"\"/>";
+                    }
+                    sub += "<a href=\"javascript:void (0)\">"+data[i].name+"</a>";
+                }
+                sub += "</div>";
+                box.append(sub);
+            }
+        })
+    }
 </script>
 </body>
 </html>

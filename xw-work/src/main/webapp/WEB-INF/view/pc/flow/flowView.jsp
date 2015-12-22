@@ -21,7 +21,7 @@
 </div>
 
 <div class="am-cf am-padding">
-    <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}"/> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
+    <a onclick="return false;" href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}"/> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
 </div>
 <hr/>
 <div class="am-g">
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="am-form-group">
-            <label name="context"  class="am-u-sm-3 am-form-label">成员 </label>
+            <label name="context" class="am-u-sm-3 am-form-label">成员 </label>
             <div class="am-u-sm-9">
                 <div class="am-tabs am-margin" data-am-tabs>
                     <ul class="am-tabs-nav am-nav am-nav-tabs">

@@ -31,20 +31,20 @@ public class FlowActivityManagerImpl implements FlowActivityManager {
     @Override
     public void createFlowActivity(Map map)throws Exception{//测试使用
         logger.info("create flowActivity begin");
-        int index = Integer.parseInt(map.get("sort").toString());
-        FlowActivity  flowActivity = new FlowActivity();
-        if (map==null){
-            logger.info("args is null");
-        }
-        flowActivity.setTitle(map.get("title")!=null&& !"".equals(map.get("title").toString())?map.get("title").toString():"");
-        flowActivity.setType(map.get("type") != null && !"".equals(map.get("type").toString()) ? map.get("type").toString() : "");
-        if(map.get("sort")!=null && !"".equals(map.get("type"))){
-            flowActivity.setSort(index);
-        }
-        //获取默认任的该节点的用户
-        List<User> users = xdoDao.getObjectList("from User where groupName=? and status!='0' order by id desc", new Object[]{index});
-        flowActivity.setUser(users);
-        baseManager.saveOrUpdate(FlowActivity.class.getName(),flowActivity);
+//        int index = Integer.parseInt(map.get("sort").toString());
+//        FlowActivity  flowActivity = new FlowActivity();
+//        if (map==null){
+//            logger.info("args is null");
+//        }
+//        flowActivity.setTitle(map.get("title")!=null&& !"".equals(map.get("title").toString())?map.get("title").toString():"");
+//        flowActivity.setType(map.get("type") != null && !"".equals(map.get("type").toString()) ? map.get("type").toString() : "");
+//        if(map.get("sort")!=null && !"".equals(map.get("type"))){
+//            flowActivity.setSort(index);
+//        }
+//        //获取默认任的该节点的用户
+//        List<User> users = xdoDao.getObjectList("from User where groupName=? and status!='0' order by id desc", new Object[]{index});
+//        flowActivity.setUser(users);
+//        baseManager.saveOrUpdate(FlowActivity.class.getName(),flowActivity);
         logger.info("create flowActivity success");
     }
     /**
