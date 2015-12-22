@@ -2,6 +2,7 @@ package com.efeiyi.ec.xw.task.model;
 
 import com.efeiyi.ec.xw.flow.model.Flow;
 import com.efeiyi.ec.xw.organization.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -148,6 +149,7 @@ public class Task implements Serializable {
         this.taskNoteList = taskNoteList;
     }
 
+    @JsonIgnore
     @Transient
     public TaskActivityInstance getCurrentInstance(){
         TaskActivityInstance TAI = null;
