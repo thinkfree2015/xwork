@@ -171,13 +171,13 @@
                     <td>
                         <div class="am-btn-toolbar">
                             <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-                                <button onclick="removeUser('${pop.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
-                                <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
+                                <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${pop.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
+                                <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}&id=${pop.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
                             </div>
                         </div>
                     </td>
                     <td width="35%">
-                        <a href="<c:url value='/basic/xm.do?qm=formFlowActivity&id=${pop.id}'/>">
+                        <a href="<c:url value='/basic/xm.do?qm=viewFlowActivity&id=${pop.id}'/>">
                             <c:if test="${!empty pop.title}">
                                 ${pop.title}
                             </c:if>
