@@ -9,6 +9,7 @@ import com.efeiyi.ec.xwork.flow.service.FlowManager;
 import com.ming800.core.base.dao.XdoDao;
 import com.ming800.core.base.service.BaseManager;
 import org.apache.log4j.Logger;
+import org.hibernate.envers.internal.tools.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,64 +21,61 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by Administrator on 2015/12/2.
- *
  */
 @Service
 public class FlowManagerImpl implements FlowManager {
     private static Logger logger = Logger.getLogger(FlowManagerImpl.class);
     @Autowired
-    private XdoDao xdoDao;
-    @Autowired
     private BaseManager baseManager;
-    @Autowired
-    private FlowActivityManager flowActivityManager;
+
     @Override
-    public void createFlow(Map map) throws Exception{
-        Flow flow = new Flow();
-        if (map!=null || map.size()==0){
-            List<FlowActivity> flowActivities=new ArrayList<FlowActivity>();
-          if(map.get("begin")!=null&& !"".equals(map.get("begin"))){
-               flowActivities.add(flowActivityManager.getFlowActivity(map.get("begin").toString())) ;
-          }
-            flow.setActivityList(flowActivities);
-            flow.setTitle(map.get("title")!=null && !"".equals(map.get("title")) ? map.get("title").toString():"");
-            List<User> users = xdoDao.getObjectList("FROM User where status!='0' ", new LinkedHashMap<String, Object>());
-            flow.setNotifyUserList(users);//默认为流程添加所有成员
-            flow.setStatus("1");//立即生效
-            flow.setType(map.get("begin").toString());//扩展字段
+    public void createFlow(Map map) throws Exception {
+        Flow flow;
+        if (StringTools.isEmpty(map.get("flowId"))) {
+            flow = new Flow();
+        } else {
+            flow = (Flow) baseManager.getObject(Flow.class.getName(), String.valueOf(map.get("flowId")));
         }
-        baseManager.saveOrUpdate(Flow.class.getName(),flow);
+        if (map.size() > 0) {
+            flow.setTitle(map.get("title") != null && !"".equals(map.get("title")) ? map.get("title").toString() : "");
+            List<User> users = (List<User>) map.get("users");
+            flow.setNotifyUserList(users);//为流程选择成员
+            flow.setStatus("1");//立即生效
+        }
+        baseManager.saveOrUpdate(Flow.class.getName(), flow);
     }
 
     @Override
-    public Flow getFlow(String taskId)throws Exception {
-        Task task =  (Task)baseManager.getObject(Task.class.getName(), taskId);
+    public Flow getFlow(String taskId) throws Exception {
+        Task task = (Task) baseManager.getObject(Task.class.getName(), taskId);
         return task.getFlow();
-}
+    }
 
     @Override
-    public List<Flow> getAllFlows() throws Exception{
+    public List<Flow> getAllFlows() throws Exception {
         return null;
     }
 
     @Override
-    public void updateFlow(String old)throws Exception {
+    public void updateFlow(String old) throws Exception {
 
     }
-    private ConcurrentLinkedQueue<FlowActivity> createFlowActivitys(){
+
+    private ConcurrentLinkedQueue<FlowActivity> createFlowActivitys() {
         return null;
     }
+
     @Override
     public FlowActivity getFlowActivity(String taskId) throws Exception {
-        Task task =null;
-        if (taskId!=null && !"".equals(taskId)){
-             task =  (Task)baseManager.getObject(Task.class.getName(), taskId);
+        Task task = null;
+        if (taskId != null && !"".equals(taskId)) {
+            task = (Task) baseManager.getObject(Task.class.getName(), taskId);
         }
         List<FlowActivity> flowActivityList = task.getFlow().getActivityList();
-        for (FlowActivity flowActivity :flowActivityList){
+        for (FlowActivity flowActivity : flowActivityList) {
             if ("1".equals(flowActivity.getStatus()))//状态为1是激活
-              break;
-            return  flowActivity;
+                break;
+            return flowActivity;
 
         }
         logger.info("pleale check no active  FlowActivity find");

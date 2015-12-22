@@ -17,11 +17,11 @@
 </head>
 <body>
 <div class="am-cf am-padding">
-    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">新建/编辑流程</strong> / <small>New/Edit Flow</small></div>
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">查看流程</strong> / <small>VIEW Flow</small></div>
 </div>
 
 <div class="am-cf am-padding">
-    <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}" /> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
+    <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}"/> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
 </div>
 <hr/>
 <div class="am-g">
@@ -29,9 +29,9 @@
         <input type="hidden" name="id" value="${object.id}">
         <input type="hidden" name="status" value="1">
         <div class="am-form-group">
-            <label for="title" class="am-u-sm-3 am-form-label">流程标题 <small>*</small></label>
+            <label name="title" for="title" class="am-u-sm-3 am-form-label">流程标题 <small>*</small></label>
             <div class="am-u-sm-9">
-                <input type="text" name="title" id="title" placeholder="流程标题" value="${object.title}">
+                <input type="text" name="title" id="title" disabled="disabled" placeholder="流程标题" value="${object.title}">
             </div>
         </div>
         <div class="am-form-group">
@@ -53,11 +53,11 @@
 
                                 <c:forEach items="${maps}" var="map">
                                     <c:if test="${map.value=='true'}">
-                                    <input name="user" type="checkbox" checked="checked" value="${map.key.id}"/>
+                                    <input name="user" type="checkbox" checked="checked" disabled="disabled" value="${map.key.id}"/>
                                         <a href="javascript:void (0)">${map.key.name}</a>
                                     </c:if>
                                     <c:if test="${map.value==''}">
-                                        <input name="user" type="checkbox" value="${map.key.id}"/>
+                                        <input name="user" type="checkbox" disabled="disabled" value="${map.key.id}"/>
                                         <a href="javascript:void (0)">${map.key.name}</a>
                                     </c:if>
                                     </c:forEach>
@@ -70,11 +70,11 @@
 
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
-                                            <input name="user" type="checkbox" checked="checked" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                         <c:if test="${map.value==''}">
-                                            <input name="user" type="checkbox" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                     </c:forEach>
@@ -87,11 +87,11 @@
 
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
-                                            <input name="user" type="checkbox" checked="checked" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                         <c:if test="${map.value==''}">
-                                            <input name="user" type="checkbox" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                     </c:forEach>
@@ -104,11 +104,11 @@
 
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
-                                            <input name="user" type="checkbox" checked="checked" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                         <c:if test="${map.value==''}">
-                                            <input name="user" type="checkbox" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                     </c:forEach>
@@ -121,11 +121,11 @@
 
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
-                                            <input name="user" type="checkbox" checked="checked" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                         <c:if test="${map.value==''}">
-                                            <input name="user" type="checkbox" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                     </c:forEach>
@@ -138,11 +138,11 @@
 
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
-                                            <input name="user" type="checkbox" checked="checked" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                         <c:if test="${map.value==''}">
-                                            <input name="user" type="checkbox" value="${map.key.id}"/>
+                                            <input name="user" type="checkbox" disabled="disabled" value="${map.key.id}"/>
                                             <a href="javascript:void (0)">${map.key.name}</a>
                                         </c:if>
                                     </c:forEach>
@@ -155,7 +155,7 @@
         </div>
         <div class="am-form-group">
             <div class="am-u-sm-9 am-u-sm-push-3">
-                <input type="submit" class="am-btn am-btn-primary" value="保存"/>
+                <input type="submit" class="am-btn am-btn-primary" disabled="disabled" value="保存"/>
             </div>
         </div>
     </form>
@@ -173,8 +173,8 @@
                     <td>
                         <div class="am-btn-toolbar">
                             <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-                                <button onclick="removeUser('${pop.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
-                                <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
+                                <button disabled="disabled" onclick="removeUser('${pop.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
+                                <button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
                             </div>
                         </div>
                     </td>
