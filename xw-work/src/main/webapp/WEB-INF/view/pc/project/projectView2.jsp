@@ -75,7 +75,7 @@
       <ul name="${taskGroup.id}">
                ${taskGroup.title}
              <c:forEach items="${taskGroup.taskList}" var="task">
-                 <li class="todo" id="${task.id}">
+                 <li class="todo" name="${task.id}">
                      <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
                          <div  style="padding-left: 10px;">
                              <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
@@ -95,14 +95,18 @@
                                   </c:forEach>
                               </select>
                          </span>
+
                          <span>
+                              <c:if test="${not empty task.currentInstance}">
  　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">
    　　　　　　　　　　　　　　　　  <option value="null">请选择成员</option>
     　　　　　　　　　　　　　　　　 <c:forEach var="user" items="${task.currentInstance.flowActivity.user}">
        　　　　　　　　　　　　　　  <option value="${user.id}" <c:if test="${user.id==task.currentUser.id}">selected="selected"</c:if>>${user.title}</option>
      　　　　　　　　　　　　　　　　</c:forEach>
  　　　　　　　　　　　　　　　　</select>
+                              </c:if>
                          </span>
+
                      </div>
                  </li>
                <%----%>
@@ -233,7 +237,7 @@
                         var a = '<a href="'+url+'">'+title+'</a>';
                         $(li).find("textarea").parent().html(a);
                         $(li).find(".am-margin").remove();
-                        $(li).attr("id",data);
+                        $(li).attr("name",data);
                     }
                 });
             }else{
@@ -278,7 +282,7 @@
     //分配人员
     function changeMember(obj){
         var  memberId = $(obj).val();
-        var taskId = $(obj).parents("li").attr("id");
+        var taskId = $(obj).parents("li").attr("name");
         if(memberId=="null"){
             alert("请选择成员!");
         }else{

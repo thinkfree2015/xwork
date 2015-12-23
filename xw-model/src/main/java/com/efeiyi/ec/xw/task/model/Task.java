@@ -152,13 +152,20 @@ public class Task implements Serializable {
     @JsonIgnore
     @Transient
     public TaskActivityInstance getCurrentInstance(){
-        TaskActivityInstance TAI = null;
-       for(TaskActivityInstance taskActivityInstance : taskActivityList){
-           if(taskActivityInstance.getActivate().equals("1")){
-               TAI = taskActivityInstance;
-               break;
-           }
-       }
-        return  TAI;
+
+        return  currentInstance;
+    }
+
+    public void setCurrentInstance(TaskActivityInstance currentInstance) {
+
+        if(taskActivityList!=null) {
+            for (TaskActivityInstance taskActivityInstance : taskActivityList) {
+                if (taskActivityInstance.getActivate().equals("1")) {
+                    currentInstance = taskActivityInstance;
+                    break;
+                }
+            }
+        }
+        this.currentInstance = currentInstance;
     }
 }
