@@ -248,7 +248,6 @@
                     success:function(data){
                         data = data.substring(1,data.length-1);
                         var url = "<c:url value="/" />"+"basic/xm.do?qm=formTask&id="+data+"&projectId="+'${object.id}';
-                        alert(url);
                         var a = '<a href='+url+'>'+title+'</a>';
                         $(li).find("textarea").parent().html(a);
                         $(li).find("select[name='flow']").attr("disabled","disabled");
