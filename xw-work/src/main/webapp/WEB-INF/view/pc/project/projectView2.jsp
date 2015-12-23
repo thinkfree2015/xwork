@@ -75,7 +75,7 @@
       <ul name="${taskGroup.id}">
                ${taskGroup.title}
              <c:forEach items="${taskGroup.taskList}" var="task">
-                 <li class="todo">
+                 <li class="todo" name="${task.id}">
                      <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
                          <div  style="padding-left: 10px;">
                              <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
@@ -88,21 +88,25 @@
                               <a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>
                          </span>
                          <span>
-                              <select  onchange="changeActivity(this)" style="font-size: 10%">
+                              <select  onchange="changeActivity(this)" style="font-size: 10%" disabled="disabled">
                                   <option value="null">请选择流程</option>
                                   <c:forEach var="flow" items="${flowList}">
-                                      <option value="${flow.id}" <c:if test="${flow.id==task.flow.id}">selected="selected"</c:if>>${flow.title}</option>
+                                      <option value="${flow.id}" <c:if test="${flow.id==task.flow.id}">selected="selected" </c:if>>${flow.title}</option>
                                   </c:forEach>
                               </select>
                          </span>
+
                          <span>
+                              <c:if test="${not empty task.currentInstance}">
  　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">
    　　　　　　　　　　　　　　　　  <option value="null">请选择成员</option>
-    　　　　　　　　　　　　　　　　 <c:forEach var="flow" items="${flowList}">
-       　　　　　　　　　　　　　　  <option value="${flow.id}" <c:if test="${flow.id==task.flow.id}">selected="selected"</c:if>>${flow.title}</option>
+    　　　　　　　　　　　　　　　　 <c:forEach var="user" items="${task.currentInstance.flowActivity.user}">
+       　　　　　　　　　　　　　　  <option value="${user.id}" <c:if test="${user.id==task.currentUser.id}">selected="selected"</c:if>>${user.title}</option>
      　　　　　　　　　　　　　　　　</c:forEach>
  　　　　　　　　　　　　　　　　</select>
+                              </c:if>
                          </span>
+
                      </div>
                  </li>
                <%----%>
@@ -145,7 +149,7 @@
 </div>
 <!--模拟窗口 添加任务-->
 <div style="display: none;" id="display_task">
-    <li class="todo">
+    <li class="todo" id="">
         <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
             <div style="padding-left: 10px;">
                 <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
@@ -160,12 +164,11 @@
                              <%--<a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>--%>
                          </span>
                          <span>
-                              <select onchange=""
+                              <select onchange="changeActivity(this)"
                                       style="font-size: 10%">
                                   <option value="null">请选择流程</option>
                                   <c:forEach var="flow" items="${flowList}">
-                                      <option value="${flow.id}"
-                                              <c:if test="${flow.id==task.flow.id}">selected="selected"</c:if>>${flow.title}</option>
+                                      <option value="${flow.id}">${flow.title}</option>
                                   </c:forEach>
                               </select>
                          </span>
@@ -234,6 +237,7 @@
                         var a = '<a href="'+url+'">'+title+'</a>';
                         $(li).find("textarea").parent().html(a);
                         $(li).find(".am-margin").remove();
+                        $(li).attr("name",data);
                     }
                 });
             }else{
@@ -257,7 +261,7 @@
                 success:function(data) {
                     $.each(data,function(k,v){
                        if(k=="users"){
-                          var select = '<select  onchange="" style="font-size: 10%;margin-left: -259px">'+
+                          var select = '<select  onchange="changeMember()" style="font-size: 10%;margin-left: -259px">'+
                                        '<option value="null">'+'请选择成员'+'</option>';
                           for(var i=0;i< v.length;i++){
 
@@ -275,6 +279,37 @@
         }
     }
 
+    //分配人员
+    function changeMember(obj){
+        var  memberId = $(obj).val();
+        var taskId = $(obj).parents("li").attr("name");
+        if(memberId=="null"){
+            alert("请选择成员!");
+        }else{
+            $.ajax({
+                type:"post",
+                url:"<c:url value="/project/changeMember.do"/>",
+                data:{taskId:taskI,memberId:memberId},
+                success:function(data) {
+                    $.each(data,function(k,v){
+                        if(k=="users"){
+                            var select = '<select  onchange="" style="font-size: 10%;margin-left: -259px">'+
+                                    '<option value="null">'+'请选择成员'+'</option>';
+                            for(var i=0;i< v.length;i++){
+
+                                select += ' <option value="'+v[i].id+'">'+v[i].username+'</option>';
+                            }
+
+                            select += '</select>';
+
+                            $(obj).parent().next().html(select);
+
+                        }
+                    });
+                }
+            });
+        }
+    }
     //新加任务 的指派成员
     function addNewTaskHtml(taskId){
         var select =  ' <select style="font-size: 10%" onchange="sendUser(this,'+taskId+')">'+

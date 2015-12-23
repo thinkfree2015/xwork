@@ -18,6 +18,11 @@
                 <do name="viewFlow" label="删除" access="" execute="com.efeiyi.ec.xwork.flow.controller.FlowHandle" result="/flow/flowView"/>
                 <do name="removeFlow" label="删除" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>
                 <do name="saveOrUpdateUserGroup" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistUser_default"/>
+                <do name="listFlow" label="用户列表" access="" result="/user/userList">
+                    <query name="default1" label="默认" type="auto" orderBy="id:desc">
+                        <condition label="主键" name="status" defaultValue="1" operation="eq"/>
+                    </query>
+                </do>
             </does>
         </entity>
         <entity name="FlowActivity" label="流程节点实例"
