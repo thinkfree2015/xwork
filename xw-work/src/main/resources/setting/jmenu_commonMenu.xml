@@ -24,6 +24,9 @@
             <jnode url="/basic/xm.do?qm=plistFlow_default" access="admin,operational,c_operational,product_manager" text_zh_CN="流程列表">
                 <match url="/basic/xm.do?qm=plistFlow_default" />
                 <match url="/basic/xm.do?qm=formFlow"/>
+                <match url="/basic/xm.do?qm=viewFlow"/>
+                <match url="/basic/xm.do?qm=formFlowActivity"/>
+                <match url="/basic/xm.do?qm=viewFlowActivity"/>
             </jnode>
             <!--<jnode url="/basic/xm.do?qm=plistFlowActivity_default" access="admin,operational,c_operational,product_manager" text_zh_CN="流程节点列表">-->
                 <!--<match url="/basic/xm.do?qm=plistFlowActivity_default" />-->
