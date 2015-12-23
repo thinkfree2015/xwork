@@ -78,8 +78,8 @@ public class ProjectController extends BaseController {
      */
     @RequestMapping("/addTask.do")
     @ResponseBody
-    public  String addTask(String taskGroupId,String title,String flowId){
-        Task task = projectManager.saveTask(taskGroupId,title,flowId);
+    public  String addTask(String taskGroupId,String title,String flowId,String userId){
+        Task task = projectManager.saveTask(taskGroupId,title,flowId,userId);
         return task.getId();
     }
 

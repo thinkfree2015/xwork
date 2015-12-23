@@ -60,7 +60,12 @@ public class ProjectManagerImpl implements ProjectManager {
 
     //创建任务
     @Override
-    public  Task saveTask(String taskGroupId,String title,String flowId){
+    public  Task saveTask(String taskGroupId,String title,String flowId,String userId){
+
+        User user = null;
+        if(!userId.equals("null")){
+            user = (User)xdoDao.getObject(User.class.getName(),userId);
+        }
         //流程
         Flow flow = (Flow)xdoDao.getObject(Flow.class.getName(),flowId);
         //流程节点
@@ -86,6 +91,8 @@ public class ProjectManagerImpl implements ProjectManager {
             task.setCreateDatetime(sdf.parse(date));
             task.setFlow(flow);
             task.setTaskGroup((TaskGroup)xdoDao.getObject(TaskGroup.class.getName(),taskGroupId));
+            //当前任务处理人
+            task.setCurrentUser(user);
             //添加新任务
             xdoDao.saveOrUpdateObject(Task.class.getName(),task);
 
@@ -102,8 +109,8 @@ public class ProjectManagerImpl implements ProjectManager {
             taskActivityInstance.setActivate("1");
             //创建时间
             taskActivityInstance.setCreateDatetime(new Date());
-            //默认处理人为当前用户
-            taskActivityInstance.setExcutor(AuthorizationUtil.getUser());
+            // 任务实例处理人
+            taskActivityInstance.setExcutor(user);
 
 //            //问题
 //            taskActivityInstance.setIssue(task.getTitle());
@@ -117,12 +124,27 @@ public class ProjectManagerImpl implements ProjectManager {
             TaskDynamic taskDynamic = new TaskDynamic();
             taskDynamic.setTask(task);
             taskDynamic.setCreateDatetime(new Date());
-            //默认当前用户
+            //当前用户
             taskDynamic.setCreator(AuthorizationUtil.getUser());
             taskDynamic.setTaskActivityInstance(taskActivityInstance);
-            taskDynamic.setMessage(AuthorizationUtil.getUser().getUsername() + "创建了任务:" + task.getTitle());
-            //保存动态
+            taskDynamic.setMessage("创建了任务" );
             xdoDao.saveOrUpdateObject(taskDynamic);
+            //user null 则只创建，未分配  不为null 则两条动态:创建任务 分配人员
+            if(user!=null){
+                TaskDynamic taskDynamic1 = new TaskDynamic();
+                taskDynamic1.setTask(task);
+                taskDynamic1.setCreateDatetime(new Date());
+                //当前用户
+                taskDynamic1.setCreator(AuthorizationUtil.getUser());
+                taskDynamic1.setTaskActivityInstance(taskActivityInstance);
+                taskDynamic1.setMessage(" 给 " + user.getName() + " 指派了任务");
+                xdoDao.saveOrUpdateObject(taskDynamic1);
+            }
+
+
+
+            //保存动态
+
         }catch (Exception e){
             e.printStackTrace();
         }

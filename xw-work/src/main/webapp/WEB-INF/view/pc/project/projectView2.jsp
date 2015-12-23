@@ -156,7 +156,7 @@
 
 <!--模拟窗口 添加任务-->
 <div style="display: none;" id="display_task">
-    <li class="todo" id="">
+    <li class="todo" name="">
         <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
             <div style="padding-left: 10px;">
                 <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
@@ -171,7 +171,7 @@
                              <%--<a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>--%>
                          </span>
                          <span>
-                              <select onchange="changeActivity(this)"
+                              <select name="flow" onchange="changeActivity(this)"
                                       style="font-size: 10%">
                                   <option value="null">请选择流程</option>
                                   <c:forEach var="flow" items="${flowList}">
@@ -231,7 +231,8 @@
     function saveTask(obj){
         var li = $(obj).parent().parent();
         var title = $(li).find("textarea").val();
-        var flow = $("select",$(li)).val();
+        var flow = $("select[name='flow']",$(li)).val();
+        var userId = $("select[name='user']",$(li)).val();
         var  taskGroupId = $(li).parent().attr("name");
         if(title==""){
             alert("请填写任务标题!");
@@ -240,15 +241,18 @@
         }else{
             var f = confirm("流程选定后,将不允许修改!确定添加此任务吗?");
             if(f){
-                alert("开始添加任务...");
                 $.ajax({
                     type:"post",
                     url:"<c:url value="/project/addTask.do"/>",
-                    data:{title:title,flowId:flow,taskGroupId:taskGroupId},
+                    data:{title:title,flowId:flow,taskGroupId:taskGroupId,userId:userId},
                     success:function(data){
-                        var url = "<c:url value="/" />"+"/basic/xm.do?qm=formTask&id="+data+"&projectId="+'${object.id}';
-                        var a = '<a href="'+url+'">'+title+'</a>';
+                        data = data.substring(1,data.length-1);
+                        var url = "<c:url value="/" />"+"basic/xm.do?qm=formTask&id="+data+"&projectId="+'${object.id}';
+                        alert(url);
+                        var a = '<a href='+url+'>'+title+'</a>';
                         $(li).find("textarea").parent().html(a);
+                        $(li).find("select[name='flow']").attr("disabled","disabled");
+                        $(li).find("select[name='user']").attr("onchange","sendUser(this,"+data+",'<c:url value="/project/sendUser.do"/>')");
                         $(li).find(".am-margin").remove();
                         $(li).attr("name",data);
                         $("#"+taskGroupId).show();
@@ -266,27 +270,28 @@
     function changeActivity(obj){
       var  flowId = $(obj).val();
         if(flowId=="null"){
-            alert("请选择流程!");
+            $(obj).parent().next().remove();
         }else{
             $.ajax({
                 type:"post",
                 url:"<c:url value="/project/changeActivity.do"/>",
                 data:{flowId:flowId},
                 success:function(data) {
-                    $.each(data,function(k,v){
-                       if(k=="users"){
-                          var select = '<select  onchange="changeMember()" style="font-size: 10%;margin-left: -259px">'+
-                                       '<option value="null">'+'请选择成员'+'</option>';
-                          for(var i=0;i< v.length;i++){
+                    $.each($.parseJSON(data),function(key,value) {
+                        if (key == "users") {
+                            var select = '<span>'+
+                                         '<select name="user" onchange="" style="font-size: 10%;">' +
+                                         '<option value="null">' + '请选择成员' + '</option>';
 
-                               select += ' <option value="'+v[i].id+'">'+v[i].username+'</option>';
-                           }
+                            $.each(value, function (k, v) {
+                                select += ' <option value="' + v.id + '">' + v.name + '</option>';
+                            });
+                            select += '</select>'+
+                                      '</span>';
+                            $(obj).parent().after(select);
 
-                           select += '</select>';
+                        }
 
-                           $(obj).parent().next().html(select);
-
-                       }
                     });
                 }
             });

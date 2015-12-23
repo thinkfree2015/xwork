@@ -11,7 +11,7 @@ public interface ProjectManager {
    Project saveProject(Project project,String[] users);
 
     /**添加任务**/
-   Task saveTask(String taskGroupId,String title,String flowId);
+   Task saveTask(String taskGroupId,String title,String flowId,String userId);
 
     /**分配人员**/
     public User sendUser(String taskId,String userId);
