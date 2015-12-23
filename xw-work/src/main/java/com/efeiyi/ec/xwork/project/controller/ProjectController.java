@@ -93,13 +93,7 @@ public class ProjectController extends BaseController {
     @ResponseBody
     public  String sendUser(String taskId,String userId){
         try {
-            Task task = (Task)baseManager.getObject(Task.class.getName(),taskId);
-            if("null".equals(userId)){
-                task.setCurrentUser(null);
-            }else {
-                task.setCurrentUser((User)baseManager.getObject(User.class.getName(),userId));
-            }
-            baseManager.saveOrUpdate(Task.class.getName(),task);
+           projectManager.sendUser(taskId,userId);
         }catch (Exception e){
             e.printStackTrace();
         }

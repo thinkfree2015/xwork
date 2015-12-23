@@ -101,7 +101,7 @@
  　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">
    　　　　　　　　　　　　　　　　  <option value="null">请选择成员</option>
     　　　　　　　　　　　　　　　　 <c:forEach var="user" items="${task.currentInstance.flowActivity.user}">
-       　　　　　　　　　　　　　　  <option value="${user.id}" <c:if test="${user.id==task.currentUser.id}">selected="selected"</c:if>>${user.title}</option>
+       　　　　　　　　　　　　　　  <option value="${user.id}" <c:if test="${user.id==task.currentUser.id}">selected="selected"</c:if>>${user.name}</option>
      　　　　　　　　　　　　　　　　</c:forEach>
  　　　　　　　　　　　　　　　　</select>
                               </c:if>

@@ -12,6 +12,7 @@ import com.efeiyi.ec.xwork.project.service.ProjectManager;
 import com.ming800.core.base.dao.XdoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,6 +28,7 @@ public class ProjectManagerImpl implements ProjectManager {
     @Autowired
     private XdoDao xdoDao;
 
+    //创建项目
     @Override
     public Project saveProject(Project project,String [] users){
        if("".equals(project.getId())){
@@ -56,6 +58,7 @@ public class ProjectManagerImpl implements ProjectManager {
         return  project;
     }
 
+    //创建任务
     @Override
     public  Task saveTask(String taskGroupId,String title,String flowId){
         //流程
@@ -124,6 +127,51 @@ public class ProjectManagerImpl implements ProjectManager {
             e.printStackTrace();
         }
         return  task;
+    }
+
+
+
+    @Override
+    public  User sendUser(String taskId,String userId){
+        User user = null;
+        //新的任务处理人
+        if(!userId.equals("null")){
+            user = (User)xdoDao.getObject(User.class.getName(),userId);
+        }
+
+        Task task = (Task)xdoDao.getObject(Task.class.getName(),taskId);
+
+        //原处理人员
+
+        User oldUser = task.getCurrentUser();
+
+        //改变任务处理人员
+        task.setCurrentUser(user);
+
+        xdoDao.saveOrUpdateObject(task);
+
+        //改变当前任务实例的处理人
+        TaskActivityInstance taskActivityInstance = task.getCurrentInstance();
+        taskActivityInstance.setExcutor(user);
+
+        xdoDao.saveOrUpdateObject(taskActivityInstance);
+
+        //添加任务操作动态记录
+
+        TaskDynamic taskDynamic = new TaskDynamic();
+        taskDynamic.setTaskActivityInstance(taskActivityInstance);
+        taskDynamic.setTask(task);
+        taskDynamic.setCreator(AuthorizationUtil.getUser());
+        taskDynamic.setCreateDatetime(new Date());
+        if(user==null){
+            taskDynamic.setMessage(" 取消了 "+oldUser.getName()+" 的任务");
+        }else {
+            taskDynamic.setMessage(" 给 " + user.getName() + " 指派了任务");
+        }
+
+        xdoDao.saveOrUpdateObject(taskDynamic);
+
+        return  user;
     }
 
 }

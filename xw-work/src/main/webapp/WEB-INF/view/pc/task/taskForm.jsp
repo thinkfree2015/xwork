@@ -88,7 +88,7 @@
  　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">
                              　　　　<option value="null">请选择成员</option>
                              　　　　　<c:forEach var="user" items="${object.currentInstance.flowActivity.user}">
-                             　　　　　　　<option value="${user.id}" <c:if test="${object.currentUser.id==user.id}">selected="selected"</c:if>>${user.title}</option>
+                             　　　　　　　<option value="${user.id}" <c:if test="${object.currentUser.id==user.id}">selected="selected"</c:if>>${user.name}</option>
                              　　　　　</c:forEach>
                              　　</select>
                          </span>
@@ -106,7 +106,11 @@
     <hr/>
     <div class="">
         <c:forEach var="dynamic" items="${object.taskDynamicList}">
-
+            <div>
+             <span><fmt:formatDate value="${dynamic.createDatetime}" pattern="yyyy-MM-dd hh:mm" type="both"/></span>
+             <span><a href="javascript:void (0);">${dynamic.creator.name}</a></span>
+             <span>${dynamic.message}</span>
+            </div>
         </c:forEach>
         <div>动态一</div>
         <div>动态二</div>

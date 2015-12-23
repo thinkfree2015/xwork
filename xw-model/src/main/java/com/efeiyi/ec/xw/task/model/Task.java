@@ -152,12 +152,6 @@ public class Task implements Serializable {
     @JsonIgnore
     @Transient
     public TaskActivityInstance getCurrentInstance(){
-
-        return  currentInstance;
-    }
-
-    public void setCurrentInstance(TaskActivityInstance currentInstance) {
-
         if(taskActivityList!=null) {
             for (TaskActivityInstance taskActivityInstance : taskActivityList) {
                 if (taskActivityInstance.getActivate().equals("1")) {
@@ -166,6 +160,12 @@ public class Task implements Serializable {
                 }
             }
         }
+        return  currentInstance;
+    }
+
+    public void setCurrentInstance(TaskActivityInstance currentInstance) {
+
+
         this.currentInstance = currentInstance;
     }
 }
