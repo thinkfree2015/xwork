@@ -162,23 +162,27 @@
 <hr/>
 <div class="am-g">
     <form action="<c:url value=''/>" method="post"  class="am-form am-form-horizontal">
-        <input type="hidden" name="id" value="${object.id}">
-        <input type="hidden" name="status" value="1">
-        <input type="hidden" name="qm" value="saveOrUpdateFlow">
+        <%--<input type="hidden" name="id" value="${object.id}">--%>
+        <%--<input type="hidden" name="status" value="1">--%>
+        <%--<input type="hidden" name="qm" value="saveOrUpdateFlow">--%>
         <table>
             <c:forEach items="${object.activityList}" var="pop">
                 <tr style="text-align: left" id="${pop.id}">
-                    <td>
-                        <div class="am-btn-toolbar">
-                            <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-                                <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${pop.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
-                                <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}&id=${pop.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
+                    <c:if test="${pop.status != '0'}">
+                        <td>
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
+                                    <%--<button onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${pop.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>--%>
+                                    <%--<button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}&id=${pop.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>--%>
+                                    <a href="<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${pop.id}"/>" class="am-btn am-btn-default"><span class="am-icon-plus"></span>废弃</a>
+                                    <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}&id=${pop.id}"/>" class="am-btn am-btn-default"><span class="am-icon-plus"></span>编辑</a>
+                                </div>
                             </div>
-                        </div>
-                    </td>
+                        </td>
+                    </c:if>
                     <td width="35%">
                         <a href="<c:url value='/basic/xm.do?qm=viewFlowActivity&id=${pop.id}'/>">
-                            <c:if test="${!empty pop.title}">
+                            <c:if test="${!empty pop.title && pop.status != '0'}">
                                 ${pop.title}
                             </c:if>
                         </a>

@@ -58,8 +58,6 @@
                 <do name="viewFlowActivity" label="查看" access="" result="/flow/flowActivityView"/>
                 <do name="removeFlowActivity" label="删除" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>
                 <do name="formFlowActivity" label="查看" execute="com.efeiyi.ec.xwork.flow.controller.FlowActivityHandle" access="" result="/flow/flowActivityFrom"/>
-                <!--<do name="saveOrUpdateFlowActivity" label="编辑" execute="com.efeiyi.ec.xwork.flow.controller.FlowActivityHandle" access=""-->
-                    <!--result="redirect:/basic/xm.do?qm=plistFlow_default"/>-->
             </does>
         </entity>
     </entities>
