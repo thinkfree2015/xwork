@@ -73,8 +73,8 @@
     <c:forEach items="${object.taskGroupList}" var="taskGroup">
         <hr/>
       <ul name="${taskGroup.id}">
-               ${taskGroup.title}
-             <c:forEach items="${taskGroup.taskList}" var="task">
+              <span>${taskGroup.title}</span>
+          <c:forEach items="${taskGroup.taskList}" var="task">
                  <li class="todo" name="${task.id}">
                      <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
                          <div  style="padding-left: 10px;">
@@ -135,18 +135,25 @@
 
 <!--模拟窗口 添加清单-->
 
-<div class="am-modal am-modal-prompt" tabindex="-1" id="taskGroup-prompt">
-    <div class="am-modal-dialog">
-        <div class="am-modal-hd">清单名称</div>
-        <div class="am-modal-bd">
-            <input type="text" name="title" class="am-modal-prompt-input">
-        </div>
-        <div class="am-modal-footer">
-            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
-            <span class="am-modal-btn" data-am-modal-confirm>提交</span>
-        </div>
+<div style="display: none;" id="display_taskGroup">
+    <hr/>
+    <ul class="" style="" name="">
+                         <span>
+                             <input class="todo-content no-border " placeholder="输入清单名称"
+                                       style="overflow: hidden; word-wrap: break-word; resize: none; height:30px;"/>
+                             <%--<a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>--%>
+                         </span>
+
+
+    </ul>
+    <div class="am-margin">
+        <button style="margin-left: 13px;" type="button" onclick="saveTaskGroup(this)" class="am-btn am-btn-primary am-btn-xs">保存，开始添加任务</button>
+        <button type="button" onclick="cancelTaskGroup(this)" class="am-btn am-btn-primary am-btn-xs">取消</button>
     </div>
 </div>
+
+
+
 <!--模拟窗口 添加任务-->
 <div style="display: none;" id="display_task">
     <li class="todo" id="">
@@ -203,15 +210,21 @@
             $(this).find(".todo-action").css({"display":"none"});
         });
     });
+
+    //--------------------------------任务---------------------------------------------------//
     //取消任务
     function cancelTask(obj){
+
+        $(obj).parents("ul").find("div:last").show();
         $(obj).parent().parent().remove();
         $(obj).parent().remove();
+
     }
 
     //to添加任务
     function addTask(taskGroupId) {
         $("#"+taskGroupId).before($("#display_task").html());
+        $("#"+taskGroupId).hide();
     }
 
     //save添加任务
@@ -238,6 +251,7 @@
                         $(li).find("textarea").parent().html(a);
                         $(li).find(".am-margin").remove();
                         $(li).attr("name",data);
+                        $("#"+taskGroupId).show();
                     }
                 });
             }else{
@@ -279,37 +293,37 @@
         }
     }
 
-    //分配人员
-    function changeMember(obj){
-        var  memberId = $(obj).val();
-        var taskId = $(obj).parents("li").attr("name");
-        if(memberId=="null"){
-            alert("请选择成员!");
-        }else{
-            $.ajax({
-                type:"post",
-                url:"<c:url value="/project/changeMember.do"/>",
-                data:{taskId:taskI,memberId:memberId},
-                success:function(data) {
-                    $.each(data,function(k,v){
-                        if(k=="users"){
-                            var select = '<select  onchange="" style="font-size: 10%;margin-left: -259px">'+
-                                    '<option value="null">'+'请选择成员'+'</option>';
-                            for(var i=0;i< v.length;i++){
+    <%--//分配人员--%>
+    <%--function changeMember(obj){--%>
+        <%--var  memberId = $(obj).val();--%>
+        <%--var taskId = $(obj).parents("li").attr("name");--%>
+        <%--if(memberId=="null"){--%>
+            <%--alert("请选择成员!");--%>
+        <%--}else{--%>
+            <%--$.ajax({--%>
+                <%--type:"post",--%>
+                <%--url:"<c:url value="/project/changeMember.do"/>",--%>
+                <%--data:{taskId:taskI,memberId:memberId},--%>
+                <%--success:function(data) {--%>
+                    <%--$.each(data,function(k,v){--%>
+                        <%--if(k=="users"){--%>
+                            <%--var select = '<select  onchange="" style="font-size: 10%;margin-left: -259px">'+--%>
+                                    <%--'<option value="null">'+'请选择成员'+'</option>';--%>
+                            <%--for(var i=0;i< v.length;i++){--%>
 
-                                select += ' <option value="'+v[i].id+'">'+v[i].username+'</option>';
-                            }
+                                <%--select += ' <option value="'+v[i].id+'">'+v[i].username+'</option>';--%>
+                            <%--}--%>
 
-                            select += '</select>';
+                            <%--select += '</select>';--%>
 
-                            $(obj).parent().next().html(select);
+                            <%--$(obj).parent().next().html(select);--%>
 
-                        }
-                    });
-                }
-            });
-        }
-    }
+                        <%--}--%>
+                    <%--});--%>
+                <%--}--%>
+            <%--});--%>
+        <%--}--%>
+    <%--}--%>
     //新加任务 的指派成员
     function addNewTaskHtml(taskId){
         var select =  ' <select style="font-size: 10%" onchange="sendUser(this,'+taskId+')">'+
@@ -322,39 +336,60 @@
     }
 
 
-
-    //添加 清单
+///------------------------------------清单---------------------------------------------------------------////
+    //to添加 清单
     function addTaskGroup(projectId){
+        var f = true;
+         $(".am-g ul").each(function(){
 
-        $('#taskGroup-prompt').modal({
-            relatedTarget: this,
-            onConfirm: function(e) {
-                var title = $("input[name='title']").val();
+             if($(this).attr("name")==""){
+                 $(this).find("input").focus();
+                 f = false;
+                 return false;
+             }
+         });
+        if(f){
+            $(".am-g").append($("#display_taskGroup").html());
+        }
 
-                $.ajax({
-                    type: "post",
-                    url: "<c:url value="/project/addTaskGroup.do"/>",
-                    data:{projectId:projectId,title:title},
-                    success: function (data) {
 
-                        var div = '<fieldset>'+
-                                '<legend></legend>'+e.data+
-                                '   <div id="'+data+'">'+
-                                '    <small> <a href="javascript:void (0);" onclick="addTask(\''+data+'\')">'+
-                                '     添加新任务'+
-                                '     </a></small>'+
-                                '   </div>'+
-                                '</fieldset>';
-                        $(".am-g").append(div);
-                    }
-                });
-            },
-            onCancel: function(e) {
-                alert('不想说!');
-            }
-        });
     }
+    //取消清单
+    function cancelTaskGroup(obj){
+        $(obj).parent().prev().prev().remove();
+         $(obj).parent().prev().remove();
+         $(obj).parent().remove();
 
+    }
+   //保存清单
+    function saveTaskGroup(obj){
+      var projectId = '${object.id}';
+        var title = $(obj).parent().prev().find("input").val();
+        if(title==""){
+            alert("请填写清单名单!");
+        }else{
+            $.ajax({
+                type: "post",
+                url: "<c:url value="/project/addTaskGroup.do"/>",
+                data:{projectId:projectId,title:title},
+                success: function (data) {
+                    data = data.substring(1,data.length-1);
+                    var ul = $(obj).parent().prev("ul");
+                    $(ul).attr("name",data);
+                    $(ul).find("span").text(title);
+                    $(obj).parent().remove();
+                    var div = '   <div id="'+data+'">'+
+                              '    <small> <a href="javascript:void (0);" onclick="addTask(\''+data+'\')">'+
+                              '     添加新任务'+
+                              '     </a></small>'+
+                              '   </div>';
+                    $(ul).append(div);
+                }
+            });
+
+        }
+
+    }
 </script>
 </body>
 </html>
