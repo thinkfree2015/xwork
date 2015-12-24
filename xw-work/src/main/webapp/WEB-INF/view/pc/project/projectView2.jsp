@@ -79,8 +79,8 @@
       <ul name="${taskGroup.id}">
               <span>${taskGroup.title}</span>
           <c:forEach items="${taskGroup.taskList}" var="task">
-                 <li class="todo" name="${task.id}" style="position:relative">
-                     <div class="todo-action" style="display: block;position: absolute;left: -3px;background-color: #FFFFFF;top: 1px;">
+                 <li class="todo" name="${task.id}">
+                     <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
                          <div  style="padding-left: 30px;">
                              <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
                              <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>
