@@ -53,6 +53,9 @@
             -webkit-writing-mode: horizontal-tb;
             box-shadow: none;
         }
+        ul li{
+            list-style-type:none;
+        }
     </style>
 </head>
 <body>
@@ -62,18 +65,22 @@
 
 
 <div class="am-g">
+
     <div class="project">
         <div>
-            <span>项目:项目一</span>
-            <span>清单</span>
-            <span>流程:${object.flow.title}</span>
-            <span>当前节点:${object.currentInstance.flowActivity.title}</span>
+            <small>
+              <span>项目:${object.taskGroup.project.title}</span>
+              <span>清单:${object.taskGroup.title}</span>
+              <span>流程:${object.flow.title}</span>
+              <span>当前节点:${object.currentInstance.flowActivity.title}</span>
+            </small>
         </div>
+        <hr/>
         <div>
             <ul>
                 <li class="todo">
                     <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
-                        <div  style="padding-left: 10px;">
+                        <div  style="padding-left: 30px;">
                             <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
                             <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>
                             <a href="javascript:void (0);"></a>
@@ -107,30 +114,26 @@
     <div class="">
         <c:forEach var="dynamic" items="${object.taskDynamicList}">
             <div>
-             <span><fmt:formatDate value="${dynamic.createDatetime}" pattern="yyyy-MM-dd hh:mm" type="both"/></span>
-             <span><a href="javascript:void (0);">${dynamic.creator.name}</a></span>
-             <span>${dynamic.message}</span>
+              <span><fmt:formatDate value="${dynamic.createDatetime}" pattern="yyyy-MM-dd hh:mm" type="both"/></span>
+              <span><a href="javascript:void (0);">${dynamic.creator.name}</a></span>
+              <span>${dynamic.message}</span>
             </div>
         </c:forEach>
-        <div>动态一</div>
-        <div>动态二</div>
-        <div>动态三</div>
-        <div>动态四</div>
     </div>
     <hr/>
     <div class="">
         <c:forEach var="taskNote" items="${object.taskNoteList}">
 
         </c:forEach>
-        <div>评论一</div>
-        <div>评论二</div>
-        <div>评论三</div>
-        <div>评论四</div>
     </div>
     <hr/>
     <div class="pinglun">
         <label>发表评论:</label>
-        <textarea class="" style="width: 65%;" rows="3" cols="4"></textarea>
+        <textarea id="container" name="content" type="text/plain" style="width:70%;height:25%"></textarea>
+        <%--<textarea class="ckeditor"  name="content" id="content" style="width: 65%;" rows="3" cols="4"></textarea>--%>
+        <div class="am-margin" style="margin-left: 65%;">
+            <a href="javascript:void (0);" onclick="toSubmitZH('2');" class="am-btn am-btn-primary am-btn-xs">发表评论</a>
+        </div>
     </div>
 
 
@@ -212,7 +215,13 @@
         },function(){
             $(this).find(".todo-action").css({"display":"none"});
         });
-        CKEDITOR.replace('content', {height: '300px', width: '1000px'});
+        var ue = UM.getEditor('container');
+        ue.execCommand( 'insertimage', {
+            src:'<c:url value="/scripts/image/taskDel.png"/>',
+            width:'100',
+            height:'100'
+        } );
+//        CKEDITOR.replace('content', {height: '300px', width: '1000px'});
 
     });
 

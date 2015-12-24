@@ -10,4 +10,6 @@ import java.util.Map;
  */
 public interface TaskManager {
     Task createTask(Map map)throws Exception;
+
+    public Task changeTaskInstanceStatus(String taskId,String status);
 }

@@ -54,6 +54,10 @@
             -webkit-writing-mode: horizontal-tb;
             box-shadow: none;
         }
+
+        ul li{
+            list-style-type:none;
+        }
     </style>
 </head>
 <body>
@@ -75,9 +79,9 @@
       <ul name="${taskGroup.id}">
               <span>${taskGroup.title}</span>
           <c:forEach items="${taskGroup.taskList}" var="task">
-                 <li class="todo" name="${task.id}">
-                     <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
-                         <div  style="padding-left: 10px;">
+                 <li class="todo" name="${task.id}" style="position:relative">
+                     <div class="todo-action" style="display: block;position: absolute;left: -3px;background-color: #FFFFFF;top: 1px;">
+                         <div  style="padding-left: 30px;">
                              <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
                              <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>
                              <a href="javascript:void (0);"></a>
@@ -85,6 +89,7 @@
                      </div>
                      <div class="todo-wrap" style="position:relative ;left: 10px;">
                          <span>
+                             <input type="checkbox" onclick="completeTask(this,'${task.id}')" />
                               <a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>
                          </span>
                          <span>
@@ -95,7 +100,6 @@
                                   </c:forEach>
                               </select>
                          </span>
-
                          <span>
                               <c:if test="${not empty task.currentInstance}">
  　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">
@@ -109,16 +113,6 @@
 
                      </div>
                  </li>
-               <%----%>
-                     <%--<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%">--%>
-                         <%--<option value="null" <c:if test="${empty task.currentUser}">selected="selected"</c:if>>未指派</option>--%>
-                         <%--<c:forEach var="member" items="${object.memberList}">--%>
-                             <%--<option value="${member.id}" <c:if test="${member.id==task.currentUser.id}">selected="selected"</c:if>>${member.username}</option>--%>
-                         <%--</c:forEach>--%>
-
-                     <%--</select>--%>
-                      <%----%>
-
              </c:forEach>
              <div id="${taskGroup.id}">
                 <small> <a href="javascript:void (0);" onclick="addTask('${taskGroup.id}')">添加新任务</a></small>
@@ -188,18 +182,7 @@
     </li>
 
 </div>
-<%--<div class="am-modal am-modal-prompt" tabindex="-1" id="task-prompt">--%>
-    <%--<div class="am-modal-dialog">--%>
-        <%--<div class="am-modal-hd">任务</div>--%>
-        <%--<div class="am-modal-bd">--%>
-            <%--<input type="text" name="taskTitle" class="am-modal-prompt-input">--%>
-        <%--</div>--%>
-        <%--<div class="am-modal-footer">--%>
-            <%--<span class="am-modal-btn" data-am-modal-cancel>取消</span>--%>
-            <%--<span class="am-modal-btn" data-am-modal-confirm>提交</span>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
+
 <script type="text/javascript">
 
     //初始化操作
@@ -297,6 +280,34 @@
         }
     }
 
+
+
+    //测试 完成任务
+    function completeTask(obj,taskId){
+        $.ajax({
+            type:"post",
+            url:"<c:url value="/task/changeTaskStatus.do"/>",
+            data:{taskId:taskId},
+            success:function(data) {
+                $.each($.parseJSON(data), function (key, value) {
+                    if (key == "users") {
+                        var select = '<span>' +
+                                '<select name="user" onchange="" style="font-size: 10%;">' +
+                                '<option value="null">' + '请选择成员' + '</option>';
+
+                        $.each(value, function (k, v) {
+                            select += ' <option value="' + v.id + '">' + v.name + '</option>';
+                        });
+                        select += '</select>' +
+                                '</span>';
+                        $(obj).parent().next().next().html(select);
+
+                    }
+
+                });
+            }
+        });
+    }
     <%--//分配人员--%>
     <%--function changeMember(obj){--%>
         <%--var  memberId = $(obj).val();--%>
