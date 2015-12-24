@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2015/12/24.
@@ -23,7 +24,7 @@ public class Message implements Serializable {
     private User creator;//消息触发者
     private Date createDatetime;//发送时间
     private String status;//1.未读 2.已读
-    private User receiver;//消息收发者
+    private List<User> receiver;//消息收发者
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -77,14 +78,15 @@ public class Message implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="receiver_id")
-    public User getReceiver() {
+    public List<User> getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(User receiver) {
+    public void setReceiver(List<User> receiver) {
         this.receiver = receiver;
     }
 }
