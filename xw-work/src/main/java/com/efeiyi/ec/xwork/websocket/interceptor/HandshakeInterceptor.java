@@ -2,6 +2,7 @@ package com.efeiyi.ec.xwork.websocket.interceptor;
 
 import java.util.Map;
 
+import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,11 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
 	public boolean beforeHandshake(ServerHttpRequest request,
 			ServerHttpResponse response, WebSocketHandler wsHandler,
 			Map<String, Object> attributes) throws Exception {
+		if(request.getHeaders().containsKey("Sec-WebSocket-Extensions")) {
+			request.getHeaders().set("Sec-WebSocket-Extensions", "permessage-deflate");
+		}
 		System.out.println("Before Handshake");
+		attributes.put("username", AuthorizationUtil.getMyUser().getId()==null ?"15538398530":"111");
 		return super.beforeHandshake(request, response, wsHandler, attributes);
 	}
 
