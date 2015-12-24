@@ -66,12 +66,12 @@
 
             //ws = (url.indexOf('sockjs') != -1) ?new SockJS(url, undefined, {protocols_whitelist: transports}) : new WebSocket(url);
             if ('WebSocket' in window) {
-                ws= new WebSocket("<c:url value='ws://localhost:8082/websck'/>");
+                ws= new WebSocket("<c:url value='ws://192.168.1.61:8082/websck'/>");
             }else if ('MozWebSocket' in window) {
                 alert("MozWebSocket");
                 ws = new MozWebSocket("ws://websck");
             }else {
-                ws = new SockJS("<c:url value='http://localhost:8082/sockjs/websck'/>");
+                ws = new SockJS("<c:url value='http://192.168.1.61:8082/sockjs/websck'/>");
             }
 
             ws.onopen = function () {
@@ -82,8 +82,9 @@
             ws.onmessage = function (event) {
                 alert('Received:' + event.data);
                 log('Received: ' + event.data);
-                if(window.URL){
-                    URL = window.URL;
+
+                if(window.webkitURL){
+                    URL = webkitURL;
                 }
                 var uri = URL.createObjectURL(event.data)
                 var img = document.createElement("img");
@@ -169,14 +170,10 @@
 
             }
         }
-
-
-
-
     </script>
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websockets 
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websockets
     rely on Javascript being enabled. Please enable
     Javascript and reload this page!</h2></noscript>
 <div>

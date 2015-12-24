@@ -5,6 +5,8 @@
  */
 package com.efeiyi.ec.xwork.websocket.hndler;
 
+import com.efeiyi.ec.xwork.util.Constants;
+import com.efeiyi.ec.xwork.websocket.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -32,25 +34,25 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         logger = Logger.getLogger(SystemWebSocketHandler.class);
     }
 
-  /*  @Autowired
-    private WebSocketService webSocketService;*/
+    @Autowired
+    private WebSocketService webSocketService;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.debug("connect to the websocket success......");
         users.add(session);
-      /*  String userName = (String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME);
+        String userName = (String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME);
         if(userName!= null){
             //查询未读消息
             int count = webSocketService.getUnReadNews((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
 
             session.sendMessage(new TextMessage(count + ""));
-        }*/
+        }
     }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-
+        //这里做业务逻辑处理 1.即时消息 2.离线消息 3.通知页面改动
         sendMessageToUsers( new TextMessage(message.getPayload()+""));
     }
 
@@ -99,7 +101,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
      */
     public void sendMessageToUser(String userName, TextMessage message) {
         for (WebSocketSession user : users) {
-           // if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(userName)) {
+           if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(userName)) {
                 try {
                     if (user.isOpen()) {
                         user.sendMessage(message);
@@ -108,7 +110,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
                     e.printStackTrace();
                 }
                 break;
-           // }
+            }
         }
     }
     
