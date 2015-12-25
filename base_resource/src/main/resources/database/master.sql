@@ -91,3 +91,13 @@ PRIMARY KEY (`id`)
 )
 ;
 
+CREATE TABLE `xw_message` (
+  `id` char(16) NOT NULL,
+  `creator_id` char(16) NOT NULL,
+  `receiver_id` char(16) NOT NULL,
+  `content` varchar(500) DEFAULT NULL,
+  `type` varchar(2) DEFAULT NULL,
+  `status` varchar(2) DEFAULT NULL,
+  `createDatetime` DATE ,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
