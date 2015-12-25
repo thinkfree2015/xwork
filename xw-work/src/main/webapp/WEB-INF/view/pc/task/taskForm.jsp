@@ -13,8 +13,10 @@
 <html>
 <head>
     <title></title>
-    <script src="<c:url value="/scripts/task.js" />"></script>
-    <script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/scripts/simditor/styles/font-awesome.css" />" />
+    <link rel="stylesheet" type="text/css" href="<c:url value="/scripts/simditor/styles/simditor.css" />" />
+     <script type="text/javascript" src="<c:url value="/scripts/simditor/scripts/js/simditor-all.js" />"></script>
+    <%--<script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>--%>
     <style type="text/css">
         .todo-content {
             display: inline-block;
@@ -131,10 +133,10 @@
     <hr/>
     <div class="pinglun">
         <label>发表评论:</label>
-        <textarea id="container" name="content" type="text/plain" style="width:70%;height:25%"></textarea>
-        <%--<textarea class="ckeditor"  name="content" id="content" style="width: 65%;" rows="3" cols="4"></textarea>--%>
+        <textarea id="content" name="content" style="width:70%;height:25%" placeholder="这里输入评价" autofocus></textarea>
+        <%--<textarea class="ckeditor"  name="content" id="content"  rows="3" cols="4"></textarea>--%>
         <div class="am-margin" style="margin-left: 65%;">
-            <a href="javascript:void (0);" onclick="toSubmitZH('2');" class="am-btn am-btn-primary am-btn-xs">发表评论</a>
+            <a href="javascript:void (0);" onclick="toReview(this);" class="am-btn am-btn-primary am-btn-xs">发表评论</a>
         </div>
     </div>
 
@@ -208,7 +210,6 @@
 </div>
 <!-- content end -->
 <hr/>
-
 <script type="text/javascript">
     //初始化操作
     $(function(){
@@ -217,16 +218,27 @@
         },function(){
             $(this).find(".todo-action").css({"display":"none"});
         });
-        var ue = UM.getEditor('container');
-        ue.execCommand( 'insertimage', {
-            src:'<c:url value="/scripts/image/taskDel.png"/>',
-            width:'100',
-            height:'100'
-        } );
+
+       var  editor = new Simditor({
+           textarea:$("#content"),
+           upload:{
+               url:"<c:url value="/task/img.do" />",
+               params:""
+           },
+           pasteImage:true
+
+       });
+
+$(".simditor-toolbar ul").css({"margin-top":"10px"});
 //        CKEDITOR.replace('content', {height: '300px', width: '1000px'});
 
     });
 
+
+    //发表评论
+    function toReview(obj){
+           alert($("#content").val());
+    }
 
     function editTask(){
           $("#EditContent").css({"display":"block"});
