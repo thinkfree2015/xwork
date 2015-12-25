@@ -30,14 +30,39 @@
         <input type="hidden" name="status" value="1">
         <div class="am-form-group">
             <label name="title" for="title" class="am-u-sm-3 am-form-label">流程标题 <small>*</small></label>
-            <div class="am-u-sm-9">
-                <input type="text" name="title" id="title" disabled="disabled" placeholder="流程标题" value="${object.title}">
+            <div class="am-u-sm-9"><p>${object.title}</p>
+                <%--<input type="text" name="title" id="title" disabled="disabled" placeholder="流程标题" value="">--%>
             </div>
         </div>
         <div class="am-form-group">
             <label name="context" class="am-u-sm-3 am-form-label">成员 </label>
             <div class="am-u-sm-9">
                 <div class="am-tabs am-margin" data-am-tabs>
+                    <%--<c:forEach items="${object.user}" var="user">--%>
+                        <%--<c:choose>--%>
+                            <%--<c:when test="${user.group == '1'}">--%>
+                                <%--产品组[${user.name}]--%>
+                            <%--</c:when>--%>
+                            <%--<c:when test="${user.group == '2'}">--%>
+                                <%--UI组[${user.name}]--%>
+                            <%--</c:when>--%>
+                            <%--<c:when test="${user.group == '3'}">--%>
+                                <%--前端组[${user.name}]--%>
+                            <%--</c:when>--%>
+                            <%--<c:when test="${user.group == '4'}">--%>
+                                <%--开发组[${user.name}]--%>
+                            <%--</c:when>--%>
+                            <%--<c:when test="${user.group == '5'}">--%>
+                                <%--测试组[${user.name}]--%>
+                            <%--</c:when>--%>
+                            <%--<c:when test="${user.group == '6'}">--%>
+                                <%--运营组[${user.name}]--%>
+                            <%--</c:when>--%>
+                            <%--<c:otherwise>--%>
+                                <%--运维组--%>
+                            <%--</c:otherwise>--%>
+                        <%--</c:choose>--%>
+                    <%--</c:forEach>--%>
                     <ul class="am-tabs-nav am-nav am-nav-tabs">
                         <li class="am-active"><a href="#tab1">产品</a></li>
                         <li><a href="#tab2">UI</a></li>
@@ -67,7 +92,6 @@
                         <div class="am-tab-panel am-fade am-in am-active" id="tab2" style="height: 30%;">
                             <c:if test="${!empty uiList}">
                                 <c:forEach items="${uiList}" var="maps">
-
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
                                             <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
@@ -84,7 +108,6 @@
                         <div class="am-tab-panel am-fade am-in am-active" id="tab3" style="height: 30%;">
                             <c:if test="${!empty webList}">
                                 <c:forEach items="${webList}" var="maps">
-
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
                                             <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
@@ -101,7 +124,6 @@
                         <div class="am-tab-panel am-fade am-in am-active" id="tab4" style="height: 30%;">
                             <c:if test="${!empty devList}">
                                 <c:forEach items="${devList}" var="maps">
-
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
                                             <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
@@ -118,7 +140,6 @@
                         <div class="am-tab-panel am-fade am-in am-active" id="tab5" style="height: 30%;">
                             <c:if test="${!empty testList}">
                                 <c:forEach items="${testList}" var="maps">
-
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
                                             <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
@@ -135,7 +156,6 @@
                         <div class="am-tab-panel am-fade am-in am-active" id="tab6" style="height: 30%;">
                             <c:if test="${!empty operateList}">
                                 <c:forEach items="${operateList}" var="maps">
-
                                     <c:forEach items="${maps}" var="map">
                                         <c:if test="${map.value=='true'}">
                                             <input name="user" type="checkbox" disabled="disabled" checked="checked" value="${map.key.id}"/>
@@ -153,40 +173,87 @@
                 </div>
             </div>
         </div>
-        <div class="am-form-group">
-            <div class="am-u-sm-9 am-u-sm-push-3">
-                <input type="submit" class="am-btn am-btn-primary" disabled="disabled" value="保存"/>
-            </div>
-        </div>
     </form>
 </div>
 <!-- content end -->
 <hr/>
+<div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">流程节点列表</strong> / <small>VIEW FlowActivity</small></div>
+</div>
 <div class="am-g">
     <form action="<c:url value=''/>" method="post"  class="am-form am-form-horizontal">
         <input type="hidden" name="id" value="${object.id}">
         <input type="hidden" name="status" value="1">
         <input type="hidden" name="qm" value="saveOrUpdateFlow">
-        <table>
+        <table class="am-table am-table-bordered">
+            <tbody>
+            <tr>
+                <td class="am-primary am-u-md-3">节点标题</td>
+                <td class="am-primary am-u-md-3">所属小组</td>
+                <td class="am-primary am-u-md-3">节点成员</td>
+                <td class="am-primary am-u-md-3">节点类型</td>
+            </tr>
             <c:forEach items="${object.activityList}" var="pop">
                 <tr style="text-align: left" id="${pop.id}">
+                        <%--<td>--%>
+                        <%--<div class="am-btn-toolbar">--%>
+                        <%--<div class="am-btn-group am-btn-group-xs" style="width: 100%;" >--%>
+                        <%--<button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>--%>
+                        <%--<button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>--%>
+                        <%--</div>--%>
+                        <%--</div>--%>
+                        <%--</td>--%>
                     <td>
-                        <div class="am-btn-toolbar">
-                            <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-                                <button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>
-                                <button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
-                            </div>
-                        </div>
+                        <c:if test="${!empty pop.title}">
+                            ${pop.title}
+                        </c:if>
                     </td>
-                    <td width="35%">
-                        <a href="<c:url value='/basic/xm.do?qm=viewFlowActivity&id=${pop.id}'/>">
-                            <c:if test="${!empty pop.title}">
-                                ${pop.title}
-                            </c:if>
-                        </a>
+                    <td>
+                        <c:choose>
+                            <c:when test="${pop.group == '1'}">
+                                产品组
+                            </c:when>
+                            <c:when test="${pop.group == '2'}">
+                                UI组
+                            </c:when>
+                            <c:when test="${pop.group == '3'}">
+                                前端组
+                            </c:when>
+                            <c:when test="${pop.group == '4'}">
+                                开发组
+                            </c:when>
+                            <c:when test="${pop.group == '5'}">
+                                测试组
+                            </c:when>
+                            <c:when test="${pop.group == '6'}">
+                                运营组
+                            </c:when>
+                            <c:otherwise>
+                                运维组
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <c:forEach items="${pop.user}" var="user">
+                            [${user.name}]
+                        </c:forEach>
+                    </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${pop.type == '1'}">
+                                one
+                            </c:when>
+                            <c:when test="${pop.type == '2'}">
+                                xor
+                            </c:when>
+                            <c:otherwise>
+                                and
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                 </tr>
             </c:forEach>
+            </tbody>
         </table>
     </form>
 </div>
