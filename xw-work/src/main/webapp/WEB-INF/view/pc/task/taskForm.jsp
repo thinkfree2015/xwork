@@ -92,12 +92,14 @@
                          </span>
 
                          <span>
+<c:if test="${not empty object.currentInstance}">
  　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">
                              　　　　<option value="null">请选择成员</option>
                              　　　　　<c:forEach var="user" items="${object.currentInstance.flowActivity.user}">
                              　　　　　　　<option value="${user.id}" <c:if test="${object.currentUser.id==user.id}">selected="selected"</c:if>>${user.name}</option>
                              　　　　　</c:forEach>
                              　　</select>
+    </c:if>
                          </span>
                     </div>
                 </li>

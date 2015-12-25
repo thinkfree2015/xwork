@@ -89,7 +89,7 @@ public class TaskManagerImpl implements TaskManager {
             //判断是否为最后一个节点
 
             if(nextFlowActivity == null){
-
+                
             }else {
                 //创建下一节点的任务实例
                 TaskActivityInstance nextTaskActivityInstance = new TaskActivityInstance();
