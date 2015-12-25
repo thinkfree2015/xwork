@@ -103,6 +103,8 @@ public class User implements Serializable {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="flow_activity_id")
     public FlowActivity getFlowActivity() {
