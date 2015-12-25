@@ -3,7 +3,7 @@
     <jnode id="ContextAndActivity" access="admin,operational,c_operational,o_operational,product_manager" text_zh_CN="我的问题" url="/main.do?jnodeId=ContextAndActivity" state="">
 
     </jnode>
-    <jnode id="efecOrderAndConsumer" access="admin,operational,o_operational,financial,product_manager,market" url="/main.do?jnodeId=efecOrderAndConsumer" text_zh_CN="全部动态">
+    <jnode id="efecOrderAndConsumer" access="admin,operational,o_operational,financial,product_manager,market" url="/basic/xm.do?qm=plistTaskDynamic_default" text_zh_CN="全部动态">
 
     </jnode>
     <jnode id="EfyProject" access="admin,operational,c_operational,o_operational,financial,product_manager" url="/basic/xm.do?qm=plistProjectUser_default&amp;jnodeId=EfyProject" text_zh_CN="项目列表">

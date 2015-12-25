@@ -2,6 +2,7 @@ package com.efeiyi.ec.xw.task.model;
 
 import com.efeiyi.ec.xw.flow.model.Flow;
 import com.efeiyi.ec.xw.organization.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -36,6 +37,7 @@ public class TaskDynamic implements Serializable {
         this.id = id;
     }
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="task_id")
     public Task getTask() {
@@ -47,6 +49,7 @@ public class TaskDynamic implements Serializable {
         this.task = task;
     }
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="task_activity_instance_id")
     public TaskActivityInstance getTaskActivityInstance() {
