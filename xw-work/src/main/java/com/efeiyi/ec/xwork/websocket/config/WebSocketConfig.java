@@ -1,5 +1,6 @@
 package com.efeiyi.ec.xwork.websocket.config;
 
+import com.efeiyi.ec.xwork.websocket.hndler.InfoSocketEndPoint;
 import com.efeiyi.ec.xwork.websocket.hndler.SystemWebSocketHandler;
 import com.efeiyi.ec.xwork.websocket.interceptor.HandshakeInterceptor;
 import org.springframework.context.annotation.Configuration;
