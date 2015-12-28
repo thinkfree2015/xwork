@@ -41,7 +41,7 @@
             <div class="am-comment-main">
                 <div class="am-comment-bd"><fmt:formatDate value="${dynamic.createDatetime}" type="both"
                                                            pattern="MM/dd HH:mm:ss"/>&nbsp;&nbsp;&nbsp;
-                    <a href="" class="am-comment-author">${dynamic.creator.name}</a>${dynamic.message} :
+                    <a href="<c:url value='/basic/xm.do?qm=formTaskDynamic&id=${dynamic.creator.id}'/>" class="am-comment-author">${dynamic.creator.name}</a>${dynamic.message} :
                     <a href="<c:url value='/basic/xm.do?qm=formTask&id=${dynamic.task.id}&projectId=${dynamic.task.taskGroup.project.id}'/>" class="am-comment-author" id="${dynamic.task.id}">${dynamic.task.title}</a>
                 </div>
             </div>
