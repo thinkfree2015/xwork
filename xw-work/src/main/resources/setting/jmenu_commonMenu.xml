@@ -3,8 +3,9 @@
     <jnode id="ContextAndActivity" access="admin,operational,c_operational,o_operational,product_manager" text_zh_CN="我的问题" url="/main.do?jnodeId=ContextAndActivity" state="">
 
     </jnode>
-    <jnode id="efecOrderAndConsumer" access="admin,operational,o_operational,financial,product_manager,market" url="/basic/xm.do?qm=plistTaskDynamic_default" text_zh_CN="全部动态">
-
+    <jnode id="efecOrderAndConsumer" access="admin,operational,o_operational,financial,product_manager,market" url="/basic/xm.do?qm=plistTaskDynamic_default&amp;jnodeId=efecOrderAndConsumer" text_zh_CN="全部动态">
+        <match url="/basic/xm.do?qm=plistTaskDynamic_default" />
+        <!--<match url="/basic/xm.do?qm=formTaskDynamic" />-->
     </jnode>
     <jnode id="EfyProject" access="admin,operational,c_operational,o_operational,financial,product_manager" url="/basic/xm.do?qm=plistProjectUser_default&amp;jnodeId=EfyProject" text_zh_CN="项目列表">
         <match url="/basic/xm.do?qm=plistProjectUser_default" />
@@ -18,7 +19,6 @@
                 <match url="/basic/xm.do?qm=plistUser_default" />
                 <match url="/basic/xm.do?qm=saveOrUpdateUserGroup" />
             </jnode>
-
         </jnode>
         <jnode url="" id="FlowManager" access="admin,operational,c_operational,product_manager" state="closed" text_zh_CN="流程管理">
             <jnode url="/basic/xm.do?qm=plistFlow_default" access="admin,operational,c_operational,product_manager" text_zh_CN="流程列表">
@@ -28,9 +28,6 @@
                 <match url="/basic/xm.do?qm=formFlowActivity"/>
                 <match url="/basic/xm.do?qm=viewFlowActivity"/>
             </jnode>
-            <!--<jnode url="/basic/xm.do?qm=plistFlowActivity_default" access="admin,operational,c_operational,product_manager" text_zh_CN="流程节点列表">-->
-                <!--<match url="/basic/xm.do?qm=plistFlowActivity_default" />-->
-            <!--</jnode>-->
         </jnode>
     </jnode>
 
