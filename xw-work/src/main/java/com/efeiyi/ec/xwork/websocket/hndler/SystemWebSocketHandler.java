@@ -61,7 +61,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         //这里做业务逻辑处理 1.即时消息 2.离线消息 3.通知页面改动
-        //saveMessageToOffLineUsers(message);
+        saveMessageToOffLineUsers(message);
         sendMessageToUsers( new TextMessage(message.getPayload()+""));
     }
 
@@ -130,7 +130,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
      * @param message
      */
     public void saveMessageToOffLineUsers(WebSocketMessage<?> message)throws Exception{
-        List<User> allUsers = webSocketService.getAllUsers(request);
+        List<User> allUsers = webSocketService.getAllUsers();
         //对 message进行处理 转化
 
         for (WebSocketSession user : users) {
