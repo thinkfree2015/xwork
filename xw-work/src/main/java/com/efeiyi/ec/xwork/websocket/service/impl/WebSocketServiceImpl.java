@@ -24,9 +24,9 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Autowired
     private XdoDaoSupport xdoDao;
     @Override
-    public List<User> getAllUsers(HttpServletRequest request) throws Exception {
-        XQuery xQuery = new XQuery("listUser_default",request);
-        List<User> list = baseManager.listObject(xQuery);
+    public List<User> getAllUsers() throws Exception {
+        Query query = xdoDao.getSession().createQuery("FROM User u WHERE  u.status != '0'");
+        List<User> list = query.list();
         return list;
     }
 
