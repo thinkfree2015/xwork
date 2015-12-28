@@ -160,35 +160,83 @@
 </div>
 <!-- content end -->
 <hr/>
+<div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">流程节点列表</strong> / <small>VIEW FlowActivity</small></div>
+</div>
 <div class="am-g">
-    <form action="<c:url value=''/>" method="post"  class="am-form am-form-horizontal">
-        <%--<input type="hidden" name="id" value="${object.id}">--%>
-        <%--<input type="hidden" name="status" value="1">--%>
-        <%--<input type="hidden" name="qm" value="saveOrUpdateFlow">--%>
-        <table>
-            <c:forEach items="${object.activityList}" var="pop">
-                <tr style="text-align: left" id="${pop.id}">
-                    <c:if test="${pop.status != '0'}">
-                        <td>
-                            <div class="am-btn-toolbar">
-                                <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-                                    <%--<button onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${pop.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>--%>
-                                    <%--<button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}&id=${pop.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>--%>
-                                    <a href="<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${pop.id}"/>" class="am-btn am-btn-default"><span class="am-icon-plus"></span>废弃</a>
-                                    <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}&id=${pop.id}"/>" class="am-btn am-btn-default"><span class="am-icon-plus"></span>编辑</a>
+    <form action="" method="post"  class="am-form am-form-horizontal">
+        <table class="am-table am-table-bordered">
+            <tbody>
+                <tr>
+                    <td class="am-primary am-u-md-3">节点操作</td>
+                    <td class="am-primary am-u-md-3">节点标题</td>
+                    <td class="am-primary am-u-md-3">所属小组</td>
+                    <td class="am-primary am-u-md-3">节点成员</td>
+                    <td class="am-primary am-u-md-3">节点类型</td>
+                </tr>
+                <c:forEach items="${object.activityList}" var="pop">
+                    <tr id="${pop.id}">
+                        <c:if test="${pop.status != '0'}">
+                            <td>
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs" >
+                                        <a href="<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${pop.id}"/>" class="am-btn am-btn-default"><span class="am-icon-plus"></span>废弃</a>
+                                        <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}&id=${pop.id}"/>" class="am-btn am-btn-default"><span class="am-icon-plus"></span>编辑</a>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </c:if>
-                    <td width="35%">
-                        <a href="<c:url value='/basic/xm.do?qm=viewFlowActivity&id=${pop.id}'/>">
+                            </td>
+                        </c:if>
+                        <td>
                             <c:if test="${!empty pop.title && pop.status != '0'}">
                                 ${pop.title}
                             </c:if>
-                        </a>
-                    </td>
-                </tr>
-            </c:forEach>
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${pop.group == '1'}">
+                                    产品组
+                                </c:when>
+                                <c:when test="${pop.group == '2'}">
+                                    UI组
+                                </c:when>
+                                <c:when test="${pop.group == '3'}">
+                                    前端组
+                                </c:when>
+                                <c:when test="${pop.group == '4'}">
+                                    开发组
+                                </c:when>
+                                <c:when test="${pop.group == '5'}">
+                                    测试组
+                                </c:when>
+                                <c:when test="${pop.group == '6'}">
+                                    运营组
+                                </c:when>
+                                <c:otherwise>
+                                    运维组
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <c:forEach items="${pop.user}" var="user">
+                                [${user.name}]
+                            </c:forEach>
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${pop.type == '1'}">
+                                    one
+                                </c:when>
+                                <c:when test="${pop.type == '2'}">
+                                    xor
+                                </c:when>
+                                <c:otherwise>
+                                    and
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
         </table>
     </form>
 </div>
