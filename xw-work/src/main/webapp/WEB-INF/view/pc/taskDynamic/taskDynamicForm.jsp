@@ -23,17 +23,21 @@
         <div class="am-u-sm-9">
             <label class="am-text-primary am-text-lg">筛选动态 :</label>
             <select onchange="changeContent(this);">
-                <option value="0" aria-checked="true">所有成员</option>
+                <option value="0">所有成员</option>
                 <c:forEach items="${users}" var="user">
-                    <option value="${user.id}">${user.name}</option>
+                    <c:if test="${onlyUser.id == user.id}">
+                        <option selected="selected" value="${user.id}">${user.name}</option>
+                    </c:if>
+                    <c:if test="${onlyUser.id != user.id}">
+                        <option value="${user.id}">${user.name}</option>
+                    </c:if>
                 </c:forEach>
             </select>
         </div>
     </div>
 </div>
-
 <div class="am-form-group" id="box">
-    <c:forEach items="${requestScope.pageInfo.list}" var="dynamic">
+    <c:forEach items="${messages}" var="dynamic">
         <article class="am-comment">
             <a href="">
                 <img class="am-comment-avatar" alt=""/>
@@ -41,26 +45,19 @@
             <div class="am-comment-main">
                 <div class="am-comment-bd"><fmt:formatDate value="${dynamic.createDatetime}" type="both"
                                                            pattern="MM/dd HH:mm:ss"/>&nbsp;&nbsp;&nbsp;
-                    <a href="<c:url value='/basic/xm.do?qm=formTaskDynamic&id=${dynamic.creator.id}'/>" class="am-comment-author">${dynamic.creator.name}</a>${dynamic.message} :
+                    <a href="" class="am-comment-author">${dynamic.creator.name}</a>${dynamic.message} :
                     <a href="<c:url value='/basic/xm.do?qm=formTask&id=${dynamic.task.id}&projectId=${dynamic.task.taskGroup.project.id}'/>" class="am-comment-author" id="${dynamic.task.id}">${dynamic.task.title}</a>
                 </div>
             </div>
         </article>
     </c:forEach>
 </div>
-<div style="clear: both">
-    <c:url value="/basic/xm.do" var="url"/>
-    <ming800:pcPageList bean="${requestScope.pageInfo.pageEntity}" url="${url}">
-        <ming800:pcPageParam name="qm" value="${requestScope.qm}"/>
-        <ming800:pcPageParam name="conditions" value="${requestScope.conditions}"/>
-    </ming800:pcPageList>
-</div>
 <script>
-    function changeContent(o){
+    function changeContent(o) {
         var userId = $(o).val();
         $.ajax({
             type: "get",//设置get请求方式
-            url: "<c:url value='/taskDynamic/'/>"+userId,//设置请求的脚本地址
+            url: "<c:url value='/taskDynamic/'/>" + userId,//设置请求的脚本地址
             data: "",//设置请求的数据
             async: true,
             dataType: "json",//设置请求返回的数据格式
@@ -68,8 +65,8 @@
                 var box = $("#box");
                 box.empty();
                 var sub = "";
-                if(data && data.length > 0){
-                    for(var i in data){
+                if (data && data.length > 0) {
+                    for (var i in data) {
                         var ctime = clockon(data[i].createDatetime);
                         sub += "<article class=\"am-comment\">" +
                                 "     <a href=\"\">" +

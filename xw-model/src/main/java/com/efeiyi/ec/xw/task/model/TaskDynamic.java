@@ -25,6 +25,36 @@ public class TaskDynamic implements Serializable {
     private String message;
     private User creator;
     private Date createDatetime;
+    private String taskTitle;
+    private String taskId;
+    private String projectId;
+
+    @Transient
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    @Transient
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    @Transient
+    public String getTaskTitle() {
+        return taskTitle;
+    }
+
+    public void setTaskTitle(String taskTitle) {
+        this.taskTitle = taskTitle;
+    }
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -69,7 +99,7 @@ public class TaskDynamic implements Serializable {
         this.message = message;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     public User getCreator() {
         return creator;

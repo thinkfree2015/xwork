@@ -182,9 +182,6 @@
 </div>
 <div class="am-g">
     <form action="<c:url value=''/>" method="post"  class="am-form am-form-horizontal">
-        <input type="hidden" name="id" value="${object.id}">
-        <input type="hidden" name="status" value="1">
-        <input type="hidden" name="qm" value="saveOrUpdateFlow">
         <table class="am-table am-table-bordered">
             <tbody>
             <tr>
@@ -195,14 +192,6 @@
             </tr>
             <c:forEach items="${object.activityList}" var="pop">
                 <tr style="text-align: left" id="${pop.id}">
-                        <%--<td>--%>
-                        <%--<div class="am-btn-toolbar">--%>
-                        <%--<div class="am-btn-group am-btn-group-xs" style="width: 100%;" >--%>
-                        <%--<button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeFlowActivity&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 废弃</button>--%>
-                        <%--<button disabled="disabled" onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>--%>
-                        <%--</div>--%>
-                        <%--</div>--%>
-                        <%--</td>--%>
                     <td>
                         <c:if test="${!empty pop.title}">
                             ${pop.title}
