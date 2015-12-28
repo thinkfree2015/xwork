@@ -5,6 +5,8 @@
  */
 package com.efeiyi.ec.xwork.websocket.hndler;
 
+import com.efeiyi.ec.xw.message.model.Message;
+import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xwork.util.Constants;
 import com.efeiyi.ec.xwork.websocket.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,12 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  *
  * @author kayson
@@ -36,7 +43,8 @@ public class SystemWebSocketHandler implements WebSocketHandler {
 
     @Autowired
     private WebSocketService webSocketService;
-
+    @Autowired
+    private HttpServletRequest request;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.debug("connect to the websocket success......");
@@ -46,13 +54,14 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             //查询未读消息
             int count = webSocketService.getUnReadNews((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
 
-            session.sendMessage(new TextMessage(count + ""));
+            session.sendMessage(new TextMessage("您有"+count + "条未读消息！"));
         }
     }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         //这里做业务逻辑处理 1.即时消息 2.离线消息 3.通知页面改动
+        //saveMessageToOffLineUsers(message);
         sendMessageToUsers( new TextMessage(message.getPayload()+""));
     }
 
@@ -113,5 +122,39 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             }
         }
     }
-    
+
+
+    /**
+     * 给所有离线用户发保存消息
+     *
+     * @param message
+     */
+    public void saveMessageToOffLineUsers(WebSocketMessage<?> message)throws Exception{
+        List<User> allUsers = webSocketService.getAllUsers(request);
+        //对 message进行处理 转化
+
+        for (WebSocketSession user : users) {
+            for (User user1:allUsers){
+                try {
+                    Message message1 = new Message();
+
+                    if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(user1.getUsername())){
+                        if (user.isOpen()) {
+                            user.sendMessage(message);
+                        }
+                        message1.setStatus("2");
+                        webSocketService.saveMessageForOffLineUser(message1);
+                    }else{
+                        message1.setStatus("1");
+                        webSocketService.saveMessageForOffLineUser(message1);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+    }
 }

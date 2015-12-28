@@ -1,6 +1,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans
@@ -8,7 +9,11 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-4.1.xsd
         http://www.springframework.org/schema/task
-        http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+        http://www.springframework.org/schema/task/spring-task-4.1.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 
 
@@ -40,6 +45,21 @@
     </bean>
 
     <context:annotation-config/>
+    <!-- 定义切面 -->
+    <aop:config>
+        <aop:advisor id="managerTx2" advice-ref="txAdvice2" pointcut="execution(* com.efeiyi.ec.xwork.websocket.service.impl.*.*(..))"/>
+    </aop:config>
+    <context:annotation-config/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <tx:advice id="txAdvice2" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" rollback-for="java.lang.Exception" propagation="REQUIRED"/>
+            <tx:method name="list*" read-only="true" rollback-for="java.lang.Exception" propagation="REQUIRED"/>
+            <tx:method name="*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>

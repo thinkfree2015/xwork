@@ -22,7 +22,7 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
 			request.getHeaders().set("Sec-WebSocket-Extensions", "permessage-deflate");
 		}
 		System.out.println("Before Handshake");
-		attributes.put(Constants.WEBSOCKET_USERNAME, AuthorizationUtil.getMyUser().getId()==null ? AuthorizationUtil.getMyUser().getFullName():"未知用户");
+		attributes.put(Constants.WEBSOCKET_USERNAME, AuthorizationUtil.getMyUser().getUsername());
 		return super.beforeHandshake(request, response, wsHandler, attributes);
 	}
 
@@ -31,6 +31,7 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
 			ServerHttpResponse response, WebSocketHandler wsHandler,
 			Exception ex) {
 		System.out.println("After Handshake");
+
 		super.afterHandshake(request, response, wsHandler, ex);
 	}
 
