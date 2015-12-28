@@ -24,22 +24,29 @@ public class TaskDynamicController {
     private BaseManager baseManager;
 
 
-
     @ResponseBody
     @RequestMapping("/taskDynamic/{userId}")
-    public List<TaskDynamic> allOrOne(@PathVariable String userId , HttpServletRequest request) throws Exception {
+    public List<TaskDynamic> allOrOne(@PathVariable String userId, HttpServletRequest request) throws Exception {
         List<TaskDynamic> list = null;
-        if (!StringTools.isEmpty(userId)){
+        if (!StringTools.isEmpty(userId)) {
             XQuery xQuery;
-            if (!"0".equals(userId)){
-                xQuery = new XQuery("listTaskDynamic_byUser",request);
-                xQuery.put("creator_id",userId);
-            }else{
-                xQuery = new XQuery("listTaskDynamic_all",request);
+            if (!"0".equals(userId)) {
+                xQuery = new XQuery("listTaskDynamic_byUser", request);
+                xQuery.put("creator_id", userId);
+            } else {
+                xQuery = new XQuery("listTaskDynamic_all", request);
             }
             list = baseManager.listObject(xQuery);
+            if (!StringTools.isEmpty(list) && list.size() > 0) {
+                for (TaskDynamic taskDynamic : list) {
+                    taskDynamic.setProjectId(taskDynamic.getTask().getTaskGroup().getProject().getId() == null ? "" : taskDynamic.getTask().getTaskGroup().getProject().getId());
+                    taskDynamic.setTaskId(taskDynamic.getTask().getId() == null ? "" : taskDynamic.getTask().getId());
+                    taskDynamic.setTaskTitle(taskDynamic.getTask().getTitle() == null ? "" : taskDynamic.getTask().getTitle());
+                }
+            }
         }
         return list;
     }
+
 
 }

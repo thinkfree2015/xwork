@@ -12,11 +12,7 @@
                         <condition label="主键" name="id" defaultValue="0" operation="ne"/>
                     </query>
                 </do>
-                <do name="formTaskDynamic" label="查看" access="" result="/flow/flowTaskDynamic"/>
-                <!--&lt;!&ndash;<do name="saveOrUpdateFlow" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>&ndash;&gt;-->
-                <!--<do name="viewFlow" label="删除" access="" execute="com.efeiyi.ec.xwork.flow.controller.FlowHandle" result="/flow/flowView"/>-->
-                <!--<do name="removeFlow" label="删除" access="" result="redirect:/basic/xm.do?qm=plistFlow_default"/>-->
-                <!--<do name="saveOrUpdateUserGroup" label="保存用户" access="" result="redirect:/basic/xm.do?qm=plistUser_default"/>-->
+                <do name="formTaskDynamic" label="查看" access="" execute="com.efeiyi.ec.xwork.task.controller.TaskDynamicHandler" result="/taskDynamic/taskDynamicForm"/>
                 <do name="listTaskDynamic" label="用户列表" access="" result="/user/userList">
                     <query name="byUser" label="默认" type="auto" orderBy="id:desc">
                         <condition label="主键" name="creator.id" defaultValue="1" operation="eq"/>
@@ -25,6 +21,13 @@
                         <condition label="主键" name="id" defaultValue="0" operation="ne"/>
                     </query>
                 </do>
+            </does>
+        </entity>
+        <entity name="TaskDynamic" label="流程"
+                basic="simple" others=""
+                model="com.efeiyi.ec.xw.task.model.Task">
+            <does>
+                <do name="viewTask" label="查看" access="" result="/taskDynamic/taskView"/>
             </does>
         </entity>
     </entities>
