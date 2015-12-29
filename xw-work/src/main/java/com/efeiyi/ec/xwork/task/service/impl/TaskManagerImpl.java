@@ -3,8 +3,10 @@ package com.efeiyi.ec.xwork.task.service.impl;
 import com.efeiyi.ec.xw.flow.model.FlowActivity;
 import com.efeiyi.ec.xw.task.model.Task;
 import com.efeiyi.ec.xw.task.model.TaskActivityInstance;
+import com.efeiyi.ec.xw.task.model.TaskActivityInstanceExecution;
 import com.efeiyi.ec.xw.task.model.TaskDynamic;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
+import com.efeiyi.ec.xwork.task.dao.TaskDao;
 import com.efeiyi.ec.xwork.task.service.TaskManager;
 import com.ming800.core.base.dao.XdoDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import java.util.Map;
 public class TaskManagerImpl implements TaskManager {
     @Autowired
     private XdoDao xdoDao;
+    @Autowired
+    private TaskDao taskDao;
     @Override
     public Task createTask(Map map) throws Exception {
         Task task = new Task();
@@ -73,6 +77,13 @@ public class TaskManagerImpl implements TaskManager {
             //当前节点任务实例设置为 未激活状态
             taskActivityInstance.setActivate("0");
             xdoDao.saveOrUpdateObject(taskActivityInstance);
+
+            //问题
+            TaskActivityInstanceExecution taskActivityInstanceExecution = taskDao.getTaskActivityInstanceExecution(taskActivityInstance.getId());
+            if(taskActivityInstanceExecution!=null){
+                taskActivityInstanceExecution.setStatus("1");
+                xdoDao.saveOrUpdateObject(taskActivityInstanceExecution);
+            }
             //所有节点
             List<FlowActivity> flowActivityList = task.getFlow().getActivityList();
             //当前所处节点位置
@@ -105,6 +116,16 @@ public class TaskManagerImpl implements TaskManager {
                 xdoDao.saveOrUpdateObject(task);
 
                 message += ",并进入下一个节点:"+nextFlowActivity.getTitle();
+
+                //问题
+                TaskActivityInstanceExecution taskActivityInstanceExecution1 = new TaskActivityInstanceExecution();
+                taskActivityInstanceExecution1.setTaskActivityInstance(nextTaskActivityInstance);
+                taskActivityInstanceExecution1.setTask(task);
+                taskActivityInstanceExecution1.setCreateDatetime(new Date());
+                taskActivityInstanceExecution1.setStatus("0");
+                taskActivityInstanceExecution1.setUser(null);
+                xdoDao.saveOrUpdateObject(taskActivityInstanceExecution1);
+
 
 //                //创建下一个节点 动态
 //                TaskDynamic nextTaskDynamic = new TaskDynamic();

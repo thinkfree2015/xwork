@@ -9,6 +9,7 @@ import com.efeiyi.ec.xw.project.model.ProjectUser;
 import com.efeiyi.ec.xw.task.model.*;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.project.service.ProjectManager;
+import com.efeiyi.ec.xwork.task.dao.TaskDao;
 import com.ming800.core.base.dao.XdoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,8 @@ public class ProjectManagerImpl implements ProjectManager {
     @Autowired
     private XdoDao xdoDao;
 
+    @Autowired
+    private TaskDao taskDao;
     //创建项目
     @Override
     public Project saveProject(Project project,String [] users){
@@ -120,6 +123,15 @@ public class ProjectManagerImpl implements ProjectManager {
             xdoDao.saveOrUpdateObject(taskActivityInstance);
 
 
+            //问题
+            TaskActivityInstanceExecution taskActivityInstanceExecution = new TaskActivityInstanceExecution();
+            taskActivityInstanceExecution.setTaskActivityInstance(taskActivityInstance);
+            taskActivityInstanceExecution.setTask(task);
+            taskActivityInstanceExecution.setCreateDatetime(new Date());
+            taskActivityInstanceExecution.setStatus("0");
+            taskActivityInstanceExecution.setUser(user);
+            xdoDao.saveOrUpdateObject(taskActivityInstanceExecution);
+
             //动态
             TaskDynamic taskDynamic = new TaskDynamic();
             taskDynamic.setTask(task);
@@ -177,6 +189,12 @@ public class ProjectManagerImpl implements ProjectManager {
         taskActivityInstance.setExcutor(user);
 
         xdoDao.saveOrUpdateObject(taskActivityInstance);
+        //改变我的问题user
+        TaskActivityInstanceExecution taskActivityInstanceExecution = taskDao.getTaskActivityInstanceExecution(taskActivityInstance.getId());
+        if(taskActivityInstanceExecution!=null){
+            taskActivityInstanceExecution.setUser(user);
+            xdoDao.saveOrUpdateObject(taskActivityInstanceExecution);
+        }
 
         //添加任务操作动态记录
 

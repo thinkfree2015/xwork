@@ -160,6 +160,7 @@
         </div>
         <div class="todo-wrap" style="position:relative ;left: 10px;">
                          <span>
+                             <input type="checkbox" onclick="" disabled="disabled"/>
                              <textarea class="todo-content no-border "
                                        style="overflow: hidden; word-wrap: break-word; resize: none; height:30px;"></textarea>
                              <%--<a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>--%>
@@ -235,6 +236,8 @@
                         $(li).find("textarea").parent().html(a);
                         $(li).find("select[name='flow']").attr("disabled","disabled");
                         $(li).find("select[name='user']").attr("onchange","sendUser(this,"+data+",'<c:url value="/project/sendUser.do"/>')");
+                        $(li).find("input[name='checkbox']").attr("onclick","completeTask(this,'"+data+"')");
+                        $(li).find("input[name='checkbox']").removeAttr("disabled");
                         $(li).find(".am-margin").remove();
                         $(li).attr("name",data);
                         $("#"+taskGroupId).show();

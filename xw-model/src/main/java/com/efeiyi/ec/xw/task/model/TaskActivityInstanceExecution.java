@@ -46,7 +46,7 @@ public class TaskActivityInstanceExecution implements Serializable{
     }
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="taskActivityInstance_id")
+    @JoinColumn(name="task_activity_instance_id")
     public TaskActivityInstance getTaskActivityInstance() {
         return taskActivityInstance;
     }
@@ -72,7 +72,7 @@ public class TaskActivityInstanceExecution implements Serializable{
     public void setStatus(String status) {
         this.status = status;
     }
-    @Column(name = "createDatetime")
+    @Column(name = "create_datetime")
     public Date getCreateDatetime() {
         return createDatetime;
     }
