@@ -5,17 +5,17 @@ import com.efeiyi.ec.xw.flow.model.Flow;
 import com.efeiyi.ec.xw.flow.model.FlowActivity;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.project.model.Project;
-import com.efeiyi.ec.xw.project.model.ProjectUser;
 import com.efeiyi.ec.xw.task.model.*;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
+import com.efeiyi.ec.xwork.project.dao.XWorkProjectDao;
 import com.efeiyi.ec.xwork.project.service.ProjectManager;
 import com.efeiyi.ec.xwork.task.dao.TaskDao;
 import com.ming800.core.base.dao.XdoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,33 +31,30 @@ public class ProjectManagerImpl implements ProjectManager {
 
     @Autowired
     private TaskDao taskDao;
+
+    @Autowired
+    private XWorkProjectDao projectDao;
     //创建项目
     @Override
     public Project saveProject(Project project,String [] users){
        if("".equals(project.getId())){
            project.setId(null);
        }
-        boolean f = false;
-        xdoDao.saveOrUpdateObject(project);
+        List<User> userList = new ArrayList<>();
+        userList.add(AuthorizationUtil.getUser());
         if(users!=null) {
             if (users.length > 0) {
                 for (int i=0;i<users.length;i++){
-                    if(users[i].equals(AuthorizationUtil.getMyUser().getId())){
-                        if(!f){
-                           f=true;
-                        }else {
-                            continue;
-                        }
+                    if(!users[i].equals(AuthorizationUtil.getMyUser().getId())){
+                        userList.add((User) xdoDao.getObject(User.class.getName(), users[i]));
                     }
-                    ProjectUser projectUser = new ProjectUser();
-                    projectUser.setProject(project);
-                    projectUser.setUser((User) xdoDao.getObject(User.class.getName(), users[i]));
-                    xdoDao.saveOrUpdateObject(projectUser);
 
 
                 }
             }
         }
+        project.setMemberList(userList);
+        xdoDao.saveOrUpdateObject(project);
         return  project;
     }
 
@@ -217,4 +214,9 @@ public class ProjectManagerImpl implements ProjectManager {
         return  user;
     }
 
+    @Override
+    public List<Project> getProject() {
+
+        return projectDao.projectPList();
+    }
 }

@@ -3,22 +3,26 @@ package com.efeiyi.ec.xwork.project.controller;
 import com.efeiyi.ec.xw.flow.model.Flow;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.project.model.Project;
+import com.efeiyi.ec.xw.project.model.ProjectUser;
 import com.efeiyi.ec.xw.task.model.Task;
 import com.efeiyi.ec.xw.task.model.TaskGroup;
+import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.project.service.ProjectManager;
 import com.ming800.core.base.controller.BaseController;
 import com.ming800.core.base.service.BaseManager;
+import com.ming800.core.does.model.Page;
+import com.ming800.core.does.model.PageInfo;
+import com.ming800.core.taglib.PageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -33,6 +37,51 @@ public class ProjectController extends BaseController {
     @Autowired
     private ProjectManager projectManager;
 
+    @RequestMapping("/pList.do")
+    public String toProjectPlist(HttpServletRequest request,ModelMap modelMap){
+
+        List<Project> projectList = projectManager.getProject();
+        PageEntity pageEntity = new PageEntity();
+        String pageIndex = request.getParameter("pageEntity.index");
+        String pageSize = request.getParameter("pageEntity.size");
+        if (pageIndex != null) {
+            pageEntity.setIndex(Integer.parseInt(pageIndex));
+            pageEntity.setSize(Integer.parseInt(pageSize));
+        }
+        PageInfo pageInfo = new PageInfo();
+        List<Project> projects = new ArrayList<>();
+        List<Project> list = new ArrayList<>();
+        if(projectList!=null){
+            for(Project project : projectList){
+                 for(User user : project.getMemberList()){
+                     if(user.getId().equals(AuthorizationUtil.getUser().getId())){
+                         projects.add(project);
+                         break;
+                     }
+                 }
+            }
+        }
+        int l = pageEntity.getIndex()*pageEntity.getSize();
+        int g = (pageEntity.getIndex()-1)*pageEntity.getSize();
+        if(projects!=null){
+            pageEntity.setCount(projects.size());
+            pageInfo.setCount(projects.size());
+            pageInfo.setPageEntity(pageEntity);
+            int i = 0;
+            for(Project project : projects){
+                if(i<l&&i>=g){
+                   if(i>=projects.size()){
+                       break;
+                   }
+                    list.add(project);
+                }
+                i++;
+            }
+         pageInfo.setList(list);
+        }
+        modelMap.put("pageInfo",pageInfo);
+        return "/project/projectPList2";
+    }
     /**
      * 保存项目爱
      * @param request

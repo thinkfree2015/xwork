@@ -1,3 +1,5 @@
+<%@ page import="com.efeiyi.ec.xwork.organization.util.AuthorizationUtil" %>
+<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -30,16 +32,19 @@
 </div>
 <fieldset>
     <legend></legend>
+
     <c:if test="${not empty requestScope.pageInfo.list}">
 <ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list  " style="margin-top: 7%;">
-    <c:forEach items="${requestScope.pageInfo.list}" var="projectUser">
+    <c:forEach items="${requestScope.pageInfo.list}" var="project">
+
         <li style="padding-bottom: 5%">
                 <%--<a href="#" class="am-text-success"><span class="am-icon-btn am-icon-briefcase"></span><br/><br/>${project.title}<br/></a>--%>
-            <a href="<c:url value="/basic/xm.do?qm=viewProject&id=${projectUser.project.id}"/> " class="am-text-success"><img src="<c:url value="/scripts/image/project2.png"/>"/><br/><br/>${projectUser.project.title}<br/></a>
+            <a href="<c:url value="/basic/xm.do?qm=viewProject&id=${project.id}"/> " class="am-text-success"><img src="<c:url value="/scripts/image/project2.png"/>"/><br/><br/>${project.title}<br/></a>
             <%--<c:forEach var="user" items="${projectUser.project.memberList}">--%>
                 <%--<a href="javascript:void (0);">${user.username}</a>--%>
             <%--</c:forEach>--%>
         </li>
+
     </c:forEach>
 </ul>
     </c:if>
@@ -169,7 +174,7 @@
 <%--</c:forEach>--%>
 <%--</table>--%>
 <div style="clear: both">
-    <c:url value="/basic/xm.do" var="url"/>
+    <c:url value="/project/pList.do" var="url"/>
     <ming800:pcPageList bean="${requestScope.pageInfo.pageEntity}" url="${url}">
         <ming800:pcPageParam name="qm" value="${requestScope.qm}"/>
         <ming800:pcPageParam name="conditions" value="${requestScope.conditions}"/>

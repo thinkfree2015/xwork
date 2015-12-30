@@ -1,8 +1,7 @@
 //package com.efeiyi.ec.xwork.project.dao;
 //
 //
-//
-//import com.efeiyi.ec.project.model.Project;
+//import com.efeiyi.ec.xw.task.model.TaskActivityInstanceExecution;
 //
 //import java.util.List;
 //
@@ -15,10 +14,6 @@
 // */
 //public interface projectDao {
 //
-//    /**
-//     * 商家关联大师列表
-//     * @param tenantId
-//     * @return
-//     */
-//    List<Project> getProjectList(String tenantId);
+//    public List projectPList();
+//
 //}

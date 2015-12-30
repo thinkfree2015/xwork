@@ -7,8 +7,8 @@
         <match url="/basic/xm.do?qm=plistTaskDynamic_default" />
         <!--<match url="/basic/xm.do?qm=formTaskDynamic" />-->
     </jnode>
-    <jnode id="EfyProject" access="admin,operational,c_operational,o_operational,financial,product_manager" url="/basic/xm.do?qm=plistProjectUser_default&amp;jnodeId=EfyProject" text_zh_CN="项目列表">
-        <match url="/basic/xm.do?qm=plistProjectUser_default" />
+    <jnode id="EfyProject" access="admin,operational,c_operational,o_operational,financial,product_manager" url="/project/pList.do" text_zh_CN="项目列表">
+        <match url="/project/pList.do" />
         <match url="/basic/xm.do?qm=formProject" />
         <match url="/basic/xm.do?qm=viewProject" />
     </jnode>

@@ -25,7 +25,7 @@
 <div class="am-g">
     <form action="<c:url value="/project/saveProject.do"/>"  class="am-form am-form-horizontal" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" value="${object.id}">
-        <input type="hidden" name="resultPage" value="redirect:/basic/xm.do?qm=plistProjectUser_default">
+        <input type="hidden" name="resultPage" value="redirect:/project/pList.do">
         <div class="am-form-group">
             <label name="title" for="user-name" class="am-u-sm-3 am-form-label">项目名称 <small>*</small></label>
             <div class="am-u-sm-9">

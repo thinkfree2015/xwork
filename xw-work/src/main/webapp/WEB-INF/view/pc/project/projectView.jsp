@@ -15,10 +15,13 @@
 <head>
     <title></title>
     <script src="<c:url value="/scripts/task.js" />"></script>
-    <script src="<c:url value="/scripts/react0.14.3/react.js"/> "></script>
-    <script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
-    <script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>
+    <script src="<c:url value="/scripts/react/react.min.js"/> "></script>
+    <script src="<c:url value="/scripts/amazeReact/amazeui.react.js"/> "></script>
+    <script src="<c:url value="/scripts/amazeReact/amazeui.react.min.js"/> "></script>
+    <%--<script src="<c:url value="/scripts/react0.14.3/react.js"/> "></script>--%>
+    <%--<script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>--%>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>--%>
+    <%--<script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>--%>
     <style type="text/css">
         .todo-content {
             display: inline-block;
@@ -64,7 +67,7 @@
     </style>
 </head>
 <body>
-<div class="am-cf am-padding">
+<div class="am-cf am-padding" id="xmmc">
     <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">${object.title}</strong></div>
 </div>
 <hr/>
@@ -72,54 +75,54 @@
     <div class="am-btn-toolbar" style="float: right;" id="qingdan">
     </div>
 </div>
-<div class="am-g">
-    <c:forEach items="${object.taskGroupList}" var="taskGroup">
-        <hr/>
-        <ul name="${taskGroup.id}">
-            <span>${taskGroup.title}</span>
-            <c:forEach items="${taskGroup.taskList}" var="task">
-                <li class="todo" name="${task.id}">
-                    <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
-                        <div  style="padding-left: 30px;">
-                            <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
-                            <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>
-                            <a href="javascript:void (0);"></a>
-                        </div>
-                    </div>
-                    <div class="todo-wrap" style="position:relative ;left: 10px;">
-                         <span>
-                             <input type="checkbox" onclick="completeTask(this,'${task.id}')" />
-                              <a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>
-                         </span>
-                         <span>
-                              <select  onchange="changeActivity(this)" style="font-size: 10%" disabled="disabled">
-                                  <option value="null">请选择流程</option>
-                                  <c:forEach var="flow" items="${flowList}">
-                                      <option value="${flow.id}" <c:if test="${flow.id==task.flow.id}">selected="selected" </c:if>>${flow.title}</option>
-                                  </c:forEach>
-                              </select>
-                         </span>
-                         <span>
-                              <c:if test="${not empty task.currentInstance}">
-                                  　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">
-                                  　　　　　　　　　　　　　　　　  <option value="null">请选择成员</option>
-                                  　　　　　　　　　　　　　　　　 <c:forEach var="user" items="${task.currentInstance.flowActivity.user}">
-                                  　　　　　　　　　　　　　　  <option value="${user.id}" <c:if test="${user.id==task.currentUser.id}">selected="selected"</c:if>>${user.name}</option>
-                                  　　　　　　　　　　　　　　　　</c:forEach>
-                                  　　　　　　　　　　　　　　　　</select>
-                              </c:if>
-                         </span>
+<div class="am-g" id="zzc">
+    <%--<c:forEach items="${object.taskGroupList}" var="taskGroup">--%>
+        <%--<hr/>--%>
+        <%--<ul name="${taskGroup.id}">--%>
+            <%--<span>${taskGroup.title}</span>--%>
+            <%--<c:forEach items="${taskGroup.taskList}" var="task">--%>
+                <%--<li class="todo" name="${task.id}">--%>
+                    <%--<div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">--%>
+                        <%--<div  style="padding-left: 30px;">--%>
+                            <%--<a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>--%>
+                            <%--<a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>--%>
+                            <%--<a href="javascript:void (0);"></a>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <%--<div class="todo-wrap" style="position:relative ;left: 10px;">--%>
+                         <%--<span>--%>
+                             <%--<input type="checkbox" onclick="completeTask(this,'${task.id}')" />--%>
+                              <%--<a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>--%>
+                         <%--</span>--%>
+                         <%--<span>--%>
+                              <%--<select  onchange="changeActivity(this)" style="font-size: 10%" disabled="disabled">--%>
+                                  <%--<option value="null">请选择流程</option>--%>
+                                  <%--<c:forEach var="flow" items="${flowList}">--%>
+                                      <%--<option value="${flow.id}" <c:if test="${flow.id==task.flow.id}">selected="selected" </c:if>>${flow.title}</option>--%>
+                                  <%--</c:forEach>--%>
+                              <%--</select>--%>
+                         <%--</span>--%>
+                         <%--<span>--%>
+                              <%--<c:if test="${not empty task.currentInstance}">--%>
+                                  <%--　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">--%>
+                                  <%--　　　　　　　　　　　　　　　　  <option value="null">请选择成员</option>--%>
+                                  <%--　　　　　　　　　　　　　　　　 <c:forEach var="user" items="${task.currentInstance.flowActivity.user}">--%>
+                                  <%--　　　　　　　　　　　　　　  <option value="${user.id}" <c:if test="${user.id==task.currentUser.id}">selected="selected"</c:if>>${user.name}</option>--%>
+                                  <%--　　　　　　　　　　　　　　　　</c:forEach>--%>
+                                  <%--　　　　　　　　　　　　　　　　</select>--%>
+                              <%--</c:if>--%>
+                         <%--</span>--%>
 
-                    </div>
-                </li>
-            </c:forEach>
-            <div id="${taskGroup.id}">
-                <small> <a href="javascript:void (0);" onclick="addTask('${taskGroup.id}')">添加新任务</a></small>
-            </div>
+                    <%--</div>--%>
+                <%--</li>--%>
+            <%--</c:forEach>--%>
+            <%--<div id="${taskGroup.id}">--%>
+                <%--<small> <a href="javascript:void (0);" onclick="addTask('${taskGroup.id}')">添加新任务</a></small>--%>
+            <%--</div>--%>
 
-        </ul>
+        <%--</ul>--%>
 
-    </c:forEach>
+    <%--</c:forEach>--%>
 </div>
 
 <!-- content end -->
@@ -184,29 +187,67 @@
 </div>
 <!-- react测试-->
 <script type="text/babel">
-    var TaskGroup = React.createClass({
-        getInitialState:function(){
-          return {
-              projectId:'${object.id}',
-              le:'${fn:length(object.memberList)}'
-          };
-        },
-        handleClick:function(){
-            alert("添加清单!");
-        },
+    <%--var TaskGroup = React.createClass({--%>
+        <%--getInitialState:function(){--%>
+          <%--return {--%>
+              <%--projectId:'${object.id}',--%>
+              <%--le:'${fn:length(object.memberList)}'--%>
+          <%--};--%>
+        <%--},--%>
+        <%--handleClick:function(){--%>
+            <%--alert("添加清单!");--%>
+        <%--},--%>
+        <%--render:function(){--%>
+           <%--return (--%>
+                   <%--<div className="am-btn-group am-btn-group-xs">--%>
+                     <%--<a href="javascript:void (0);" onClick={this.handleClick} projectId="{this.state.projectId}" className="am-btn am-btn-default">新建清单</a>--%>
+                     <%--<a href="javascript:void (0);" className="am-btn am-btn-default">成员({this.state.le})</a>--%>
+                   <%--</div>--%>
+           <%--);--%>
+        <%--}--%>
+    <%--});--%>
+
+    <%--ReactDOM.render(--%>
+            <%--<TaskGroup />,--%>
+            <%--document.getElementById("qingdan")--%>
+    <%--);--%>
+
+
+
+    var P_ul = React.createClass({
         render:function(){
-           return (
-                   <div className="am-btn-group am-btn-group-xs">
-                     <a href="javascript:void (0);" onClick={this.handleClick} projectId="{this.state.projectId}" className="am-btn am-btn-default">新建清单</a>
-                     <a href="javascript:void (0);" className="am-btn am-btn-default">成员({this.state.le})</a>
-                   </div>
-           );
+            return (
+
+                  <ul name="{this.props.taskGroup}">
+                  <li>
+                    {this.props.taskGroup}
+                    </li>
+                  </ul>
+            );
         }
     });
 
+    <%--var P_li = React.createClass({--%>
+        <%--render:function(){--%>
+            <%--return (--%>
+                    <%--<li className="todo" name={this.props.taskId}>--%>
+                    <%--</li>--%>
+            <%--);--%>
+        <%--}--%>
+    <%--});--%>
+
+    var P = React.createClass({
+        render:function(){
+       return <div>
+             ${object.taskGroupList}.map(function(list1){
+               {list1}
+             })
+          </div>
+        }
+     });
     ReactDOM.render(
-            <TaskGroup />,
-            document.getElementById("qingdan")
+        <P   />,
+            document.getElementById("zzc")
     );
 </script>
 

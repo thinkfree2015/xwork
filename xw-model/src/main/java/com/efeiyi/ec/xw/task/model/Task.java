@@ -115,7 +115,8 @@ public class Task implements Serializable {
     public void setFlow(Flow flow) {
         this.flow = flow;
     }
-    @Column(name = "author_id")
+    @OneToOne
+    @JoinColumn(name = "author_id")
     public User getAuthor() {
         return author;
     }
