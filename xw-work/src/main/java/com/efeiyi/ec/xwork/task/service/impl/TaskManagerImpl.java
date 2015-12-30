@@ -149,4 +149,25 @@ public class TaskManagerImpl implements TaskManager {
         return  task;
 
     }
+
+
+    @Override
+    public void removeTask(String taskId){
+        Task task = (Task)xdoDao.getObject(Task.class.getName(),taskId);
+        task.setStatus("0");
+        xdoDao.saveOrUpdateObject(task);
+
+        TaskActivityInstance taskActivityInstance = task.getCurrentInstance();
+        taskActivityInstance.setStatus("5");
+        xdoDao.saveOrUpdateObject(taskActivityInstance);
+        //动态
+        TaskDynamic taskDynamic = new TaskDynamic();
+        taskDynamic.setMessage("删除了任务");
+        taskDynamic.setTaskActivityInstance(taskActivityInstance);
+        taskDynamic.setTask(task);
+        taskDynamic.setCreator(AuthorizationUtil.getUser());
+        taskDynamic.setCreateDatetime(new Date());
+        xdoDao.saveOrUpdateObject(taskDynamic);
+    }
+
 }

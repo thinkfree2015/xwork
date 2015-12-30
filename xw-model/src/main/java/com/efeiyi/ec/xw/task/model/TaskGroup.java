@@ -4,6 +4,7 @@ import com.efeiyi.ec.xw.project.model.Project;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -52,6 +53,7 @@ public class TaskGroup implements Serializable {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "taskGroup")
+    @Where(clause = "status=1")
     public List<Task> getTaskList() {
         return taskList;
     }

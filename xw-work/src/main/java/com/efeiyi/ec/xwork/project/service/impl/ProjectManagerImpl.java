@@ -93,9 +93,12 @@ public class ProjectManagerImpl implements ProjectManager {
             task.setTitle(title);
             task.setCreateDatetime(sdf.parse(date));
             task.setFlow(flow);
+            task.setStatus("1");
             task.setTaskGroup((TaskGroup)xdoDao.getObject(TaskGroup.class.getName(),taskGroupId));
             //当前任务处理人
             task.setCurrentUser(user);
+            //创建人
+            task.setAuthor(AuthorizationUtil.getUser());
             //添加新任务
             xdoDao.saveOrUpdateObject(Task.class.getName(),task);
 

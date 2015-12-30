@@ -33,6 +33,7 @@ public class Task implements Serializable {
     private User author;
     private Date createDatetime;
     private TaskActivityInstance currentInstance;
+    private String status;
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -167,5 +168,14 @@ public class Task implements Serializable {
 
 
         this.currentInstance = currentInstance;
+    }
+
+    @Column(name = "status")
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
