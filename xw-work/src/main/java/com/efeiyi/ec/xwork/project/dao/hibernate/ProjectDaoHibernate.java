@@ -2,7 +2,6 @@ package com.efeiyi.ec.xwork.project.dao.hibernate;
 
 import com.efeiyi.ec.xw.project.model.ProjectUser;
 import com.efeiyi.ec.xwork.project.dao.XWorkProjectDao;
-import com.efeiyi.ec.xwork.project.dao.projectDao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
