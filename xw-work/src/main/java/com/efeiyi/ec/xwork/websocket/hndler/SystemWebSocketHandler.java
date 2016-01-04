@@ -5,10 +5,14 @@
  */
 package com.efeiyi.ec.xwork.websocket.hndler;
 
+import com.alibaba.fastjson.JSONObject;
 import com.efeiyi.ec.xw.message.model.Message;
+import com.efeiyi.ec.xw.message.model.UserMessage;
 import com.efeiyi.ec.xw.organization.model.User;
+import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.util.Constants;
 import com.efeiyi.ec.xwork.websocket.service.WebSocketService;
+import com.ming800.core.base.service.BaseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -19,6 +23,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -44,7 +49,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
     @Autowired
     private WebSocketService webSocketService;
     @Autowired
-    private HttpServletRequest request;
+    private BaseManager baseManager;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.debug("connect to the websocket success......");
@@ -60,9 +65,31 @@ public class SystemWebSocketHandler implements WebSocketHandler {
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+        try{
         //这里做业务逻辑处理 1.即时消息 2.离线消息 3.通知页面改动
-        saveMessageToOffLineUsers(message);
-        sendMessageToUsers( new TextMessage(message.getPayload()+""));
+        String msg = message.getPayload().toString();
+        JSONObject jasonObject = (JSONObject) JSONObject.parse(msg);
+        Message message1 = new Message();//对 message进行处理 转化
+        if(jasonObject.getString("content")!=null){
+            message1.setContent(jasonObject.getString("content"));
+        }else {
+            message1.setContent("");
+        }
+        message1.setCreateDatetime(new Date());
+        message1.setType("1");//暂时都默认为文本消息
+        User user =  webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
+        message1.setCreator(user);
+        String receiver= jasonObject.getString("receiver")==null?"":jasonObject.getString("receiver");
+        if(receiver!=null || !"".equals(receiver)){//消息不指定接收者，默认发送所有人
+            saveMessageForReceiver(receiver,message1);
+            sendMessageToUser(receiver,new TextMessage(message.getPayload()+""));
+        }else{
+            saveMessageToOffLineUsers(message1);
+            sendMessageToUsers(new TextMessage(message.getPayload()+""));
+        }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -125,36 +152,71 @@ public class SystemWebSocketHandler implements WebSocketHandler {
 
 
     /**
-     * 给所有离线用户发保存消息
+     * 给所有离线用户保存消息
      *
-     * @param message
+     * @param message1
      */
-    public void saveMessageToOffLineUsers(WebSocketMessage<?> message)throws Exception{
-        List<User> allUsers = webSocketService.getAllUsers();
-        //对 message进行处理 转化
+    public void saveMessageToOffLineUsers(Message message1)throws Exception{
 
+        List<User> allUsers = webSocketService.getAllUsers();
         for (WebSocketSession user : users) {
             for (User user1:allUsers){
                 try {
-                    Message message1 = new Message();
-
+                    UserMessage userMessage = new UserMessage();
                     if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(user1.getUsername())){
                         if (user.isOpen()) {
-                            user.sendMessage(message);
+                            message1.setStatus("2");
                         }
-                        message1.setStatus("2");
-                        webSocketService.saveMessageForOffLineUser(message1);
+
                     }else{
                         message1.setStatus("1");
-                        webSocketService.saveMessageForOffLineUser(message1);
-                    }
 
-                } catch (IOException e) {
+                    }
+                    userMessage.setUser(user1);
+                    userMessage.setMessage(message1);
+                    baseManager.saveOrUpdate(Message.class.getName(),message1);
+                    baseManager.saveOrUpdate(UserMessage.class.getName(),userMessage);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
 
         }
+    }
+
+    /**
+     * 保存某个用户的信息
+     *
+     * @param message1
+     */
+    public void saveMessageForReceiver(String username, Message message1)throws Exception{
+
+        User u= webSocketService.getUser(username);
+        UserMessage userMessage = new UserMessage();
+        for (WebSocketSession user : users) {
+            try {
+                 if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(username)) {
+
+                     if (user.isOpen()) {
+                        message1.setStatus("2");
+                         userMessage.setStatus("2");
+                     }
+
+                 }else {
+                      message1.setStatus("1");
+                     userMessage.setStatus("1");
+                }
+                userMessage.setUser(u);
+                userMessage.setMessage(message1);
+                baseManager.saveOrUpdate(Message.class.getName(),message1);
+                baseManager.saveOrUpdate(UserMessage.class.getName(),userMessage);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
 }
