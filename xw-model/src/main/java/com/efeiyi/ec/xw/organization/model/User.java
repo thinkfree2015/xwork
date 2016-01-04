@@ -5,14 +5,12 @@ package com.efeiyi.ec.xw.organization.model;
  */
 
 import com.efeiyi.ec.xw.flow.model.FlowActivity;
-import com.efeiyi.ec.xw.project.model.Project;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 @Entity
@@ -27,7 +25,6 @@ public class User implements Serializable {
     private String status;
     private FlowActivity flowActivity;
     private Integer groupName;
-
 
     @JsonIgnore
     @Column(name = "password")
