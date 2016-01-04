@@ -23,7 +23,7 @@
                 </do>
             </does>
         </entity>
-        <entity name="TaskDynamic" label="流程"
+        <entity name="Task" label="流程"
                 basic="simple" others=""
                 model="com.efeiyi.ec.xw.task.model.Task">
             <does>

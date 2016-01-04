@@ -32,6 +32,7 @@ public class TaskGroup implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id")
     public Project getProject() {

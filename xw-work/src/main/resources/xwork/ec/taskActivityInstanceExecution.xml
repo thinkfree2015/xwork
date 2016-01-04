@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module name="xwork" label="系统-流程" version="" package="com.efeiyi.ec.xw" path="">
+
+    <entities>
+        <entity name="TaskActivityInstanceExecution" label="流程"
+                basic="simple" others=""
+                model="com.efeiyi.ec.xw.task.model.TaskActivityInstanceExecution">
+            <does>
+                <do name="plistTaskActivityInstanceExecution" access="" label="TaskActivityInstanceExecution列表"
+                    execute="com.efeiyi.ec.xwork.task.controller.TaskActivityInstanceExecutionHandle"
+                    result="/taskActivityInstanceExecution/taskActivityInstanceExecutionPList">
+                    <query name="default" label="默认" type="auto" orderBy="id:desc">
+                        <condition label="主键" name="id" defaultValue="0" operation="ne"/>
+                        <condition name="user.id" label="经纪人" defaultValue="${MY_USER}" operation="eq"/>
+                    </query>
+                </do>
+                <do name="listTaskActivityInstanceExecution" access="" label="TaskActivityInstanceExecution列表"
+                    result="json">
+                    <query name="default" label="默认" type="auto" orderBy="id:desc">
+                        <condition label="主键" name="task.id" defaultValue="0" operation="eq"/>
+                    </query>
+                </do>
+            </does>
+        </entity>
+    </entities>
+</module>

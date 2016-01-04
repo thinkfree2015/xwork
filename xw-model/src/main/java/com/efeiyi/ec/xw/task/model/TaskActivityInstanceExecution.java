@@ -24,6 +24,29 @@ public class TaskActivityInstanceExecution implements Serializable{
     private String status;//  未执行    已执行
     private Date createDatetime;
 
+
+    //加入临时变量taskId
+    private String taskId;
+    private String taskTitle;
+
+    @Transient
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    @Transient
+    public String getTaskTitle() {
+        return taskTitle;
+    }
+
+    public void setTaskTitle(String taskTitle) {
+        this.taskTitle = taskTitle;
+    }
+
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
     @GeneratedValue(generator = "id")
@@ -46,7 +69,7 @@ public class TaskActivityInstanceExecution implements Serializable{
     }
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="taskActivityInstance_id")
+    @JoinColumn(name="task_activity_instance_id")
     public TaskActivityInstance getTaskActivityInstance() {
         return taskActivityInstance;
     }
@@ -72,7 +95,7 @@ public class TaskActivityInstanceExecution implements Serializable{
     public void setStatus(String status) {
         this.status = status;
     }
-    @Column(name = "createDatetime")
+    @Column(name = "create_datetime")
     public Date getCreateDatetime() {
         return createDatetime;
     }

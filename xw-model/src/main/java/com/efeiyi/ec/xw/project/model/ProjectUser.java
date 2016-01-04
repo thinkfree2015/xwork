@@ -42,7 +42,7 @@ public class ProjectUser implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-
+    @EmbeddedId
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="project_id")
     public Project getProject() {

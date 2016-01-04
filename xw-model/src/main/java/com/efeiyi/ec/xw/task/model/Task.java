@@ -52,6 +52,7 @@ public class Task implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="task_group_id")
     public TaskGroup getTaskGroup() {
@@ -69,6 +70,7 @@ public class Task implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User getCurrentUser() {
@@ -78,6 +80,7 @@ public class Task implements Serializable {
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
     public List<TaskActivityInstance> getTaskActivityList() {
         return taskActivityList;
@@ -87,6 +90,7 @@ public class Task implements Serializable {
         this.taskActivityList = taskActivityList;
     }
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="notify_userId")
     public List<User> getUsernotifyUserList() {
@@ -96,6 +100,8 @@ public class Task implements Serializable {
     public void setUsernotifyUserList(List<User> usernotifyUserList) {
         UsernotifyUserList = usernotifyUserList;
     }
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
     public List<TaskAttachment> getTaskAttachmentList() {
         return taskAttachmentList;
@@ -105,6 +111,7 @@ public class Task implements Serializable {
         this.taskAttachmentList = taskAttachmentList;
     }
 
+    @JsonIgnore
     @OneToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name="flow_id")
     public Flow getFlow() {
@@ -114,6 +121,7 @@ public class Task implements Serializable {
     public void setFlow(Flow flow) {
         this.flow = flow;
     }
+    @JsonIgnore
     @Column(name = "author_id")
     public User getAuthor() {
         return author;
@@ -131,6 +139,7 @@ public class Task implements Serializable {
         this.createDatetime = createDatetime;
     }
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
     public List<TaskDynamic> getTaskDynamicList() {
         return taskDynamicList;
@@ -140,6 +149,7 @@ public class Task implements Serializable {
         this.taskDynamicList = taskDynamicList;
     }
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
     public List<TaskNote> getTaskNoteList() {
         return taskNoteList;
