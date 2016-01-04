@@ -1,6 +1,7 @@
 <sitemesh>
     <mapping path="/main.do" decorator="/layouts/main.jsp"/>
     <mapping path="/flow/**" decorator="/layouts/main.jsp"/>
+    <mapping path="/project/pList.do" decorator="/layouts/main.jsp"/>
    <mapping path="/pcn/viewAttention.do" decorator="/layouts/main.jsp"/>
     <!--<mapping path="/*" decorator="/layouts/main.jsp"/>-->
     <mapping path="/basic/**" decorator="/layouts/main.jsp"/>

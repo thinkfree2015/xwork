@@ -101,3 +101,11 @@ CREATE TABLE `xw_message` (
   `createDatetime` DATE ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `xw_user_message` (
+  `id` char(16) NOT NULL,
+  `user_id` char(16) NOT NULL,
+  `message_id` varchar(500) DEFAULT NULL,
+  `status` varchar(2) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

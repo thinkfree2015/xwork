@@ -5,16 +5,17 @@ import com.efeiyi.ec.xw.flow.model.Flow;
 import com.efeiyi.ec.xw.flow.model.FlowActivity;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.project.model.Project;
-import com.efeiyi.ec.xw.project.model.ProjectUser;
 import com.efeiyi.ec.xw.task.model.*;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
+import com.efeiyi.ec.xwork.project.dao.XWorkProjectDao;
 import com.efeiyi.ec.xwork.project.service.ProjectManager;
+import com.efeiyi.ec.xwork.task.dao.TaskDao;
 import com.ming800.core.base.dao.XdoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,33 +29,32 @@ public class ProjectManagerImpl implements ProjectManager {
     @Autowired
     private XdoDao xdoDao;
 
+    @Autowired
+    private TaskDao taskDao;
+
+    @Autowired
+    private XWorkProjectDao projectDao;
     //创建项目
     @Override
     public Project saveProject(Project project,String [] users){
        if("".equals(project.getId())){
            project.setId(null);
        }
-        boolean f = false;
-        xdoDao.saveOrUpdateObject(project);
+        List<User> userList = new ArrayList<>();
+        userList.add(AuthorizationUtil.getUser());
         if(users!=null) {
             if (users.length > 0) {
                 for (int i=0;i<users.length;i++){
-                    if(users[i].equals(AuthorizationUtil.getMyUser().getId())){
-                        if(!f){
-                           f=true;
-                        }else {
-                            continue;
-                        }
+                    if(!users[i].equals(AuthorizationUtil.getMyUser().getId())){
+                        userList.add((User) xdoDao.getObject(User.class.getName(), users[i]));
                     }
-                    ProjectUser projectUser = new ProjectUser();
-                    projectUser.setProject(project);
-                    projectUser.setUser((User) xdoDao.getObject(User.class.getName(), users[i]));
-                    xdoDao.saveOrUpdateObject(projectUser);
 
 
                 }
             }
         }
+        project.setMemberList(userList);
+        xdoDao.saveOrUpdateObject(project);
         return  project;
     }
 
@@ -90,9 +90,12 @@ public class ProjectManagerImpl implements ProjectManager {
             task.setTitle(title);
             task.setCreateDatetime(sdf.parse(date));
             task.setFlow(flow);
+            task.setStatus("1");
             task.setTaskGroup((TaskGroup)xdoDao.getObject(TaskGroup.class.getName(),taskGroupId));
             //当前任务处理人
             task.setCurrentUser(user);
+            //创建人
+            task.setAuthor(AuthorizationUtil.getUser());
             //添加新任务
             xdoDao.saveOrUpdateObject(Task.class.getName(),task);
 
@@ -119,6 +122,15 @@ public class ProjectManagerImpl implements ProjectManager {
             //添加实例
             xdoDao.saveOrUpdateObject(taskActivityInstance);
 
+
+            //问题
+            TaskActivityInstanceExecution taskActivityInstanceExecution = new TaskActivityInstanceExecution();
+            taskActivityInstanceExecution.setTaskActivityInstance(taskActivityInstance);
+            taskActivityInstanceExecution.setTask(task);
+            taskActivityInstanceExecution.setCreateDatetime(new Date());
+            taskActivityInstanceExecution.setStatus("0");
+            taskActivityInstanceExecution.setUser(user);
+            xdoDao.saveOrUpdateObject(taskActivityInstanceExecution);
 
             //动态
             TaskDynamic taskDynamic = new TaskDynamic();
@@ -177,6 +189,12 @@ public class ProjectManagerImpl implements ProjectManager {
         taskActivityInstance.setExcutor(user);
 
         xdoDao.saveOrUpdateObject(taskActivityInstance);
+        //改变我的问题user
+        TaskActivityInstanceExecution taskActivityInstanceExecution = taskDao.getTaskActivityInstanceExecution(taskActivityInstance.getId());
+        if(taskActivityInstanceExecution!=null){
+            taskActivityInstanceExecution.setUser(user);
+            xdoDao.saveOrUpdateObject(taskActivityInstanceExecution);
+        }
 
         //添加任务操作动态记录
 
@@ -196,4 +214,9 @@ public class ProjectManagerImpl implements ProjectManager {
         return  user;
     }
 
+    @Override
+    public List<Project> getProject() {
+
+        return projectDao.projectPList();
+    }
 }

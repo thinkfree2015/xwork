@@ -1,5 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -8,186 +6,475 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="ming800" uri="http://java.ming800.com/taglib" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
 <head>
     <title></title>
+    <script src="<c:url value="/scripts/task.js" />"></script>
+    <script src="<c:url value="/scripts/react/react.min.js"/> "></script>
+    <script src="<c:url value="/scripts/amazeReact/amazeui.react.js"/> "></script>
+    <script src="<c:url value="/scripts/amazeReact/amazeui.react.min.js"/> "></script>
+    <%--<script src="<c:url value="/scripts/react0.14.3/react.js"/> "></script>--%>
+    <%--<script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>--%>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>--%>
+    <%--<script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>--%>
+    <style type="text/css">
+        .todo-content {
+            display: inline-block;
+            width: 465px;
+            padding: 0 35px 0 0;
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+            vertical-align: top;
+            word-break: break-all;
+        }
+        .no-border {
+            border: none;
+            border-bottom: 1px dashed #cccccc;
+            border-radius: 0;
+        }
+
+        textarea{
+            outline: 0 none;
+            font-family: monospace;
+            overflow-y:visible;
+            -webkit-appearance: textarea;
+            background-color: white;
+            -webkit-rtl-ordering: logical;
+            -webkit-user-select: text;
+            flex-direction: column;
+            white-space: pre-wrap;
+            text-rendering: auto;
+            color: initial;
+            letter-spacing: normal;
+            word-spacing: normal;
+            text-transform: none;
+            text-indent: 0px;
+            text-shadow: none;
+            text-align: start;
+            -webkit-writing-mode: horizontal-tb;
+            box-shadow: none;
+        }
+
+        ul li{
+            list-style-type:none;
+        }
+    </style>
 </head>
-
-<div class="am-g">
-    <div style="text-align: left;margin-left: 18px;" >
-        <input onclick="window.location.href='<c:url value="/basic/xm.do?qm=plistProject_default"/>'" type="button" class="am-btn am-btn-default am-btn-xs" style="margin-top: 4px;margin-bottom: 6px;width: 100px;height: 35px;" value="返回列表" />
-<security:authorize ifAnyGranted="admin,operational,c_operational">
-        <input onclick="window.location.href='<c:url value="/basic/xm.do?qm=formProject&param=formProject"/>'" type="button" class="am-btn am-btn-default am-btn-xs" style="margin-top: 4px;margin-bottom: 6px;width: 100px;height: 35px;" value="新建项目" />
-        <input onclick="window.location.href='<c:url value="/basic/xm.do?qm=formProject&param=formProject&id=${object.id}"/>'" type="button" class="am-btn am-btn-default am-btn-xs" style="margin-top: 4px;margin-bottom: 6px;width: 100px;height: 35px;" value="编辑项目" />
-    </security:authorize>
+<body>
+<div class="am-cf am-padding" id="xmmc">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">${object.title}</strong></div>
+</div>
+<hr/>
+<div class="am-u-md-12" style="margin-top: 4%;">
+    <div class="am-btn-toolbar" style="float: right;" id="qingdan">
     </div>
-    <div class="am-u-sm-12">
-        <table class="am-table am-table-bordered">
-            <tbody>
-            <tr>
-                <td class="am-primary am-u-md-3">项目名称</td>
-                <td class="am-u-md-3">${object.name}</td>
-                <td class="am-primary am-u-md-3">项目编号</td>
-                <td class="am-u-md-3">${object.serial}</td>
-            </tr>
-            <tr>
-                <td class="am-primary am-u-md-3">父类别</td>
-                <td class="am-u-md-3">
-                    <c:if test="${not empty object.projectCategory.id}">
-                       ${object.projectCategory.name}
-                    </c:if>
-                </td>
-                <td class="am-primary am-u-md-3">父项目</td>
-                <td class="am-u-md-3">
-                    <c:if test="${not empty object.fatherProject.id}">
-                       ${object.fatherProject.name}
-                    </c:if>
-                </td>
-            </tr>
-            <tr>
-                <td class="am-primary am-u-md-3">项目图片(PC)</td>
-                <td class="am-u-md-3">
-                    <img width="35px;" src="<c:url value="http://pro.efeiyi.com/${object.picture_url}@!product-model"/>" alt=""/>
-                </td>
-                <td class="am-primary am-u-md-3">项目图片(WAP)</td>
-                <td class="am-u-md-3">
-                    <img width="35px;" src="<c:url value="http://pro.efeiyi.com/${object.picture_wap_url}@!product-model"/>" alt=""/>
-                </td>
-            </tr>
-            <tr>
-                <td class="am-primary am-u-md-3">省</td>
-                <td class="am-u-md-3">
-                    ${object.addressDistrict.addressCity.addressProvince.name}
-                </td>
-                <td class="am-primary am-u-md-3">市</td>
-                <td class="am-u-md-3">
-                    ${object.addressDistrict.addressCity.name}
-                </td>
-            <tr>
-                <td class="am-primary am-u-md-3">区</td>
-                <td class="am-u-md-3">
-                    ${object.addressDistrict.name}
-                </td>
-                <td class="am-primary am-u-md-3"></td>
-                <td class="am-u-md-3">
+</div>
+<div class="am-g" id="zzc">
+    <%--<c:forEach items="${object.taskGroupList}" var="taskGroup">--%>
+        <%--<hr/>--%>
+        <%--<ul name="${taskGroup.id}">--%>
+            <%--<span>${taskGroup.title}</span>--%>
+            <%--<c:forEach items="${taskGroup.taskList}" var="task">--%>
+                <%--<li class="todo" name="${task.id}">--%>
+                    <%--<div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">--%>
+                        <%--<div  style="padding-left: 30px;">--%>
+                            <%--<a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>--%>
+                            <%--<a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>--%>
+                            <%--<a href="javascript:void (0);"></a>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <%--<div class="todo-wrap" style="position:relative ;left: 10px;">--%>
+                         <%--<span>--%>
+                             <%--<input type="checkbox" onclick="completeTask(this,'${task.id}')" />--%>
+                              <%--<a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>--%>
+                         <%--</span>--%>
+                         <%--<span>--%>
+                              <%--<select  onchange="changeActivity(this)" style="font-size: 10%" disabled="disabled">--%>
+                                  <%--<option value="null">请选择流程</option>--%>
+                                  <%--<c:forEach var="flow" items="${flowList}">--%>
+                                      <%--<option value="${flow.id}" <c:if test="${flow.id==task.flow.id}">selected="selected" </c:if>>${flow.title}</option>--%>
+                                  <%--</c:forEach>--%>
+                              <%--</select>--%>
+                         <%--</span>--%>
+                         <%--<span>--%>
+                              <%--<c:if test="${not empty task.currentInstance}">--%>
+                                  <%--　　　　　　　　　　　　　　　　<select  onchange="sendUser(this,'${task.id}','<c:url value="/project/sendUser.do"/>')" style="font-size: 10%;margin-left: -259px">--%>
+                                  <%--　　　　　　　　　　　　　　　　  <option value="null">请选择成员</option>--%>
+                                  <%--　　　　　　　　　　　　　　　　 <c:forEach var="user" items="${task.currentInstance.flowActivity.user}">--%>
+                                  <%--　　　　　　　　　　　　　　  <option value="${user.id}" <c:if test="${user.id==task.currentUser.id}">selected="selected"</c:if>>${user.name}</option>--%>
+                                  <%--　　　　　　　　　　　　　　　　</c:forEach>--%>
+                                  <%--　　　　　　　　　　　　　　　　</select>--%>
+                              <%--</c:if>--%>
+                         <%--</span>--%>
 
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    <%--</div>--%>
+                <%--</li>--%>
+            <%--</c:forEach>--%>
+            <%--<div id="${taskGroup.id}">--%>
+                <%--<small> <a href="javascript:void (0);" onclick="addTask('${taskGroup.id}')">添加新任务</a></small>--%>
+            <%--</div>--%>
+
+        <%--</ul>--%>
+
+    <%--</c:forEach>--%>
+</div>
+
+<!-- content end -->
+<hr/>
+
+
+<!--模拟窗口 添加清单-->
+
+<div style="display: none;" id="display_taskGroup">
+    <hr/>
+    <ul class="" style="" name="">
+                         <span>
+                             <input class="todo-content no-border " placeholder="输入清单名称"
+                                    style="overflow: hidden; word-wrap: break-word; resize: none; height:30px;"/>
+                             <%--<a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>--%>
+                         </span>
+
+
+    </ul>
+    <div class="am-margin">
+        <button style="margin-left: 13px;" type="button" onclick="saveTaskGroup(this)" class="am-btn am-btn-primary am-btn-xs">保存，开始添加任务</button>
+        <button type="button" onclick="cancelTaskGroup(this)" class="am-btn am-btn-primary am-btn-xs">取消</button>
     </div>
 </div>
 
-    <%--<div style="text-align: left;" >--%>
-        <%--<input onclick="window.location.href='<c:url value="/basic/xm.do?qm=formProjectTag&param=project&projectId=${object.id}"/>'" type="button" class="am-btn am-btn-default am-btn-xs" style="margin-top: 4px;margin-bottom: 6px;width: 100px;margin-left:2px;height: 35px;" value="新建标签" />--%>
-    <%--</div>--%>
-    <%--<div class="am-panel am-panel-default">--%>
-        <%--<div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-2'}">项目标签<span class="am-icon-chevron-down am-fr" ></span></div>--%>
-        <%--<div id="collapse-panel-2" class="am-in" >--%>
-                <%--<c:forEach var="projectTag" items="${object.projectTagList}" varStatus="status">--%>
-                     <%--<span class="am-badge am-badge-secondary" style="margin-left: 10px;width:85px;height: 28px;line-height: 2;margin-top: 10px;margin-bottom: 10px;background-color:rgb(102,102,102);">${projectTag.value}--%>
-                     <%--</span>--%>
-                    <%--<span style="margin-right: 2px;">--%>
-                     <%--<a href="#" onclick="window.location.href='<c:url value="/basic/xm.do?qm=formProjectTag&id=${projectTag.id}&projectId=${object.id}"/>'" >编辑</a>--%>
-                     <%--<a href="#"  onclick="window.location.href='<c:url value="/basic/xm.do?qm=removeProjectTag&id=${projectTag.id}"/>'" >删除</a>--%>
-                    <%--</span>--%>
-                <%--</c:forEach>--%>
 
-        <%--</div>--%>
-    <%--</div>--%>
 
-    <div style="text-align: left;margin-left: 15px;" >
-<security:authorize ifAnyGranted="admin,operational,c_operational">
-        <input onclick="window.location.href='<c:url value="/basic/xm.do?qm=formProjectProperty&param=project&projectId=${object.id}"/>'" type="button" class="am-btn am-btn-default am-btn-xs" style="margin-top: 4px;margin-bottom: 6px;width: 100px;margin-left:2px;height: 35px;" value="新建项目属性" />
-    </security:authorize>
-    </div>
-
-        <div class="am-panel am-panel-default" style="margin-left: 15px;">
-            <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-3'}">项目属性<span class="am-icon-chevron-down am-fr" ></span></div>
-            <div id="collapse-panel-3" class="am-in">
-                <table class="am-table am-table-bd am-table-bdrs am-table-striped am-table-hover">
-                    <tbody>
-                    <tr>
-<security:authorize ifAnyGranted="admin,operational,c_operational">
-                        <th>操作</th>
-</security:authorize>
-                        <th>属性名称</th>
-                        <th>属性值</th>
-                    </tr>
-                    <c:forEach var="projectProperty" items="${object.projectPropertyList}" >
-                        <tr id="${projectProperty.id}">
-                            <security:authorize ifAnyGranted="admin,operational,c_operational">
-                            <td width="20%">
-                                <div class="am-btn-toolbar">
-                                    <div class="am-btn-group am-btn-group-xs" style="width: 100%;" >
-                                        <button   onclick="window.location.href='<c:url value="/basic/xm.do?qm=formProjectProperty&param=project&id=${projectProperty.id}&projectId=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span class="am-icon-edit"></span> 编辑</button>
-                                        <button onclick="removeProjectProperty('${projectProperty.id}')" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-trash-o"></span> 删除</button>
-                                    </div>
-                                </div>
-                            </td>
-                            </security:authorize>
-                            <td width="20%">
-                                <a href="#">${projectProperty.name}</a>
-                            </td>
-                            <td width="60%">
-                                <security:authorize ifAnyGranted="admin,operational,c_operational">
-                                <a class="am-badge am-badge-secondary" href="<c:url value="/basic/xm.do?qm=formProjectPropertyValue&projectPropertyId=${projectProperty.id}&projectId=${object.id}"/>"  style="margin-left: 10px;width:85px;height: 28px;line-height: 2;margin-top: 10px;margin-bottom: 10px;background-color:rgb(102,102,102);">+
-                                 </a>
-                                </security:authorize>
-                                <c:forEach var="projectPropertyValue" items="${projectProperty.projectPropertyValueList}" varStatus="status">
-                                          <span>
-                                            <a class="am-badge am-badge-secondary" style="margin-left: 10px;width:85px;height: 28px;line-height: 2;margin-top: 10px;margin-bottom: 10px;background-color:rgb(102,102,102);">${projectPropertyValue.value}
-                                            </a>
-                                          </span>
-                                    <samll style="margin-left: 2px;">
-                                        <security:authorize ifAnyGranted="admin,operational,c_operational">
-                                        <a href="#" onclick= "window.location.href='<c:url value="/basic/xm.do?qm=formProjectPropertyValue&id=${projectPropertyValue.id}&projectPropertyId=${projectProperty.id}&projectId=${object.id}"/>'" >编辑</a>
-                                        <a href="#"  onclick="removePropertyValue(this,'${projectPropertyValue.id}')" >删除</a>
-                                        </security:authorize>
-                                    </samll>
-                                </c:forEach>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+<!--模拟窗口 添加任务-->
+<div style="display: none;" id="display_task">
+    <li class="todo" name="">
+        <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
+            <div style="padding-left: 10px;">
+                <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
+                <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>
+                <a href="javascript:void (0);"></a>
             </div>
         </div>
+        <div class="todo-wrap" style="position:relative ;left: 10px;">
+                         <span>
+                             <input type="checkbox" onclick="" disabled="disabled"/>
+                             <textarea class="todo-content no-border "
+                                       style="overflow: hidden; word-wrap: break-word; resize: none; height:30px;"></textarea>
+                             <%--<a href="<c:url value="/basic/xm.do?qm=formTask&id=${task.id}&projectId=${object.id}"/> ">${task.title}</a>--%>
+                         </span>
+                         <span>
+                              <select name="flow" onchange="changeActivity(this)"
+                                      style="font-size: 10%">
+                                  <option value="null">请选择流程</option>
+                                  <c:forEach var="flow" items="${flowList}">
+                                      <option value="${flow.id}">${flow.title}</option>
+                                  </c:forEach>
+                              </select>
+                         </span>
 
-
-
+        </div>
+        <div class="am-margin">
+            <button type="button" onclick="saveTask(this)" class="am-btn am-btn-primary am-btn-xs">添加任务</button>
+            <button type="button" onclick="cancelTask(this)" class="am-btn am-btn-primary am-btn-xs">取消</button>
+        </div>
+    </li>
 
 </div>
-<script>
+<!-- react测试-->
+<script type="text/babel">
+    <%--var TaskGroup = React.createClass({--%>
+        <%--getInitialState:function(){--%>
+          <%--return {--%>
+              <%--projectId:'${object.id}',--%>
+              <%--le:'${fn:length(object.memberList)}'--%>
+          <%--};--%>
+        <%--},--%>
+        <%--handleClick:function(){--%>
+            <%--alert("添加清单!");--%>
+        <%--},--%>
+        <%--render:function(){--%>
+           <%--return (--%>
+                   <%--<div className="am-btn-group am-btn-group-xs">--%>
+                     <%--<a href="javascript:void (0);" onClick={this.handleClick} projectId="{this.state.projectId}" className="am-btn am-btn-default">新建清单</a>--%>
+                     <%--<a href="javascript:void (0);" className="am-btn am-btn-default">成员({this.state.le})</a>--%>
+                   <%--</div>--%>
+           <%--);--%>
+        <%--}--%>
+    <%--});--%>
 
-    function removePropertyValue(obj,divId){
-        $.ajax({
-            type: "get",
-            url: '<c:url value="/product/delProjectPropertyValue.do"/>',
-            cache: false,
-            dataType: "json",
-            data:{id:divId},
-            success: function (data) {
-                $(obj).parent().prev().remove();
-                $(obj).parent().remove();
-            }
-        });
-    }
+    <%--ReactDOM.render(--%>
+            <%--<TaskGroup />,--%>
+            <%--document.getElementById("qingdan")--%>
+    <%--);--%>
 
-    function removeProjectProperty(divId){
-        $.ajax({
-            type: "get",
-            url: '<c:url value="/basic/xmj.do?qm=removeProjectProperty"/>',
-            cache: false,
-            dataType: "json",
-            data:{id:divId},
-            success: function (data) {
-                $("#"+divId).remove();
-            }
-        });
-    }
+
+
+    var P_ul = React.createClass({
+        render:function(){
+            return (
+
+                  <ul name="{this.props.taskGroup}">
+                  <li>
+                    {this.props.taskGroup}
+                    </li>
+                  </ul>
+            );
+        }
+    });
+
+    <%--var P_li = React.createClass({--%>
+        <%--render:function(){--%>
+            <%--return (--%>
+                    <%--<li className="todo" name={this.props.taskId}>--%>
+                    <%--</li>--%>
+            <%--);--%>
+        <%--}--%>
+    <%--});--%>
+
+    var P = React.createClass({
+        render:function(){
+       return <div>
+             ${object.taskGroupList}.map(function(list1){
+               {list1}
+             })
+          </div>
+        }
+     });
+    ReactDOM.render(
+        <P   />,
+            document.getElementById("zzc")
+    );
 </script>
 
+<script type="text/javascript">
+
+    //初始化操作
+    $(function(){
+        $(".todo").hover(function(){
+            $(this).find(".todo-action").css({"display":"block"});
+        },function(){
+            $(this).find(".todo-action").css({"display":"none"});
+        });
+    });
+
+    //--------------------------------任务---------------------------------------------------//
+    //取消任务
+    function cancelTask(obj){
+
+        $(obj).parents("ul").find("div:last").show();
+        $(obj).parent().parent().remove();
+        $(obj).parent().remove();
+
+    }
+
+    //to添加任务
+    function addTask(taskGroupId) {
+        $("#"+taskGroupId).before($("#display_task").html());
+        $("#"+taskGroupId).hide();
+    }
+
+    //save添加任务
+    function saveTask(obj){
+        var li = $(obj).parent().parent();
+        var title = $(li).find("textarea").val();
+        var flow = $("select[name='flow']",$(li)).val();
+        var userId = $("select[name='user']",$(li)).val();
+        var  taskGroupId = $(li).parent().attr("name");
+        if(title==""){
+            alert("请填写任务标题!");
+        }else if(flow=="null"){
+            alert("请选择流程!");
+        }else{
+            var f = confirm("流程选定后,将不允许修改!确定添加此任务吗?");
+            if(f){
+                $.ajax({
+                    type:"post",
+                    url:"<c:url value="/project/addTask.do"/>",
+                    data:{title:title,flowId:flow,taskGroupId:taskGroupId,userId:userId},
+                    success:function(data){
+                        data = data.substring(1,data.length-1);
+                        var url = "<c:url value="/" />"+"basic/xm.do?qm=formTask&id="+data+"&projectId="+'${object.id}';
+                        var a = '<a href='+url+'>'+title+'</a>';
+                        $(li).find("textarea").parent().html(a);
+                        $(li).find("select[name='flow']").attr("disabled","disabled");
+                        $(li).find("select[name='user']").attr("onchange","sendUser(this,"+data+",'<c:url value="/project/sendUser.do"/>')");
+                        $(li).find("input[name='checkbox']").attr("onclick","completeTask(this,'"+data+"')");
+                        $(li).find("input[name='checkbox']").removeAttr("disabled");
+                        $(li).find(".am-margin").remove();
+                        $(li).attr("name",data);
+                        $("#"+taskGroupId).show();
+                    }
+                });
+            }else{
+                alert("再想想!");
+            }
+
+        }
+
+    }
+
+    //选择流程事件--->首节点成员
+    function changeActivity(obj){
+        var  flowId = $(obj).val();
+        if(flowId=="null"){
+            $(obj).parent().next().remove();
+        }else{
+            $.ajax({
+                type:"post",
+                url:"<c:url value="/project/changeActivity.do"/>",
+                data:{flowId:flowId},
+                success:function(data) {
+                    $.each($.parseJSON(data),function(key,value) {
+                        if (key == "users") {
+                            var select = '<span>'+
+                                    '<select name="user" onchange="" style="font-size: 10%;">' +
+                                    '<option value="null">' + '请选择成员' + '</option>';
+
+                            $.each(value, function (k, v) {
+                                select += ' <option value="' + v.id + '">' + v.name + '</option>';
+                            });
+                            select += '</select>'+
+                                    '</span>';
+                            $(obj).parent().after(select);
+
+                        }
+
+                    });
+                }
+            });
+        }
+    }
+
+
+
+    //测试 完成任务
+    function completeTask(obj,taskId){
+        $.ajax({
+            type:"post",
+            url:"<c:url value="/task/changeTaskStatus.do"/>",
+            data:{taskId:taskId},
+            success:function(data) {
+                $.each($.parseJSON(data), function (key, value) {
+                    if (key == "users") {
+                        var select = '<span>' +
+                                '<select name="user" onchange="" style="font-size: 10%;">' +
+                                '<option value="null">' + '请选择成员' + '</option>';
+
+                        $.each(value, function (k, v) {
+                            select += ' <option value="' + v.id + '">' + v.name + '</option>';
+                        });
+                        select += '</select>' +
+                                '</span>';
+                        $(obj).parent().next().next().html(select);
+
+                    }
+
+                });
+            }
+        });
+    }
+    <%--//分配人员--%>
+    <%--function changeMember(obj){--%>
+    <%--var  memberId = $(obj).val();--%>
+    <%--var taskId = $(obj).parents("li").attr("name");--%>
+    <%--if(memberId=="null"){--%>
+    <%--alert("请选择成员!");--%>
+    <%--}else{--%>
+    <%--$.ajax({--%>
+    <%--type:"post",--%>
+    <%--url:"<c:url value="/project/changeMember.do"/>",--%>
+    <%--data:{taskId:taskI,memberId:memberId},--%>
+    <%--success:function(data) {--%>
+    <%--$.each(data,function(k,v){--%>
+    <%--if(k=="users"){--%>
+    <%--var select = '<select  onchange="" style="font-size: 10%;margin-left: -259px">'+--%>
+    <%--'<option value="null">'+'请选择成员'+'</option>';--%>
+    <%--for(var i=0;i< v.length;i++){--%>
+
+    <%--select += ' <option value="'+v[i].id+'">'+v[i].username+'</option>';--%>
+    <%--}--%>
+
+    <%--select += '</select>';--%>
+
+    <%--$(obj).parent().next().html(select);--%>
+
+    <%--}--%>
+    <%--});--%>
+    <%--}--%>
+    <%--});--%>
+    <%--}--%>
+    <%--}--%>
+    //新加任务 的指派成员
+    function addNewTaskHtml(taskId){
+        var select =  ' <select style="font-size: 10%" onchange="sendUser(this,'+taskId+')">'+
+                '   <option value="null">'+'未指派'+'</option>';
+        <c:forEach items="${object.memberList}" var="member">
+        select += '   <option value="${member.id}" >${member.username}</option>';
+        </c:forEach>
+        select += '</select>';
+        return select;
+    }
+
+
+    ///------------------------------------清单---------------------------------------------------------------////
+    //to添加 清单
+    function addTaskGroup(projectId){
+        var f = true;
+        $(".am-g ul").each(function(){
+
+            if($(this).attr("name")==""){
+                $(this).find("input").focus();
+                f = false;
+                return false;
+            }
+        });
+        if(f){
+            $(".am-g").append($("#display_taskGroup").html());
+        }
+
+
+    }
+    //取消清单
+    function cancelTaskGroup(obj){
+        $(obj).parent().prev().prev().remove();
+        $(obj).parent().prev().remove();
+        $(obj).parent().remove();
+
+    }
+    //保存清单
+    function saveTaskGroup(obj){
+        var projectId = '${object.id}';
+        var title = $(obj).parent().prev().find("input").val();
+        if(title==""){
+            alert("请填写清单名单!");
+        }else{
+            $.ajax({
+                type: "post",
+                url: "<c:url value="/project/addTaskGroup.do"/>",
+                data:{projectId:projectId,title:title},
+                success: function (data) {
+                    data = data.substring(1,data.length-1);
+                    var ul = $(obj).parent().prev("ul");
+                    $(ul).attr("name",data);
+                    $(ul).find("span").text(title);
+                    $(obj).parent().remove();
+                    var div = '   <div id="'+data+'">'+
+                            '    <small> <a href="javascript:void (0);" onclick="addTask(\''+data+'\')">'+
+                            '     添加新任务'+
+                            '     </a></small>'+
+                            '   </div>';
+                    $(ul).append(div);
+                }
+            });
+
+        }
+
+    }
+</script>
 </body>
 </html>

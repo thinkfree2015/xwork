@@ -1,6 +1,8 @@
 package com.efeiyi.ec.xwork.task.controller;
 
 import com.efeiyi.ec.xw.task.model.Task;
+import com.efeiyi.ec.xw.task.model.TaskNote;
+import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.task.service.TaskManager;
 import com.ming800.core.base.controller.BaseController;
 import com.ming800.core.base.service.BaseManager;
@@ -92,6 +94,47 @@ public class TaskController extends BaseController {
 //        data = data.substring(1,data.lastIndexOf("\""));
 
         return  data;
+    }
+
+    @RequestMapping("/removeTask.do")
+    @ResponseBody
+    public String removeTask(String taskId){
+        try{
+          taskManager.removeTask(taskId);
+        }catch(Exception e){
+          e.printStackTrace();
+        }
+    return taskId;
+    }
+
+    @RequestMapping("/editTask.do")
+    @ResponseBody
+    public String editTask(String taskId,String title){
+        try{
+            Task task = (Task)baseManager.getObject(Task.class.getName(),taskId);
+            task.setTitle(title);
+            baseManager.saveOrUpdate(Task.class.getName(),task);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return taskId;
+    }
+
+    @RequestMapping("/saveNote.do")
+    @ResponseBody
+    public TaskNote saveNote(String taskId,String content){
+        TaskNote taskNote = new TaskNote();
+        try{
+            Task task = (Task)baseManager.getObject(Task.class.getName(),taskId);
+            taskNote.setContent(content);
+            taskNote.setCreateDatetime(new Date());
+            taskNote.setCreator(AuthorizationUtil.getUser());
+            taskNote.setTask(task);
+            baseManager.saveOrUpdate(TaskNote.class.getName(),taskNote);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return taskNote;
     }
 
 
