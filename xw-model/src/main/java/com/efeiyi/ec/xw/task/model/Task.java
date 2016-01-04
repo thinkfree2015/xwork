@@ -123,7 +123,6 @@ public class Task implements Serializable {
         this.flow = flow;
     }
     @JsonIgnore
-    @Column(name = "author_id")
     @OneToOne
     @JoinColumn(name = "author_id")
     public User getAuthor() {
