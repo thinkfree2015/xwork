@@ -31,10 +31,10 @@
 <fieldset>
     <legend>ss</legend>
     <ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list  " style="margin-top: 7%;">
-        <c:forEach items="${requestScope.pageInfo.list}" var="project">
+        <c:forEach items="${requestScope.pageInfo.list}" var="projectUser">
             <li style="padding-bottom: 5%">
                     <%--<a href="#" class="am-text-success"><span class="am-icon-btn am-icon-briefcase"></span><br/><br/>${project.title}<br/></a>--%>
-                <a href="#" class="am-text-success"><img src="<c:url value="/scripts/image/project2.png"/>"/><br/><br/>${project.title}<br/></a>
+                <a href="#" class="am-text-success"><img src="<c:url value="/scripts/image/project2.png"/>"/><br/><br/>${projectUser.project.title}<br/></a>
             </li>
         </c:forEach>
     </ul>
