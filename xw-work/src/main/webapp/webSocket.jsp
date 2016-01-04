@@ -150,7 +150,7 @@
             <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
         </div>--%>
         <div>
-            <textarea id="message" style="width: 350px">Here is a message!</textarea>
+            <textarea id="message" style="width: 350px">{'type':'1','content':'Here is a message!','creator':'15538398530','receiver':'15538398530'}</textarea>
         </div>
         <div>
             <button id="echo" onclick="echo();" disabled="disabled">Echo message</button>
