@@ -52,6 +52,7 @@ public class TaskActivityInstanceExecutionController {
                                     if ((user.getId()).equals(execution.getUser().getId())) {
                                         execution.setTaskId(task.getId());
                                         execution.setTaskTitle(task.getTitle());
+                                        execution.setTaskContent(task.getContent());
                                         list.add(execution);
                                     }
                                 }
@@ -73,16 +74,17 @@ public class TaskActivityInstanceExecutionController {
                     List<TaskGroup> groups = baseManager.listObject(hql, queryMap);
                     if (!StringTools.isEmpty(groups) && groups.size() > 0) {
                         for (TaskGroup group : groups) {
-                            if (!StringTools.isEmpty(group.getTaskList()) && group.getTaskList().size() > 0) {
+                            if (group.getTaskList() != null && group.getTaskList().size() > 0) {
                                 for (Task task : group.getTaskList()) {
                                     XQuery query = new XQuery("listTaskActivityInstanceExecution_default", request);
-                                    xQuery.put("task_id", task.getId());
+                                    query.put("task_id", task.getId());
                                     List<TaskActivityInstanceExecution> executions = baseManager.listObject(query);
                                     if (!StringTools.isEmpty(executions) && executions.size() > 0) {
                                         for (TaskActivityInstanceExecution execution : executions) {
                                             if ((user.getId()).equals(execution.getUser().getId())) {
                                                 execution.setTaskId(task.getId());
                                                 execution.setTaskTitle(task.getTitle());
+                                                execution.setTaskContent(task.getContent());
                                                 list.add(execution);
                                             }
                                         }
