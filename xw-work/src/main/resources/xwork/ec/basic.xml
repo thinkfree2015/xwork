@@ -39,7 +39,7 @@
                        result="/project/projectForm"/>
                 <do name="viewProject" label="项目查看" access=""
                     execute="com.efeiyi.ec.xwork.project.controller.ProjectFormHandler"
-                    result="/project/projectView2"/>
+                    result="/project/projectView"/>
                 <do name="saveOrUpdateProject" label="保存banner" access=""
                     result="redirect:/basic/xm.do?qm=plistProjectUser_default"
                     />

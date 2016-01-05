@@ -15,12 +15,10 @@
 <head>
     <title></title>
     <script src="<c:url value="/scripts/task.js" />"></script>
-    <script src="<c:url value="/scripts/react/react.min.js"/> "></script>
-    <script src="<c:url value="/scripts/amazeReact/amazeui.react.js"/> "></script>
-    <script src="<c:url value="/scripts/amazeReact/amazeui.react.min.js"/> "></script>
-    <%--<script src="<c:url value="/scripts/react0.14.3/react.js"/> "></script>--%>
-    <%--<script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>--%>
-    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>--%>
+
+    <script src="<c:url value="/scripts/react0.14.3/react.js"/> "></script>
+    <script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>
+    <script src="<c:url value="/scripts/react0.14.3/browser.min.js"/>"></script>
     <%--<script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>--%>
     <style type="text/css">
         .todo-content {
@@ -67,15 +65,17 @@
     </style>
 </head>
 <body>
-<div class="am-cf am-padding" id="xmmc">
-    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">${object.title}</strong></div>
+<div id="all">
 </div>
-<hr/>
-<div class="am-u-md-12" style="margin-top: 4%;">
-    <div class="am-btn-toolbar" style="float: right;" id="qingdan">
-    </div>
-</div>
-<div class="am-g" id="zzc">
+<%--<div class="am-cf am-padding" id="xmmc">--%>
+    <%--<div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">${object.title}</strong></div>--%>
+<%--</div>--%>
+<%--<hr/>--%>
+<%--<div class="am-u-md-12" style="margin-top: 4%;">--%>
+    <%--<div class="am-btn-toolbar" style="float: right;" id="qingdan">--%>
+    <%--</div>--%>
+<%--</div>--%>
+<%--<div class="am-g" id="zzc">--%>
     <%--<c:forEach items="${object.taskGroupList}" var="taskGroup">--%>
         <%--<hr/>--%>
         <%--<ul name="${taskGroup.id}">--%>
@@ -123,10 +123,10 @@
         <%--</ul>--%>
 
     <%--</c:forEach>--%>
-</div>
+<%--</div>--%>
 
-<!-- content end -->
-<hr/>
+<%--<!-- content end -->--%>
+<%--<hr/>--%>
 
 
 <!--模拟窗口 添加清单-->
@@ -185,70 +185,169 @@
     </li>
 
 </div>
+<script>
+
+</script>
 <!-- react测试-->
 <script type="text/babel">
-    <%--var TaskGroup = React.createClass({--%>
-        <%--getInitialState:function(){--%>
-          <%--return {--%>
-              <%--projectId:'${object.id}',--%>
-              <%--le:'${fn:length(object.memberList)}'--%>
-          <%--};--%>
-        <%--},--%>
-        <%--handleClick:function(){--%>
-            <%--alert("添加清单!");--%>
-        <%--},--%>
-        <%--render:function(){--%>
-           <%--return (--%>
-                   <%--<div className="am-btn-group am-btn-group-xs">--%>
-                     <%--<a href="javascript:void (0);" onClick={this.handleClick} projectId="{this.state.projectId}" className="am-btn am-btn-default">新建清单</a>--%>
-                     <%--<a href="javascript:void (0);" className="am-btn am-btn-default">成员({this.state.le})</a>--%>
-                   <%--</div>--%>
-           <%--);--%>
-        <%--}--%>
-    <%--});--%>
-
-    <%--ReactDOM.render(--%>
-            <%--<TaskGroup />,--%>
-            <%--document.getElementById("qingdan")--%>
-    <%--);--%>
 
 
+    var Add_li = React.createClass({
 
-    var P_ul = React.createClass({
+       handleClick:function(){
+         alert("添加");
+       },
+       cancelClick:function(){
+         this.props.dataStyle = 'none';
+       },
+       render:function(){
+       var style1 = {"position":"relative" ,"left": "10px"};
+       var style2 = {"overflow": "hidden", "word-wrap": "break-word", "resize": "none", "height":"30px"};
+       var style3 = {"display":this.props.dataStyle};
+          return (
+           <li className="todo" name="" style={style3}>
+              <div className="todo-wrap" style={style1}>
+                         <span>
+                             <input type="checkbox" onclick="" disabled="disabled"/>
+                             <textarea className="todo-content no-border "
+                                       style={style2}></textarea>
+                         </span>
+              </div>
+              <div className="am-margin">
+                   <a  onClick={this.handleClick} className="am-btn am-btn-primary am-btn-xs">确认添加</a>
+              </div>
+           </li>
+          )
+         }
+    });
+
+    var A_addTask = React.createClass({
+
+         getInitialState:function(){
+
+           return {
+
+             style:'none',
+             text:'添加任务'
+
+           };
+         },
+
+         handleClick:function(){
+            this.setState({style:this.state.style=='none'?'block':'none',text:this.state.text=='添加任务'?'取消':'添加任务'});
+            this
+         },
+         render:function(){
+           return (
+              <div>
+               <Add_li dataStyle={this.state.style} />
+              <a onClick={this.handleClick} href={this.props.href} className={this.props.className}>
+                {this.state.text}
+              </a>
+              </div>
+              )
+         }
+    });
+
+    var TaskGroup = React.createClass({
+        getInitialState:function(){
+          return {
+              projectId:'${object.id}',
+              le:'${fn:length(object.memberList)}'
+          };
+        },
+        handleClick:function(){
+            alert("添加清单!");
+        },
         render:function(){
-            return (
-
-                  <ul name="{this.props.taskGroup}">
-                  <li>
-                    {this.props.taskGroup}
-                    </li>
-                  </ul>
-            );
+           return (
+                   <div className="am-btn-group am-btn-group-xs">
+                     <a href="javascript:void (0);" onClick={this.handleClick} projectId="{this.state.projectId}" className="am-btn am-btn-default">新建清单</a>
+                     <a href="javascript:void (0);" className="am-btn am-btn-default">成员({this.state.le})</a>
+                   </div>
+           );
         }
     });
 
-    <%--var P_li = React.createClass({--%>
-        <%--render:function(){--%>
-            <%--return (--%>
-                    <%--<li className="todo" name={this.props.taskId}>--%>
-                    <%--</li>--%>
-            <%--);--%>
-        <%--}--%>
-    <%--});--%>
 
-    var P = React.createClass({
-        render:function(){
-       return <div>
-             ${object.taskGroupList}.map(function(list1){
-               {list1}
-             })
-          </div>
-        }
-     });
+
+    var P_li = React.createClass({
+       render:function(){
+       return <li className="todo" name={this.props.key}>
+
+              </li>
+       }
+    });
+    var Div1 = React.createClass({
+
+       render:function(){
+         return (
+           <div className="am-cf am-padding" >
+               <div className="am-fl am-cf"><strong className="am-text-primary am-text-lg">{this.props.title}</strong></div>
+            </div>
+         )
+       }
+    });
+    var Div2 = React.createClass({
+
+       render:function(){
+          var style1 = {
+              "marginTop":"4%"
+           };
+          var style2 = {
+             "float":"right"
+           };
+         return (
+
+             <div className="am-u-md-12" style={style1}>
+                 <div className="am-btn-toolbar" style={style2}>
+                   <TaskGroup />
+                 </div>
+             </div>
+         )
+       }
+    });
+
+    var Div3 = React.createClass({
+       render:function(){
+                 <c:forEach items="${object.taskGroupList}" var="taskGroup">
+             return  <ul name="${taskGroup.id}">
+                         <c:forEach var="task" items="${taskGroup.taskList}">
+                            <li className="todo" name="${task.id}">
+                               ${task.title}
+                             </li>
+                         </c:forEach>
+                         <div id="${taskGroup.id}">
+                            <small>
+                               <A_addTask href="javascript:void(0)" onclick="ddd()" className="" text="添加任务" />
+                            </small>
+                        </div>
+                      </ul>
+
+                 </c:forEach>
+       }
+    });
+
+
     ReactDOM.render(
-        <P   />,
-            document.getElementById("zzc")
+            (
+              <div>
+               <Div1 title="${object.title}" />
+               <hr/>
+               <Div2 />
+               <hr />
+               <Div3 />
+             </div>
+            )
+            ,
+           document.getElementById("all")
+  
     );
+
+
+
+
+
 </script>
 
 <script type="text/javascript">

@@ -24,7 +24,7 @@ public class Message implements Serializable {
     private User creator;//消息触发者
     private Date createDatetime;//发送时间
     private String status;//1.未读 2.已读
-    private List<User> receiver;//消息收发者
+    //private List<User> receiver;//消息收发者
 
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
@@ -79,14 +79,13 @@ public class Message implements Serializable {
         this.status = status;
     }
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="receiver_id")
+  /*  @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "message",cascade=CascadeType.ALL)
     public List<User> getReceiver() {
         return receiver;
     }
 
     public void setReceiver(List<User> receiver) {
         this.receiver = receiver;
-    }
+    }*/
 }
