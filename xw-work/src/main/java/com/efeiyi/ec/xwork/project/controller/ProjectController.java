@@ -152,16 +152,15 @@ public class ProjectController extends BaseController {
 
     @RequestMapping("/changeActivity.do")
     @ResponseBody
-    public   Map<String,List> changeActivity(String flowId){
+    public   List changeActivity(String flowId){
         Map<String,List> map = new HashMap<>();
+        Flow flow = (Flow)baseManager.getObject(Flow.class.getName(),flowId);
         try {
-            Flow flow = (Flow)baseManager.getObject(Flow.class.getName(),flowId);
             map.put("users",flow.getActivityList().get(0).getUser());
-
         }catch (Exception e){
             e.printStackTrace();
         }
-        return map;
+        return flow.getActivityList().get(0).getUser();
     }
 
 

@@ -18,6 +18,7 @@
 
     <script src="<c:url value="/scripts/react0.14.3/react.js"/> "></script>
     <script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>
+    <script src="<c:url value="/scripts/react0.14.3/react-dom-server.js"/> "></script>
     <script src="<c:url value="/scripts/react0.14.3/browser.min.js"/>"></script>
     <%--<script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>--%>
     <style type="text/css">
@@ -191,34 +192,194 @@
 <!-- react测试-->
 <script type="text/babel">
 
+   var Add_user_select = React.createClass({
+       handleChange:function(s){
+          this.props.onSelect(s);
+
+       },
+       render:function(){
+       var users =this.props.users;
+         var style2 = {"display":this.props.dataStyle,"fontSize":"10%"};
+         var user = users.map(function(v){
+            return <option key={v.id} value={v.id}>{v.name}</option>
+         });
+         return (
+           <select style={style2} defaultValue={this.props.currentUser} onChange={this.handleChange}>
+            <option value="null">请选择成员</option>
+            {user}
+           </select>
+         )
+       }
+   });
+
+    var Add_select = React.createClass({
+
+         getInitialState:function(){
+           return {
+             flowId:"null",
+             users:[],
+             style:"none",
+             currentUser:"null",
+             usersAmount:0
+             }
+         },
+         handleChange:function(s){
+              var v = s.target.value;
+              this.setState({flowId:s.target.value});
+              this.props.onSelect(s);
+         },
+
+         render:function(){
+         var style1 = {"fontSize":"10%"};
+                return (
+                             <select name="flow" onChange={this.handleChange}
+                                      style={style1} defaultValue={this.state.flowId}>
+                                     <option value="null">请选择流程</option>
+                                  <c:forEach var="flow" items="${flowList}">
+                                     <option value="${flow.id}">${flow.title}</option>
+                                  </c:forEach>
+                              </select>
+
+                         )
+         }
+
+    });
 
     var Add_li = React.createClass({
 
+       getInitialState:function(){
+        return {
+                  title:"",
+                  userId:"null",
+                  flowId:"",
+                  taskGroupId:"",
+                  style:"none",
+                  users:[],
+                  styleA:"none",
+                  styleTextarea:"inherit"
+               }
+
+       },
+       onSelectUser:function(s){
+            this.setState({userId:s.target.value});
+       },
        handleClick:function(){
-         alert("添加");
+          $.ajax({
+                    type:"post",
+                    url:"<c:url value="/project/addTask.do"/>",
+                    data:{"title":this.state.title,"userId":this.state.userId,"flowId":this.state.flowId,"taskGroupId":this.props.taskGroupId},
+                    success:function(){
+
+                     }.bind(this)
+                    });
+       },
+       handleChange:function(event){
+        this.setState({title:event.target.value});
+       },
+       onSelect:function(s){
+          if(s.target.value=="null"){
+           this.setState({flowId:s.target.value,style:"none"});
+          }else{
+
+           var userTemp;
+           $.ajax({
+                type:"post",
+                url:"<c:url value="/project/changeActivity.do"/>",
+                data:{flowId:s.target.value},
+                success:function(data) {
+                var obj = $.parseJSON(data);
+                   this.setState({flowId:s.target.value,style:"inherit",users:obj,styleA:"inherit",styleTextarea:"none"});
+
+                 }.bind(this)
+                });
+
+
+          }
+
        },
        cancelClick:function(){
          this.props.dataStyle = 'none';
        },
+       componentDidMount:function(){
+
+       },
        render:function(){
        var style1 = {"position":"relative" ,"left": "10px"};
-       var style2 = {"overflow": "hidden", "word-wrap": "break-word", "resize": "none", "height":"30px"};
+       var style2 = {"overflow": "hidden", "wordWrap": "break-word", "resize": "none", "height":"30px"};
        var style3 = {"display":this.props.dataStyle};
+       var styleA = {"display":this.state.styleA};
+       var styleTextarea = {"display":this.state.styleTextarea};
           return (
            <li className="todo" name="" style={style3}>
               <div className="todo-wrap" style={style1}>
                          <span>
                              <input type="checkbox" onclick="" disabled="disabled"/>
-                             <textarea className="todo-content no-border "
-                                       style={style2}></textarea>
+                             <a href="javascript:void(0)" style={styleA}>{this.state.title}</a>
+                             <span style={styleTextarea}>
+                             <textarea className="todo-content no-border " onChange={this.handleChange}
+                                       style={style2} defaultValue={this.state.title}></textarea>
+                              </span>
                          </span>
+                         <span>
+                            <Add_select onSelect={this.onSelect} />
+                         </span>
+                         <span>
+                            <Add_user_select dataStyle={this.state.style} currentUser="null" taskId="null" onSelect={this.onSelectUser} users={this.state.users}/>
+                         </span>
+
+
               </div>
-              <div className="am-margin">
+              <div className="am-margin" style={styleTextarea}>
                    <a  onClick={this.handleClick} className="am-btn am-btn-primary am-btn-xs">确认添加</a>
               </div>
            </li>
           )
          }
+    });
+
+
+    var Add_ul = React.createClass({
+
+      getInitialState:function(){
+         return {
+            style:''
+            }
+      },
+
+      cancelClick:function(){
+          this.setState({
+            style:this.state.style=='none'?'block':'none'
+          });
+      },
+       componentDidMount:function(){
+
+       },
+       render:function(){
+          var style1= {
+            "overflow":"hidden",
+            "wordWrap":"break-word",
+            "resize":"none",
+            "height":"30px"
+          };
+          var style2 = {
+            "marginLeft":"13px"
+          };
+          var style3 = {"display":this.props.dataStyle};
+          return (
+
+              <ul className="" style={style3} name="">
+                         <span>
+                             <input className="todo-content no-border " placeholder="输入清单名称"
+                                    style={style1}/>
+                         </span>
+                          <div className="am-margin">
+                             <a style={style2}   className="am-btn am-btn-primary am-btn-xs">保存，开始添加任务</a>
+                          </div>
+               </ul>
+
+
+          )
+       }
     });
 
     var A_addTask = React.createClass({
@@ -235,12 +396,11 @@
 
          handleClick:function(){
             this.setState({style:this.state.style=='none'?'block':'none',text:this.state.text=='添加任务'?'取消':'添加任务'});
-            this
          },
          render:function(){
            return (
               <div>
-               <Add_li dataStyle={this.state.style} />
+               <Add_li taskGroupId={this.props.taskGroupId} dataStyle={this.state.style} />
               <a onClick={this.handleClick} href={this.props.href} className={this.props.className}>
                 {this.state.text}
               </a>
@@ -253,18 +413,33 @@
         getInitialState:function(){
           return {
               projectId:'${object.id}',
-              le:'${fn:length(object.memberList)}'
+              le:'${fn:length(object.memberList)}',
+              style:'none',
+              text:'添加清单'
           };
         },
         handleClick:function(){
-            alert("添加清单!");
+            this.setState({style:this.state.style=='none'?'block':'none',text:this.state.text=='添加清单'?'取消':'添加清单'});
         },
         render:function(){
+             var style1 = {
+              "marginTop":"4%"
+           };
+          var style2 = {
+             "float":"right"
+           };
            return (
+           <div>
+             <div className="am-u-md-12" style={style1}>
+                 <div className="am-btn-toolbar" style={style2}>
                    <div className="am-btn-group am-btn-group-xs">
-                     <a href="javascript:void (0);" onClick={this.handleClick} projectId="{this.state.projectId}" className="am-btn am-btn-default">新建清单</a>
+                     <a href="javascript:void (0);" onClick={this.handleClick} disabled={this.state.disabled} projectId="{this.state.projectId}" className="am-btn am-btn-default">{this.state.text}</a>
                      <a href="javascript:void (0);" className="am-btn am-btn-default">成员({this.state.le})</a>
                    </div>
+                 </div>
+              </div>
+              <Div3 dataStyle={this.state.style}/>
+           </div>
            );
         }
     });
@@ -298,34 +473,59 @@
              "float":"right"
            };
          return (
-
+            <div>
              <div className="am-u-md-12" style={style1}>
                  <div className="am-btn-toolbar" style={style2}>
                    <TaskGroup />
                  </div>
              </div>
+             <Div3 />
+            </div>
          )
        }
     });
 
+
     var Div3 = React.createClass({
+
+       getInitialState:function(){
+
+          return {flag:'0'}
+       },
        render:function(){
+           var style1 = {"fontSize":"10%"};
+             return    (
+              <div>
                  <c:forEach items="${object.taskGroupList}" var="taskGroup">
-             return  <ul name="${taskGroup.id}">
+                   <ul name="${taskGroup.id}">
+                         ${taskGroup.title}
                          <c:forEach var="task" items="${taskGroup.taskList}">
                             <li className="todo" name="${task.id}">
-                               ${task.title}
-                             </li>
+                                  <a href="javascript:void(0)">${task.title}</a>
+                              <c:if test="${not empty task.flow}">
+                                  <select defaultValue="${task.flow.id}" disabled="disabled">
+                                         <option value="${task.flow.id}">${task.flow.title}</option>
+                                  </select>
+                                    <select style={style1} defaultValue="${task.currentUser.id}">
+                                       <option value="null">请选择成员</option>
+                                     <c:forEach items="${task.currentInstance.flowActivity.user}" var="user">
+                                        <option value="${user.id}">${user.name}</option>
+                                     </c:forEach>
+                                    </select>
+                              </c:if>
+                            </li>
                          </c:forEach>
                          <div id="${taskGroup.id}">
                             <small>
-                               <A_addTask href="javascript:void(0)" onclick="ddd()" className="" text="添加任务" />
+                               <A_addTask href="javascript:void(0)" taskGroupId="${taskGroup.id}" className="" text="添加任务" />
                             </small>
                         </div>
                       </ul>
-
                  </c:forEach>
-       }
+                      <Add_ul dataStyle={this.props.dataStyle} />
+                 </div>
+                 )
+         }
     });
 
 
@@ -334,9 +534,8 @@
               <div>
                <Div1 title="${object.title}" />
                <hr/>
-               <Div2 />
-               <hr />
-               <Div3 />
+               <TaskGroup />
+
              </div>
             )
             ,
