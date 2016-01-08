@@ -197,7 +197,7 @@
         }
     });
 
-<%-- 标题组件 --%>
+<%-- 添加清单组件 --%>
      var Add_ul = React.createClass({
 
       getInitialState:function(){
@@ -217,6 +217,7 @@
                 data:{projectId:${id},title:this.state.value},
                 dataType:"json",
                 success: function (data) {
+                   this.setState({value:""});
                    this.props.saveTaskGroup(data);
                 }.bind(this)
             });
@@ -256,7 +257,7 @@
           )
        }
     });
-
+<%--展示任务组件 --%>
   var Display_li = React.createClass({
 
        getInitialState:function(){
@@ -312,6 +313,7 @@
                  )
          }
     });
+    <%--展示任务流程组件 --%>
    var Display_li_select_flow = React.createClass({
        getInitialState:function(){
          return {
@@ -346,6 +348,7 @@
        }
 
    });
+     <%--展示任务流程人员组件 --%>
    var Display_li_select_user = React.createClass({
        getInitialState:function(){
        return {
@@ -413,7 +416,7 @@
 
        }
    });
-
+     <%--添加任务组件--%>
    var A_addTask = React.createClass({
 
          getInitialState:function(){
@@ -444,7 +447,7 @@
               )
          }
     });
-
+<%--添加任务子组件 --%>
    var Add_li = React.createClass({
 
        getInitialState:function(){
@@ -460,9 +463,6 @@
 
        },
 
-       onSelectUser:function(s){
-            this.setState({userId:s.target.value});
-       },
        handleClick:function(){
        if(this.state.title==""){
             alert("请填写任务标题!");
@@ -487,11 +487,15 @@
        handleChange:function(event){
         this.setState({title:event.target.value});
        },
-       onSelect:function(s){
-          if(s.target.value=="null"){
-           this.setState({flowId:s.target.value,style:"none"});
-          }else{
+       handleUserChange:function(event){
+        this.setState({userId:event.target.value});
+       },
 
+       handleFlowChange:function(s){
+          if(s.target.value=="null"){
+           this.setState({flowId:s.target.value,style:"none",userId:"null"});
+          }else{
+            this.setState({flowId:s.target.value});
            var userTemp;
            $.ajax({
                 type:"post",
@@ -499,7 +503,7 @@
                 data:{flowId:s.target.value},
                 success:function(data) {
                 var obj = $.parseJSON(data);
-                   this.setState({flowId:s.target.value,style:"inherit",users:obj});
+                   this.setState({style:"inherit",users:obj});
 
                  }.bind(this)
                 });
@@ -510,7 +514,7 @@
        },
        componentWillMount:function(){
             if(this.props.dataStyle=="none"){
-                this.setState({title:"",isAdd:"false"});
+                this.setState({title:""});
              }
        },
 
@@ -518,6 +522,11 @@
        var style1 = {"position":"relative" ,"left": "10px"};
        var style2 = {"overflow": "hidden", "wordWrap": "break-word", "resize": "none", "height":"30px"};
        var style3 = {"display":this.props.dataStyle};
+       var style4 = {"fontSize":"10%"};
+       var style5 = {"display":this.state.style};
+        var user = this.state.users.map(function(v){
+            return <option key={v.id} value={v.id}>{v.name}</option>
+         });
           return (
            <li className="todo" name="" style={style3}>
               <div className="todo-wrap" style={style1}>
@@ -529,10 +538,19 @@
                               </span>
                          </span>
                          <span>
-                            <Add_select onSelect={this.onSelect} isAdd={this.props.dataStyle} />
+                             <select name="flow" onChange={this.handleFlowChange}
+                                      style={style4} value={this.state.flowId}>
+                                     <option value="null">请选择流程</option>
+                                         <c:forEach var="flow" items="${flowList}">
+                                          <option value="${flow.id}">${flow.title}</option>
+                                         </c:forEach>
+                              </select>
                          </span>
                          <span>
-                            <Add_user_select dataStyle={this.state.style} isAdd={this.props.dataStyle} onSelect={this.onSelectUser} users={this.state.users}/>
+                            <select style={style5} value={this.state.userId} onChange={this.handleUserChange}>
+                               <option value="null">请选择成员</option>
+                               {user}
+                             </select>
                          </span>
 
 
@@ -545,71 +563,6 @@
          }
     });
 
-
-    var Add_select = React.createClass({
-
-         getInitialState:function(){
-           return {
-             flowId:"null",
-             }
-         },
-         handleChange:function(s){
-              var v = s.target.value;
-              this.setState({flowId:s.target.value});
-              this.props.onSelect(s);
-         },
-         componentWillMount:function(){
-            if(this.props.isAdd=="none"){
-                this.setState({flowId:"null"});
-             }
-       },
-         render:function(){
-         var style1 = {"fontSize":"10%"};
-                return (
-                             <select name="flow" onChange={this.handleChange}
-                                      style={style1} value={this.state.flowId}>
-                                     <option value="null">请选择流程</option>
-                                  <c:forEach var="flow" items="${flowList}">
-                                     <option value="${flow.id}">${flow.title}</option>
-                                  </c:forEach>
-                              </select>
-
-                         )
-         }
-
-    });
-
-    var Add_user_select = React.createClass({
-      getInitialState:function(){
-           return {
-             userId:"null",
-             }
-         },
-       handleChange:function(s){
-         this.setState({userId:s.target.value});
-          this.props.onSelect(s);
-
-
-       },
-        componentWillMount:function(){
-             if(this.props.isAdd=="none"){
-                this.setState({userId:"null"});
-             }
-       },
-       render:function(){
-       var users =this.props.users;
-         var style2 = {"display":this.props.dataStyle,"fontSize":"10%"};
-         var user = users.map(function(v){
-            return <option key={v.id} value={v.id}>{v.name}</option>
-         });
-         return (
-           <select style={style2} value={this.state.userId} onChange={this.handleChange}>
-            <option value="null">请选择成员</option>
-            {user}
-           </select>
-         )
-       }
-   });
 
     ReactDOM.render(
             (
