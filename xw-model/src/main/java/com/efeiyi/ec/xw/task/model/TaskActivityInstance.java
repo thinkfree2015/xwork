@@ -102,6 +102,7 @@ public class TaskActivityInstance implements Serializable {
         this.fatherTaskActivityInstance = fatherTaskActivityInstance;
     }
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flow_activity_id")
     public FlowActivity getFlowActivity() {

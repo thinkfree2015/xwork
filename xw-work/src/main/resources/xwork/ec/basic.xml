@@ -161,5 +161,19 @@
 
             </does>
         </entity>
+        <entity name="TaskGroup" label="任务"
+                basic="simple" others=""
+                model="com.efeiyi.ec.xw.task.model.TaskGroup">
+            <does>
+
+                <do name="listTaskGroup" label="任务列表" access="" result="/taskGroup/taskGroupList">
+                    <query name="default" label="默认" type="auto" orderBy="id:asc">
+                        <condition label="项目id" name="project.id" defaultValue="1" operation="eq"/>
+                    </query>
+
+                </do>
+
+            </does>
+        </entity>
     </entities>
 </module>

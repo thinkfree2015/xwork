@@ -12,6 +12,7 @@ import com.ming800.core.base.controller.BaseController;
 import com.ming800.core.base.service.BaseManager;
 import com.ming800.core.does.model.Page;
 import com.ming800.core.does.model.PageInfo;
+import com.ming800.core.does.model.XQuery;
 import com.ming800.core.taglib.PageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -102,20 +103,27 @@ public class ProjectController extends BaseController {
 
     /**
      * 添加任务清单
-     * @param taskGroup
+     * @param title
      * @param projectId
      * @return
      */
     @RequestMapping("/addTaskGroup.do")
     @ResponseBody
-    public  String addTaskGroup(TaskGroup taskGroup,String projectId){
+    public  List addTaskGroup(String title,String projectId,HttpServletRequest request){
+        List<TaskGroup> taskGroupList = null;
+        TaskGroup taskGroup = new TaskGroup();
        try {
+           XQuery xQuery = new XQuery("listTaskGroup_default",request);
+           xQuery.put("project_id",projectId);
+           taskGroupList = baseManager.listObject(xQuery);
            taskGroup.setProject((Project)baseManager.getObject(Project.class.getName(),projectId));
+           taskGroup.setTitle(title);
            baseManager.saveOrUpdate(TaskGroup.class.getName(),taskGroup);
+           taskGroupList.add(taskGroup);
        }catch (Exception e){
            e.printStackTrace();
        }
-       return taskGroup.getId();
+       return taskGroupList;
     }
 
     /**
@@ -127,9 +135,19 @@ public class ProjectController extends BaseController {
      */
     @RequestMapping("/addTask.do")
     @ResponseBody
-    public  String addTask(String taskGroupId,String title,String flowId,String userId){
-        Task task = projectManager.saveTask(taskGroupId,title,flowId,userId);
-        return task.getId();
+    public  List addTask(String taskGroupId,String title,String flowId,String userId,HttpServletRequest request){
+        List<Task> taskList = null;
+        try {
+            XQuery xQuery = new XQuery("listTask_byGroup",request);
+            xQuery.put("taskGroup_id",taskGroupId);
+            taskList = baseManager.listObject(xQuery);
+            Task task = projectManager.saveTask(taskGroupId,title,flowId,userId);
+            taskList.add(task);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return taskList;
     }
 
     /**
@@ -163,5 +181,97 @@ public class ProjectController extends BaseController {
         return flow.getActivityList().get(0).getUser();
     }
 
+    @RequestMapping("/getProject.do")
+    @ResponseBody
+     public   Project getProject(String id){
+        Project project = null;
+        try {
+            project = (Project)baseManager.getObject(Project.class.getName(),id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return project;
+    }
+    @RequestMapping("/getTaskGroup.do")
+    @ResponseBody
+    public   List getTaskGroup(String projectId,HttpServletRequest request){
+        List<TaskGroup> taskGroupList = null;
+        try {
+            XQuery xQuery = new XQuery("listTaskGroup_default",request);
+            xQuery.put("project_id",projectId);
+            taskGroupList = baseManager.listObject(xQuery);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return taskGroupList;
+    }
+
+    @RequestMapping("/getTask.do")
+    @ResponseBody
+    public   List getTask(String id,HttpServletRequest request){
+        List<Task> taskList = null;
+        try {
+            XQuery xQuery = new XQuery("listTask_byGroup",request);
+            xQuery.put("taskGroup_id",id);
+            taskList = baseManager.listObject(xQuery);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return taskList;
+    }
+    @RequestMapping("/getCurrentInstanceUsers.do")
+    @ResponseBody
+    public   List getCurrentInstanceUsers(String id){
+        List<User> userList = null;
+        try {
+           Task  task = (Task)baseManager.getObject(Task.class.getName(),id);
+            userList = task.getCurrentInstance().getFlowActivity().getUser();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return userList;
+    }
+    @RequestMapping("/getCurrentUser.do")
+    @ResponseBody
+    public   String getCurrentUser(String id){
+       String userId = "null";
+        try {
+            Task  task = (Task)baseManager.getObject(Task.class.getName(),id);
+            if(task.getCurrentUser()!=null) {
+                userId = task.getCurrentUser().getId();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return userId;
+    }
+    @RequestMapping("/getFlow.do")
+    @ResponseBody
+    public   Flow getFlow(String id){
+        Flow flow = null;
+        try {
+            Task  task = (Task)baseManager.getObject(Task.class.getName(),id);
+            flow = task.getFlow();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return flow;
+    }
+    @RequestMapping("/view.do")
+    public   String projectView(HttpServletRequest request,ModelMap modelMap){
+
+        try {
+            //流程
+            XQuery xQuery = new XQuery("listFlow_default",request);
+            List<Flow> flowList = baseManager.listObject(xQuery);
+            modelMap.put("flowList",flowList);
+            modelMap.put("id",request.getParameter("id"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "/project/projectView";
+    }
 
 }

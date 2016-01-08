@@ -11,6 +11,7 @@
         <match url="/basic/xm.do?qm=plistProjectUser_default" />
         <match url="/basic/xm.do?qm=formProject" />
         <match url="/basic/xm.do?qm=viewProject" />
+        <match url="/project/projectView.do" />
     </jnode>
 
     <jnode id="ttManager" access="admin,operational,c_operational,product_manager" url="/main.do?jnodeId=ttManager" text_zh_CN="系统设置">

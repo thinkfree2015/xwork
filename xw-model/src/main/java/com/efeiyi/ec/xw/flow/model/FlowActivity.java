@@ -1,6 +1,7 @@
 package com.efeiyi.ec.xw.flow.model;
 
 import com.efeiyi.ec.xw.organization.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -85,7 +86,7 @@ public class FlowActivity implements Serializable {
     }
 
 
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="flow_id")
     public Flow getFlow() {
