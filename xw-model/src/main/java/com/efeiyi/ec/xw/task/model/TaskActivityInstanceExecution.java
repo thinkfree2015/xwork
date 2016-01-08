@@ -28,6 +28,16 @@ public class TaskActivityInstanceExecution implements Serializable{
     //加入临时变量taskId
     private String taskId;
     private String taskTitle;
+    private String taskContent;
+
+    @Transient
+    public String getTaskContent() {
+        return taskContent;
+    }
+
+    public void setTaskContent(String taskContent) {
+        this.taskContent = taskContent;
+    }
 
     @Transient
     public String getTaskId() {

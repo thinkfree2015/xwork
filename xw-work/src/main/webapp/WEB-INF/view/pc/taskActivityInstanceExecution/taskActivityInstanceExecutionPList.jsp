@@ -29,7 +29,7 @@
 <div class="am-form-group" id="box">
   <c:forEach items="${requestScope.pageInfo.list}" var="taskActivityInstanceExecution">
     <article class="am-comment">
-        <a href="javascript:void (0);">编辑</a>
+        <a onclick="changeInput(this , '${taskActivityInstanceExecution.task.id}');">编辑</a>
         <a href="javascript:void (0);">标记</a>
         <a href="<c:url value='/basic/xm.do?qm=formTask&id=${taskActivityInstanceExecution.task.id}'/>" class="am-comment-author">${taskActivityInstanceExecution.task.content}</a>
     </article>
@@ -43,6 +43,9 @@
   </ming800:pcPageList>
 </div>
 <script>
+  function changeInput(o,taskId){
+
+  }
   function changeData(o){
     var checkVal = $(o).val();
     $.ajax({
@@ -59,9 +62,9 @@
         if(data && data.length > 0){
           for(var i in data){
             sub += "<article class=\"am-comment\">"+
-            "        <a href=\"javascript:void (0);\">编辑</a>"+
-            "        <a href=\"javascript:void (0);\">标记</a>"+
-            "        <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>"+data[i].taskId+"\" class=\"am-comment-author\">"+data[i].taskTitle+" </a>"+
+            "        <a onclick=\"changeInput(this,'"+data[i].taskId+"')\">编辑</a>"+
+            "        <a onclick=\"\">标记</a>"+
+            "        <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>"+data[i].taskId+"\" class=\"am-comment-author\">"+data[i].taskContent+" </a>"+
             "</article>";
           }
           box.append(sub);
