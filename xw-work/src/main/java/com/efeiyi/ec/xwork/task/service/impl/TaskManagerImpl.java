@@ -1,6 +1,7 @@
 package com.efeiyi.ec.xwork.task.service.impl;
 
 import com.efeiyi.ec.xw.flow.model.FlowActivity;
+import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.task.model.Task;
 import com.efeiyi.ec.xw.task.model.TaskActivityInstance;
 import com.efeiyi.ec.xw.task.model.TaskActivityInstanceExecution;
@@ -41,6 +42,8 @@ public class TaskManagerImpl implements TaskManager {
     public Task changeTaskInstanceStatus(String taskId,String status){
         //当前任务
               Task task = (Task)xdoDao.getObject(Task.class.getName(),taskId);
+        //默认用户
+              User  user = (User)xdoDao.getObject(User.class.getName(),AuthorizationUtil.getUser().getId());
         //当前任务实例
               TaskActivityInstance taskActivityInstance = task.getCurrentInstance();
         //改变实例状态
@@ -52,7 +55,7 @@ public class TaskManagerImpl implements TaskManager {
         //创建完成任务动态
         TaskDynamic taskDynamic = new TaskDynamic();
         taskDynamic.setCreateDatetime(new Date());
-        taskDynamic.setCreator(AuthorizationUtil.getUser());
+        taskDynamic.setCreator(user);
         taskDynamic.setTask(task);
         taskDynamic.setTaskActivityInstance(taskActivityInstance);
         //1 :未处理    2:正在处理      3:搁置    4:已完成   5:已放弃
@@ -106,7 +109,7 @@ public class TaskManagerImpl implements TaskManager {
                 TaskActivityInstance nextTaskActivityInstance = new TaskActivityInstance();
                 nextTaskActivityInstance.setActivate("1");
                 //创建人默认为当前用户
-                nextTaskActivityInstance.setExcutor(AuthorizationUtil.getUser());
+                nextTaskActivityInstance.setExcutor(user);
                 nextTaskActivityInstance.setStatus("1");
                 nextTaskActivityInstance.setCreateDatetime(new Date());
                 nextTaskActivityInstance.setTask(task);

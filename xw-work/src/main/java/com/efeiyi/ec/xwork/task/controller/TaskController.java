@@ -1,5 +1,6 @@
 package com.efeiyi.ec.xwork.task.controller;
 
+import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.task.model.Task;
 import com.efeiyi.ec.xw.task.model.TaskNote;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
@@ -16,10 +17,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -44,17 +42,19 @@ public class TaskController extends BaseController {
 
     @RequestMapping("/changeTaskStatus")
     @ResponseBody
-    public  Map<String,List> changeTaskStatus(String taskId,String status){
+    public  List changeTaskStatus(String taskId,String status){
         Task task = null;
-        Map<String,List> map = new HashMap<>();
+        List<User> userList = null;
         try {
             task = taskManager.changeTaskInstanceStatus(taskId,"4");
-            map.put("users",task.getCurrentInstance().getFlowActivity().getUser());
+            if(task.getCurrentInstance()!=null){
+                userList = task.getCurrentInstance().getFlowActivity().getUser();
+            }
 
         }catch (Exception e){
-
+           e.printStackTrace();
         }
-        return map;
+        return userList;
     }
 
     @RequestMapping("/img.do")

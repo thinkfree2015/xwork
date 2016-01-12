@@ -70,6 +70,30 @@
 </div>
 <!-- react测试-->
 <script type="text/babel">
+
+   var Task_tool = React.createClass({
+      handleEdit:function(){
+          this.props.handleEdit();
+      },
+      handleRemove:function(){
+          this.props.handleRemove();
+      },
+      handleCompleted:function(){
+         this.props.handleCompleted();
+      },
+      render:function(){
+        var style1 = {"marginRight":"2px"};
+        var style2 = {"display":this.props.dataStyle};
+        return (
+          <span style={style2}>
+              <a style={style1} onClick={this.handleEdit} href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
+              <a style={style1} onClick={this.handleRemove} href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>
+              <a style={style1} onClick={this.handleCompleted} href="javascript:void (0);"><img src="<c:url value="/scripts/image/completed1.png"/>" alt="已完成"/></a>
+          </span>
+        )
+      }
+   });
+
 <%--父组件 项目视图 --%>
  var ProjectView = React.createClass({
        getInitialState:function(){
@@ -257,6 +281,133 @@
           )
        }
     });
+
+    var Li = React.createClass({
+      getInitialState:function(){
+         return {
+           style:"none",
+           value:"",
+           editStyle:"none",
+           removeStyle:"block",
+           users:[],
+           userId:"null"
+         }
+      },
+       handleEdit:function(){
+           this.setState({editStyle:"initial","style":"none"});
+       },
+       onMouseOver:function(){
+         if(this.state.editStyle!="initial"){
+            this.setState({style:"initial"});
+         }
+       },
+       onMouseOut:function(){
+       if(this.state.editStyle!="initial"){
+        this.setState({style:"none"});
+        }
+       },
+       handleCompleted:function(){
+          var taskId = this.props.task.id;
+           var con= confirm("完成后任务将会分配给下一个节点,确认完成任务吗？");
+           if(con){
+               $.ajax({
+                type:"post",
+                url:"<c:url value="/task/changeTaskStatus.do"/>",
+                data:{taskId:taskId,status:"4"},
+                dataType:"json",
+                success:function(data) {
+                   this.setState({style:"none",editStyle:"none",users:data,userId:"null"});
+                 }.bind(this)
+                });
+              }
+       },
+       handleClick:function(){
+             var value = this.state.value;
+             var taskId = this.props.task.id;
+               $.ajax({
+                type:"post",
+                url:"<c:url value="/task/editTask.do"/>",
+                data:{taskId:taskId,title:value},
+                dataType:"json",
+                success:function(data) {
+                   this.setState({style:"none",editStyle:"none"});
+                 }.bind(this)
+                });
+       },
+       handleChange:function(s){
+          this.setState({value:s.target.value});
+       },
+       handleCancel:function(){
+          this.setState({style:"none",editStyle:"none",value:this.props.task.title});
+       },
+       handleRemove:function(){
+           var taskId = this.props.task.id;
+           var con= confirm("确认删除？");
+           if(con){
+            $.ajax({
+                type:"post",
+                url:"<c:url value="/task/removeTask.do"/>",
+                data:{taskId:taskId},
+                dataType:"json",
+                success:function(data) {
+                    this.setState({removeStyle:"none",style:"none",editStyle:"initial"});
+                 }.bind(this)
+                });
+            }
+
+       },
+          getCurrentUser:function(){
+          $.ajax({
+                type:"post",
+                url:"<c:url value="/project/getCurrentUser.do"/>",
+                data:{id:this.props.task.id},
+                dataType:"json",
+                success:function(data) {
+                      this.setState({userId:data});
+                 }.bind(this)
+                });
+       },
+        loadCommentsFromServer:function(){
+          $.ajax({
+                type:"post",
+                url:"<c:url value="/project/getCurrentInstanceUsers.do"/>",
+                data:{id:this.props.task.id},
+                dataType:"json",
+                success:function(data) {
+                   this.setState({users:data});
+                 }.bind(this)
+                });
+       },
+       componentWillMount:function(){
+
+                this.setState({value:this.props.task.title});
+                this.loadCommentsFromServer()
+                this.getCurrentUser()
+       },
+
+      render:function(){
+          var  style3 = {"marginTop":"2px","marginRight":"2px"};
+          var  editStyle = {"display":this.state.editStyle};
+          var  editStyle2 = {"display":this.state.editStyle=="none"?"initial":"none"};
+          var  removeStyle = {"display":this.state.removeStyle};
+        return (
+                      <li onMouseOver={this.onMouseOver}  onMouseOut={this.onMouseOut} style={removeStyle}>
+                         <Task_tool dataStyle={this.state.style} handleEdit={this.handleEdit} handleRemove={this.handleRemove} handleCompleted={this.handleCompleted}/>
+                         <span style={editStyle2}>
+                            <a href={this.props.a} >{this.state.value}</a>
+                         </span>
+                         <span style={editStyle}>
+                            <textarea className="todo-content no-border " onChange={this.handleChange}  value={this.state.value}></textarea>
+                            <a href="javascript:void (0);" onClick={this.handleClick} className="am-btn am-btn-primary am-btn-xs" style={style3}>保存</a>
+                            <a href="javascript:void (0);" onClick={this.handleCancel} className="am-btn am-btn-primary am-btn-xs" style={style3}>取消</a>
+                         </span>
+                         <Display_li_select_user userId={this.state.userId} users={this.state.users} taskId={this.props.task.id} />
+                         <Display_li_select_flow  taskId={this.props.task.id} />
+                      </li>
+
+        )
+      }
+    });
 <%--展示任务组件 --%>
   var Display_li = React.createClass({
 
@@ -285,6 +436,7 @@
                 this.setState({status:"1"});
              }
        },
+
        componentDidMount:function(){
 
        },
@@ -292,14 +444,7 @@
 
             var createLI = this.state.li.map(function(task){
                var a = "<c:url value="/basic/xm.do?qm=formTask&id=" />"+task.id+"&projectId=${id}";
-               return <li key={task.id}>
-                         <span>
-                            <input type="checkbox"  />
-                            <a href={a} >{task.title}</a>
-                         </span>
-                         <Display_li_select_user  taskId={task.id} />
-                         <Display_li_select_flow  taskId={task.id} />
-                      </li>
+               return <Li key={task.id} task={task} a={a}/>
             });
             var style1 = {"fontSize":"10%"};
              return    (
@@ -369,17 +514,17 @@
                  }.bind(this)
                 });
        },
-       loadCommentsFromServer:function(){
-          $.ajax({
-                type:"post",
-                url:"<c:url value="/project/getCurrentInstanceUsers.do"/>",
-                data:{id:this.props.taskId},
-                dataType:"json",
-                success:function(data) {
-                   this.setState({users:data});
-                 }.bind(this)
-                });
-       },
+       <%--loadCommentsFromServer:function(){--%>
+          <%--$.ajax({--%>
+                <%--type:"post",--%>
+                <%--url:"<c:url value="/project/getCurrentInstanceUsers.do"/>",--%>
+                <%--data:{id:this.props.taskId},--%>
+                <%--dataType:"json",--%>
+                <%--success:function(data) {--%>
+                   <%--this.setState({users:data});--%>
+                 <%--}.bind(this)--%>
+                <%--});--%>
+       <%--},--%>
        handleChange:function(s){
            var value = s.target.value;
            $.ajax({
@@ -392,15 +537,18 @@
                  }.bind(this)
                 });
        },
-       componentWillMount:function(){
-            if(this.state.status=="0"){
-                this.loadCommentsFromServer();
-                this.getCurrentUser();
-                this.setState({status:"1"});
-             }
-       },
+       <%--componentWillMount:function(){--%>
+            <%--if(this.state.status=="0"){--%>
+                <%--this.loadCommentsFromServer();--%>
+                <%--this.getCurrentUser();--%>
+                <%--this.setState({status:"1"});--%>
+             <%--}--%>
+       <%--},--%>
        render:function(){
-         var selectUser = this.state.users.map(function(user){
+        if(this.state.value!=this.props.userId){
+           this.setState({value:this.props.userId});
+        }
+         var selectUser = this.props.users.map(function(user){
               return <option key={user.id} value={user.id}>{user.name}</option>
          });
          var style = {fontSize:"10px"};
@@ -582,230 +730,6 @@
 
 </script>
 
-<script type="text/javascript">
 
-    //初始化操作
-//    $(function(){
-//        $(".todo").hover(function(){
-//            $(this).find(".todo-action").css({"display":"block"});
-//        },function(){
-//            $(this).find(".todo-action").css({"display":"none"});
-//        });
-//    });
-
-    //--------------------------------任务---------------------------------------------------//
-    //取消任务
-//    function cancelTask(obj){
-//
-//        $(obj).parents("ul").find("div:last").show();
-//        $(obj).parent().parent().remove();
-//        $(obj).parent().remove();
-//
-//    }
-
-    //to添加任务
-//    function addTask(taskGroupId) {
-//        $("#"+taskGroupId).before($("#display_task").html());
-//        $("#"+taskGroupId).hide();
-//    }
-
-    //save添加任务
-    <%--function saveTask(obj){--%>
-        <%--var li = $(obj).parent().parent();--%>
-        <%--var title = $(li).find("textarea").val();--%>
-        <%--var flow = $("select[name='flow']",$(li)).val();--%>
-        <%--var userId = $("select[name='user']",$(li)).val();--%>
-        <%--var  taskGroupId = $(li).parent().attr("name");--%>
-        <%--if(title==""){--%>
-            <%--alert("请填写任务标题!");--%>
-        <%--}else if(flow=="null"){--%>
-            <%--alert("请选择流程!");--%>
-        <%--}else{--%>
-            <%--var f = confirm("流程选定后,将不允许修改!确定添加此任务吗?");--%>
-            <%--if(f){--%>
-                <%--$.ajax({--%>
-                    <%--type:"post",--%>
-                    <%--url:"<c:url value="/project/addTask.do"/>",--%>
-                    <%--data:{title:title,flowId:flow,taskGroupId:taskGroupId,userId:userId},--%>
-                    <%--success:function(data){--%>
-                        <%--data = data.substring(1,data.length-1);--%>
-                        <%--var url = "<c:url value="/" />"+"basic/xm.do?qm=formTask&id="+data+"&projectId="+'${object.id}';--%>
-                        <%--var a = '<a href='+url+'>'+title+'</a>';--%>
-                        <%--$(li).find("textarea").parent().html(a);--%>
-                        <%--$(li).find("select[name='flow']").attr("disabled","disabled");--%>
-                        <%--$(li).find("select[name='user']").attr("onchange","sendUser(this,"+data+",'<c:url value="/project/sendUser.do"/>')");--%>
-                        <%--$(li).find("input[name='checkbox']").attr("onclick","completeTask(this,'"+data+"')");--%>
-                        <%--$(li).find("input[name='checkbox']").removeAttr("disabled");--%>
-                        <%--$(li).find(".am-margin").remove();--%>
-                        <%--$(li).attr("name",data);--%>
-                        <%--$("#"+taskGroupId).show();--%>
-                    <%--}--%>
-                <%--});--%>
-            <%--}else{--%>
-                <%--alert("再想想!");--%>
-            <%--}--%>
-
-        <%--}--%>
-
-    <%--}--%>
-
-    //选择流程事件--->首节点成员
-    <%--function changeActivity(obj){--%>
-        <%--var  flowId = $(obj).val();--%>
-        <%--if(flowId=="null"){--%>
-            <%--$(obj).parent().next().remove();--%>
-        <%--}else{--%>
-            <%--$.ajax({--%>
-                <%--type:"post",--%>
-                <%--url:"<c:url value="/project/changeActivity.do"/>",--%>
-                <%--data:{flowId:flowId},--%>
-                <%--success:function(data) {--%>
-                    <%--$.each($.parseJSON(data),function(key,value) {--%>
-                        <%--if (key == "users") {--%>
-                            <%--var select = '<span>'+--%>
-                                    <%--'<select name="user" onchange="" style="font-size: 10%;">' +--%>
-                                    <%--'<option value="null">' + '请选择成员' + '</option>';--%>
-
-                            <%--$.each(value, function (k, v) {--%>
-                                <%--select += ' <option value="' + v.id + '">' + v.name + '</option>';--%>
-                            <%--});--%>
-                            <%--select += '</select>'+--%>
-                                    <%--'</span>';--%>
-                            <%--$(obj).parent().after(select);--%>
-
-                        <%--}--%>
-
-                    <%--});--%>
-                <%--}--%>
-            <%--});--%>
-        <%--}--%>
-    <%--}--%>
-
-
-
-    //测试 完成任务
-    <%--function completeTask(obj,taskId){--%>
-        <%--$.ajax({--%>
-            <%--type:"post",--%>
-            <%--url:"<c:url value="/task/changeTaskStatus.do"/>",--%>
-            <%--data:{taskId:taskId},--%>
-            <%--success:function(data) {--%>
-                <%--$.each($.parseJSON(data), function (key, value) {--%>
-                    <%--if (key == "users") {--%>
-                        <%--var select = '<span>' +--%>
-                                <%--'<select name="user" onchange="" style="font-size: 10%;">' +--%>
-                                <%--'<option value="null">' + '请选择成员' + '</option>';--%>
-
-                        <%--$.each(value, function (k, v) {--%>
-                            <%--select += ' <option value="' + v.id + '">' + v.name + '</option>';--%>
-                        <%--});--%>
-                        <%--select += '</select>' +--%>
-                                <%--'</span>';--%>
-                        <%--$(obj).parent().next().next().html(select);--%>
-
-                    <%--}--%>
-
-                <%--});--%>
-            <%--}--%>
-        <%--});--%>
-    <%--}--%>
-    <%--//分配人员--%>
-    <%--function changeMember(obj){--%>
-    <%--var  memberId = $(obj).val();--%>
-    <%--var taskId = $(obj).parents("li").attr("name");--%>
-    <%--if(memberId=="null"){--%>
-    <%--alert("请选择成员!");--%>
-    <%--}else{--%>
-    <%--$.ajax({--%>
-    <%--type:"post",--%>
-    <%--url:"<c:url value="/project/changeMember.do"/>",--%>
-    <%--data:{taskId:taskI,memberId:memberId},--%>
-    <%--success:function(data) {--%>
-    <%--$.each(data,function(k,v){--%>
-    <%--if(k=="users"){--%>
-    <%--var select = '<select  onchange="" style="font-size: 10%;margin-left: -259px">'+--%>
-    <%--'<option value="null">'+'请选择成员'+'</option>';--%>
-    <%--for(var i=0;i< v.length;i++){--%>
-
-    <%--select += ' <option value="'+v[i].id+'">'+v[i].username+'</option>';--%>
-    <%--}--%>
-
-    <%--select += '</select>';--%>
-
-    <%--$(obj).parent().next().html(select);--%>
-
-    <%--}--%>
-    <%--});--%>
-    <%--}--%>
-    <%--});--%>
-    <%--}--%>
-    <%--}--%>
-    //新加任务 的指派成员
-    <%--function addNewTaskHtml(taskId){--%>
-        <%--var select =  ' <select style="font-size: 10%" onchange="sendUser(this,'+taskId+')">'+--%>
-                <%--'   <option value="null">'+'未指派'+'</option>';--%>
-        <%--<c:forEach items="${object.memberList}" var="member">--%>
-        <%--select += '   <option value="${member.id}" >${member.username}</option>';--%>
-        <%--</c:forEach>--%>
-        <%--select += '</select>';--%>
-        <%--return select;--%>
-    <%--}--%>
-
-
-    ///------------------------------------清单---------------------------------------------------------------////
-    //to添加 清单
-//    function addTaskGroup(projectId){
-//        var f = true;
-//        $(".am-g ul").each(function(){
-//
-//            if($(this).attr("name")==""){
-//                $(this).find("input").focus();
-//                f = false;
-//                return false;
-//            }
-//        });
-//        if(f){
-//            $(".am-g").append($("#display_taskGroup").html());
-//        }
-//
-//
-//    }
-    //取消清单
-//    function cancelTaskGroup(obj){
-//        $(obj).parent().prev().prev().remove();
-//        $(obj).parent().prev().remove();
-//        $(obj).parent().remove();
-//
-//    }
-    //保存清单
-    <%--function saveTaskGroup(obj){--%>
-        <%--var projectId = '${object.id}';--%>
-        <%--var title = $(obj).parent().prev().find("input").val();--%>
-        <%--if(title==""){--%>
-            <%--alert("请填写清单名单!");--%>
-        <%--}else{--%>
-            <%--$.ajax({--%>
-                <%--type: "post",--%>
-                <%--url: "<c:url value="/project/addTaskGroup.do"/>",--%>
-                <%--data:{projectId:projectId,title:title},--%>
-                <%--success: function (data) {--%>
-                    <%--data = data.substring(1,data.length-1);--%>
-                    <%--var ul = $(obj).parent().prev("ul");--%>
-                    <%--$(ul).attr("name",data);--%>
-                    <%--$(ul).find("span").text(title);--%>
-                    <%--$(obj).parent().remove();--%>
-                    <%--var div = '   <div id="'+data+'">'+--%>
-                            <%--'    <small> <a href="javascript:void (0);" onclick="addTask(\''+data+'\')">'+--%>
-                            <%--'     添加新任务'+--%>
-                            <%--'     </a></small>'+--%>
-                            <%--'   </div>';--%>
-                    <%--$(ul).append(div);--%>
-                <%--}--%>
-            <%--});--%>
-
-        <%--}--%>
-
-    <%--}--%>
-</script>
 </body>
 </html>
