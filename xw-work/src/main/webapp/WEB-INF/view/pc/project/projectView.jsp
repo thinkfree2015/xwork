@@ -291,10 +291,11 @@
        render:function(){
 
             var createLI = this.state.li.map(function(task){
+               var a = "<c:url value="/basic/xm.do?qm=formTask&id=" />"+task.id+"&projectId=${id}";
                return <li key={task.id}>
                          <span>
                             <input type="checkbox"  />
-                            <a href="javascript:void(0)">{task.title}</a>
+                            <a href={a} >{task.title}</a>
                          </span>
                          <Display_li_select_user  taskId={task.id} />
                          <Display_li_select_flow  taskId={task.id} />
@@ -584,130 +585,130 @@
 <script type="text/javascript">
 
     //初始化操作
-    $(function(){
-        $(".todo").hover(function(){
-            $(this).find(".todo-action").css({"display":"block"});
-        },function(){
-            $(this).find(".todo-action").css({"display":"none"});
-        });
-    });
+//    $(function(){
+//        $(".todo").hover(function(){
+//            $(this).find(".todo-action").css({"display":"block"});
+//        },function(){
+//            $(this).find(".todo-action").css({"display":"none"});
+//        });
+//    });
 
     //--------------------------------任务---------------------------------------------------//
     //取消任务
-    function cancelTask(obj){
-
-        $(obj).parents("ul").find("div:last").show();
-        $(obj).parent().parent().remove();
-        $(obj).parent().remove();
-
-    }
+//    function cancelTask(obj){
+//
+//        $(obj).parents("ul").find("div:last").show();
+//        $(obj).parent().parent().remove();
+//        $(obj).parent().remove();
+//
+//    }
 
     //to添加任务
-    function addTask(taskGroupId) {
-        $("#"+taskGroupId).before($("#display_task").html());
-        $("#"+taskGroupId).hide();
-    }
+//    function addTask(taskGroupId) {
+//        $("#"+taskGroupId).before($("#display_task").html());
+//        $("#"+taskGroupId).hide();
+//    }
 
     //save添加任务
-    function saveTask(obj){
-        var li = $(obj).parent().parent();
-        var title = $(li).find("textarea").val();
-        var flow = $("select[name='flow']",$(li)).val();
-        var userId = $("select[name='user']",$(li)).val();
-        var  taskGroupId = $(li).parent().attr("name");
-        if(title==""){
-            alert("请填写任务标题!");
-        }else if(flow=="null"){
-            alert("请选择流程!");
-        }else{
-            var f = confirm("流程选定后,将不允许修改!确定添加此任务吗?");
-            if(f){
-                $.ajax({
-                    type:"post",
-                    url:"<c:url value="/project/addTask.do"/>",
-                    data:{title:title,flowId:flow,taskGroupId:taskGroupId,userId:userId},
-                    success:function(data){
-                        data = data.substring(1,data.length-1);
-                        var url = "<c:url value="/" />"+"basic/xm.do?qm=formTask&id="+data+"&projectId="+'${object.id}';
-                        var a = '<a href='+url+'>'+title+'</a>';
-                        $(li).find("textarea").parent().html(a);
-                        $(li).find("select[name='flow']").attr("disabled","disabled");
-                        $(li).find("select[name='user']").attr("onchange","sendUser(this,"+data+",'<c:url value="/project/sendUser.do"/>')");
-                        $(li).find("input[name='checkbox']").attr("onclick","completeTask(this,'"+data+"')");
-                        $(li).find("input[name='checkbox']").removeAttr("disabled");
-                        $(li).find(".am-margin").remove();
-                        $(li).attr("name",data);
-                        $("#"+taskGroupId).show();
-                    }
-                });
-            }else{
-                alert("再想想!");
-            }
+    <%--function saveTask(obj){--%>
+        <%--var li = $(obj).parent().parent();--%>
+        <%--var title = $(li).find("textarea").val();--%>
+        <%--var flow = $("select[name='flow']",$(li)).val();--%>
+        <%--var userId = $("select[name='user']",$(li)).val();--%>
+        <%--var  taskGroupId = $(li).parent().attr("name");--%>
+        <%--if(title==""){--%>
+            <%--alert("请填写任务标题!");--%>
+        <%--}else if(flow=="null"){--%>
+            <%--alert("请选择流程!");--%>
+        <%--}else{--%>
+            <%--var f = confirm("流程选定后,将不允许修改!确定添加此任务吗?");--%>
+            <%--if(f){--%>
+                <%--$.ajax({--%>
+                    <%--type:"post",--%>
+                    <%--url:"<c:url value="/project/addTask.do"/>",--%>
+                    <%--data:{title:title,flowId:flow,taskGroupId:taskGroupId,userId:userId},--%>
+                    <%--success:function(data){--%>
+                        <%--data = data.substring(1,data.length-1);--%>
+                        <%--var url = "<c:url value="/" />"+"basic/xm.do?qm=formTask&id="+data+"&projectId="+'${object.id}';--%>
+                        <%--var a = '<a href='+url+'>'+title+'</a>';--%>
+                        <%--$(li).find("textarea").parent().html(a);--%>
+                        <%--$(li).find("select[name='flow']").attr("disabled","disabled");--%>
+                        <%--$(li).find("select[name='user']").attr("onchange","sendUser(this,"+data+",'<c:url value="/project/sendUser.do"/>')");--%>
+                        <%--$(li).find("input[name='checkbox']").attr("onclick","completeTask(this,'"+data+"')");--%>
+                        <%--$(li).find("input[name='checkbox']").removeAttr("disabled");--%>
+                        <%--$(li).find(".am-margin").remove();--%>
+                        <%--$(li).attr("name",data);--%>
+                        <%--$("#"+taskGroupId).show();--%>
+                    <%--}--%>
+                <%--});--%>
+            <%--}else{--%>
+                <%--alert("再想想!");--%>
+            <%--}--%>
 
-        }
+        <%--}--%>
 
-    }
+    <%--}--%>
 
     //选择流程事件--->首节点成员
-    function changeActivity(obj){
-        var  flowId = $(obj).val();
-        if(flowId=="null"){
-            $(obj).parent().next().remove();
-        }else{
-            $.ajax({
-                type:"post",
-                url:"<c:url value="/project/changeActivity.do"/>",
-                data:{flowId:flowId},
-                success:function(data) {
-                    $.each($.parseJSON(data),function(key,value) {
-                        if (key == "users") {
-                            var select = '<span>'+
-                                    '<select name="user" onchange="" style="font-size: 10%;">' +
-                                    '<option value="null">' + '请选择成员' + '</option>';
+    <%--function changeActivity(obj){--%>
+        <%--var  flowId = $(obj).val();--%>
+        <%--if(flowId=="null"){--%>
+            <%--$(obj).parent().next().remove();--%>
+        <%--}else{--%>
+            <%--$.ajax({--%>
+                <%--type:"post",--%>
+                <%--url:"<c:url value="/project/changeActivity.do"/>",--%>
+                <%--data:{flowId:flowId},--%>
+                <%--success:function(data) {--%>
+                    <%--$.each($.parseJSON(data),function(key,value) {--%>
+                        <%--if (key == "users") {--%>
+                            <%--var select = '<span>'+--%>
+                                    <%--'<select name="user" onchange="" style="font-size: 10%;">' +--%>
+                                    <%--'<option value="null">' + '请选择成员' + '</option>';--%>
 
-                            $.each(value, function (k, v) {
-                                select += ' <option value="' + v.id + '">' + v.name + '</option>';
-                            });
-                            select += '</select>'+
-                                    '</span>';
-                            $(obj).parent().after(select);
+                            <%--$.each(value, function (k, v) {--%>
+                                <%--select += ' <option value="' + v.id + '">' + v.name + '</option>';--%>
+                            <%--});--%>
+                            <%--select += '</select>'+--%>
+                                    <%--'</span>';--%>
+                            <%--$(obj).parent().after(select);--%>
 
-                        }
+                        <%--}--%>
 
-                    });
-                }
-            });
-        }
-    }
+                    <%--});--%>
+                <%--}--%>
+            <%--});--%>
+        <%--}--%>
+    <%--}--%>
 
 
 
     //测试 完成任务
-    function completeTask(obj,taskId){
-        $.ajax({
-            type:"post",
-            url:"<c:url value="/task/changeTaskStatus.do"/>",
-            data:{taskId:taskId},
-            success:function(data) {
-                $.each($.parseJSON(data), function (key, value) {
-                    if (key == "users") {
-                        var select = '<span>' +
-                                '<select name="user" onchange="" style="font-size: 10%;">' +
-                                '<option value="null">' + '请选择成员' + '</option>';
+    <%--function completeTask(obj,taskId){--%>
+        <%--$.ajax({--%>
+            <%--type:"post",--%>
+            <%--url:"<c:url value="/task/changeTaskStatus.do"/>",--%>
+            <%--data:{taskId:taskId},--%>
+            <%--success:function(data) {--%>
+                <%--$.each($.parseJSON(data), function (key, value) {--%>
+                    <%--if (key == "users") {--%>
+                        <%--var select = '<span>' +--%>
+                                <%--'<select name="user" onchange="" style="font-size: 10%;">' +--%>
+                                <%--'<option value="null">' + '请选择成员' + '</option>';--%>
 
-                        $.each(value, function (k, v) {
-                            select += ' <option value="' + v.id + '">' + v.name + '</option>';
-                        });
-                        select += '</select>' +
-                                '</span>';
-                        $(obj).parent().next().next().html(select);
+                        <%--$.each(value, function (k, v) {--%>
+                            <%--select += ' <option value="' + v.id + '">' + v.name + '</option>';--%>
+                        <%--});--%>
+                        <%--select += '</select>' +--%>
+                                <%--'</span>';--%>
+                        <%--$(obj).parent().next().next().html(select);--%>
 
-                    }
+                    <%--}--%>
 
-                });
-            }
-        });
-    }
+                <%--});--%>
+            <%--}--%>
+        <%--});--%>
+    <%--}--%>
     <%--//分配人员--%>
     <%--function changeMember(obj){--%>
     <%--var  memberId = $(obj).val();--%>
@@ -740,71 +741,71 @@
     <%--}--%>
     <%--}--%>
     //新加任务 的指派成员
-    function addNewTaskHtml(taskId){
-        var select =  ' <select style="font-size: 10%" onchange="sendUser(this,'+taskId+')">'+
-                '   <option value="null">'+'未指派'+'</option>';
-        <c:forEach items="${object.memberList}" var="member">
-        select += '   <option value="${member.id}" >${member.username}</option>';
-        </c:forEach>
-        select += '</select>';
-        return select;
-    }
+    <%--function addNewTaskHtml(taskId){--%>
+        <%--var select =  ' <select style="font-size: 10%" onchange="sendUser(this,'+taskId+')">'+--%>
+                <%--'   <option value="null">'+'未指派'+'</option>';--%>
+        <%--<c:forEach items="${object.memberList}" var="member">--%>
+        <%--select += '   <option value="${member.id}" >${member.username}</option>';--%>
+        <%--</c:forEach>--%>
+        <%--select += '</select>';--%>
+        <%--return select;--%>
+    <%--}--%>
 
 
     ///------------------------------------清单---------------------------------------------------------------////
     //to添加 清单
-    function addTaskGroup(projectId){
-        var f = true;
-        $(".am-g ul").each(function(){
-
-            if($(this).attr("name")==""){
-                $(this).find("input").focus();
-                f = false;
-                return false;
-            }
-        });
-        if(f){
-            $(".am-g").append($("#display_taskGroup").html());
-        }
-
-
-    }
+//    function addTaskGroup(projectId){
+//        var f = true;
+//        $(".am-g ul").each(function(){
+//
+//            if($(this).attr("name")==""){
+//                $(this).find("input").focus();
+//                f = false;
+//                return false;
+//            }
+//        });
+//        if(f){
+//            $(".am-g").append($("#display_taskGroup").html());
+//        }
+//
+//
+//    }
     //取消清单
-    function cancelTaskGroup(obj){
-        $(obj).parent().prev().prev().remove();
-        $(obj).parent().prev().remove();
-        $(obj).parent().remove();
-
-    }
+//    function cancelTaskGroup(obj){
+//        $(obj).parent().prev().prev().remove();
+//        $(obj).parent().prev().remove();
+//        $(obj).parent().remove();
+//
+//    }
     //保存清单
-    function saveTaskGroup(obj){
-        var projectId = '${object.id}';
-        var title = $(obj).parent().prev().find("input").val();
-        if(title==""){
-            alert("请填写清单名单!");
-        }else{
-            $.ajax({
-                type: "post",
-                url: "<c:url value="/project/addTaskGroup.do"/>",
-                data:{projectId:projectId,title:title},
-                success: function (data) {
-                    data = data.substring(1,data.length-1);
-                    var ul = $(obj).parent().prev("ul");
-                    $(ul).attr("name",data);
-                    $(ul).find("span").text(title);
-                    $(obj).parent().remove();
-                    var div = '   <div id="'+data+'">'+
-                            '    <small> <a href="javascript:void (0);" onclick="addTask(\''+data+'\')">'+
-                            '     添加新任务'+
-                            '     </a></small>'+
-                            '   </div>';
-                    $(ul).append(div);
-                }
-            });
+    <%--function saveTaskGroup(obj){--%>
+        <%--var projectId = '${object.id}';--%>
+        <%--var title = $(obj).parent().prev().find("input").val();--%>
+        <%--if(title==""){--%>
+            <%--alert("请填写清单名单!");--%>
+        <%--}else{--%>
+            <%--$.ajax({--%>
+                <%--type: "post",--%>
+                <%--url: "<c:url value="/project/addTaskGroup.do"/>",--%>
+                <%--data:{projectId:projectId,title:title},--%>
+                <%--success: function (data) {--%>
+                    <%--data = data.substring(1,data.length-1);--%>
+                    <%--var ul = $(obj).parent().prev("ul");--%>
+                    <%--$(ul).attr("name",data);--%>
+                    <%--$(ul).find("span").text(title);--%>
+                    <%--$(obj).parent().remove();--%>
+                    <%--var div = '   <div id="'+data+'">'+--%>
+                            <%--'    <small> <a href="javascript:void (0);" onclick="addTask(\''+data+'\')">'+--%>
+                            <%--'     添加新任务'+--%>
+                            <%--'     </a></small>'+--%>
+                            <%--'   </div>';--%>
+                    <%--$(ul).append(div);--%>
+                <%--}--%>
+            <%--});--%>
 
-        }
+        <%--}--%>
 
-    }
+    <%--}--%>
 </script>
 </body>
 </html>

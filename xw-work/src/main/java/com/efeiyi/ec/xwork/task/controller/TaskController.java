@@ -137,5 +137,16 @@ public class TaskController extends BaseController {
         return taskNote;
     }
 
-
+    @RequestMapping("/saveDescription.do")
+    @ResponseBody
+    public String saveDescription(String taskId,String content){
+        try{
+            Task task = (Task)baseManager.getObject(Task.class.getName(),taskId);
+            task.setContent(content);
+            baseManager.saveOrUpdate(Task.class.getName(),task);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return taskId;
+    }
 }
