@@ -16,12 +16,12 @@
 
     <jnode id="ttManager" access="admin,operational,c_operational,product_manager" url="/main.do?jnodeId=ttManager" text_zh_CN="系统设置">
         <jnode url="" id="UserManager" access="admin,operational,c_operational,product_manager" state="closed" text_zh_CN="用户管理">
-            <jnode url="/basic/xm.do?qm=plistUser_default" access="admin,operational,c_operational,product_manager" text_zh_CN="用户分组列表">
+            <jnode url="/basic/xm.do?qm=plistUser_default" access="admin,operational,c_operational,product_manager" text_zh_CN="用户列表">
                 <match url="/basic/xm.do?qm=plistUser_default" />
                 <match url="/basic/xm.do?qm=saveOrUpdateUserGroup" />
             </jnode>
         </jnode>
-        <jnode url="" id="FlowManager" access="admin,operational,c_operational,product_manager" state="closed" text_zh_CN="流程管理">
+        <jnode url="" id="FlowManager" access="admin,operational,c_operational,product_manager" state="closed" text_zh_CN="流程设置">
             <jnode url="/basic/xm.do?qm=plistFlow_default" access="admin,operational,c_operational,product_manager" text_zh_CN="流程列表">
                 <match url="/basic/xm.do?qm=plistFlow_default" />
                 <match url="/basic/xm.do?qm=formFlow"/>
