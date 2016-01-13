@@ -87,11 +87,11 @@
             <ul>
                 <li class="todo">
                     <div class="todo-action" style="display: none;position: absolute;left: 13%;background-color: #FFFFFF">
-                        <div  style="padding-left: 30px;">
-                            <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
-                            <a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>
-                            <a href="javascript:void (0);"></a>
-                        </div>
+                        <%--<div  style="padding-left: 30px;">--%>
+                            <%--<a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>--%>
+                            <%--<a href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskDel.png"/>" alt="删除"/></a>--%>
+                            <%--<a href="javascript:void (0);"></a>--%>
+                        <%--</div>--%>
                     </div>
                     <div class="todo-wrap" style="position:relative ;left: 10px;">
                          <span>
