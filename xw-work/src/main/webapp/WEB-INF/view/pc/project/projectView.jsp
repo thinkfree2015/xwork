@@ -20,6 +20,7 @@
     <script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>
     <script src="<c:url value="/scripts/react0.14.3/react-dom-server.js"/> "></script>
     <script src="<c:url value="/scripts/react0.14.3/browser.min.js"/>"></script>
+    <script src="<c:url value="/scripts/sockjs-0.3.min.js"/>"></script>
     <%--<script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>--%>
     <style type="text/css">
         .todo-content {
@@ -69,8 +70,43 @@
 <div id="all">
 </div>
 <!-- react测试-->
-<script type="text/babel">
 
+<script type="text/babel">
+  <%-- 消息推送 --%>
+   var ws = null;
+      function connect(){}{
+       if ('WebSocket' in window) {
+                ws= new WebSocket("<c:url value='ws://192.168.1.80:8080/websck'/>");
+            }else if ('MozWebSocket' in window) {
+                alert("MozWebSocket");
+                ws = new MozWebSocket("ws://websck");
+            }else {
+                ws = new SockJS("<c:url value='http://192.168.1.80:8080/sockjs/websck'/>");
+            }
+
+           <%--ws = new WebSocket("<c:url value='ws://192.168.1.80:8080/websck'/>");--%>
+          ws.onopen=function(e){
+          };
+          ws.onmessage=function(e){
+
+          };
+          ws.onerror=function(e){
+
+          };
+          ws.onclose=function(e){
+
+          }
+      }
+<%-- 发送消息 --%>
+    function doSend(msg){
+        ws.send(msg);
+    }
+
+<%--初始化 --%>
+    $(function(){
+        connect();
+    });
+<%--任务操作 --%>
    var Task_tool = React.createClass({
       handleEdit:function(){
           this.props.handleEdit();
@@ -83,7 +119,7 @@
       },
       render:function(){
         var style1 = {"marginRight":"2px"};
-        var style2 = {"display":this.props.dataStyle};
+        var style2 = {"display":this.props.dataStyle,"position":"absolute","z-index":"99","left":"-55px","top":"3px"};
         return (
           <span style={style2}>
               <a style={style1} onClick={this.handleEdit} href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
@@ -205,8 +241,11 @@
              }
        },
         render:function(){
+          var listStyle= {
+            "padding-left":"5em",
+          };
            var createUL = this.state.ul.map(function(taskGroup){
-               return <ul key={taskGroup.id}>
+               return <ul key={taskGroup.id} style={listStyle}>
                           {taskGroup.title}
                           <Display_li taskGroupId={taskGroup.id} />
                       </ul>
@@ -281,7 +320,7 @@
           )
        }
     });
-
+<%--任务li --%>
     var Li = React.createClass({
       getInitialState:function(){
          return {
@@ -356,7 +395,10 @@
             }
 
        },
-          getCurrentUser:function(){
+          getCurrentUser:function(data){
+            this.setState({userId:data});
+          },
+          defaultCurrentUser:function(e){
           $.ajax({
                 type:"post",
                 url:"<c:url value="/project/getCurrentUser.do"/>",
@@ -382,14 +424,14 @@
 
                 this.setState({value:this.props.task.title});
                 this.loadCommentsFromServer()
-                this.getCurrentUser()
+                this.defaultCurrentUser()
        },
 
       render:function(){
           var  style3 = {"marginTop":"2px","marginRight":"2px"};
           var  editStyle = {"display":this.state.editStyle};
           var  editStyle2 = {"display":this.state.editStyle=="none"?"initial":"none"};
-          var  removeStyle = {"display":this.state.removeStyle};
+          var  removeStyle = {"display":this.state.removeStyle,"position":"relative"};
         return (
                       <li onMouseOver={this.onMouseOver}  onMouseOut={this.onMouseOut} style={removeStyle}>
                          <Task_tool dataStyle={this.state.style} handleEdit={this.handleEdit} handleRemove={this.handleRemove} handleCompleted={this.handleCompleted}/>
@@ -401,7 +443,7 @@
                             <a href="javascript:void (0);" onClick={this.handleClick} className="am-btn am-btn-primary am-btn-xs" style={style3}>保存</a>
                             <a href="javascript:void (0);" onClick={this.handleCancel} className="am-btn am-btn-primary am-btn-xs" style={style3}>取消</a>
                          </span>
-                         <Display_li_select_user userId={this.state.userId} users={this.state.users} taskId={this.props.task.id} />
+                         <Display_li_select_user userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.users} taskId={this.props.task.id} />
                          <Display_li_select_flow  taskId={this.props.task.id} />
                       </li>
 
@@ -503,28 +545,7 @@
           users:[]
          }
        },
-        getCurrentUser:function(){
-          $.ajax({
-                type:"post",
-                url:"<c:url value="/project/getCurrentUser.do"/>",
-                data:{id:this.props.taskId},
-                dataType:"json",
-                success:function(data) {
-                      this.setState({value:data});
-                 }.bind(this)
-                });
-       },
-       <%--loadCommentsFromServer:function(){--%>
-          <%--$.ajax({--%>
-                <%--type:"post",--%>
-                <%--url:"<c:url value="/project/getCurrentInstanceUsers.do"/>",--%>
-                <%--data:{id:this.props.taskId},--%>
-                <%--dataType:"json",--%>
-                <%--success:function(data) {--%>
-                   <%--this.setState({users:data});--%>
-                 <%--}.bind(this)--%>
-                <%--});--%>
-       <%--},--%>
+
        handleChange:function(s){
            var value = s.target.value;
            $.ajax({
@@ -533,21 +554,13 @@
                 data:{taskId:this.props.taskId,userId:value},
                 dataType:"json",
                 success:function(data) {
-                  this.setState({value:value});
+                   this.props.getCurrentUser(value);
                  }.bind(this)
                 });
        },
-       <%--componentWillMount:function(){--%>
-            <%--if(this.state.status=="0"){--%>
-                <%--this.loadCommentsFromServer();--%>
-                <%--this.getCurrentUser();--%>
-                <%--this.setState({status:"1"});--%>
-             <%--}--%>
-       <%--},--%>
+
        render:function(){
-        if(this.state.value!=this.props.userId){
-           this.setState({value:this.props.userId});
-        }
+
          var selectUser = this.props.users.map(function(user){
               return <option key={user.id} value={user.id}>{user.name}</option>
          });
@@ -555,7 +568,7 @@
          return (
 
             <span>
-                 <select value={this.state.value} onChange={this.handleChange} style={style}>
+                 <select value={this.props.userId} onChange={this.handleChange} style={style}>
                      <option value="null">请分配人员</option>
                      {selectUser}
                  </select>
@@ -729,7 +742,9 @@
 
 
 </script>
+<script type="text/javascript">
 
+</script>
 
 </body>
 </html>
