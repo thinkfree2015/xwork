@@ -29,7 +29,7 @@
             }
 
             if ('WebSocket' in window) {
-                ws= new WebSocket("<c:url value='ws://192.168.1.61:8082/websck'/>");
+                ws= new WebSocket("<c:url value='ws://192.168.1.80:8080/websck'/>");
             }else if ('MozWebSocket' in window) {
                 alert("MozWebSocket");
                 ws = new MozWebSocket("ws://websck");
