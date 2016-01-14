@@ -62,7 +62,7 @@ public class FlowActivityController {
         activity.setUser(list);
         baseManager.saveOrUpdate(FlowActivity.class.getName(),activity);
         assert flow != null;
-        return "redirect:/basic/xm.do?qm=formFlow&id="+flow.getId();
+        return "redirect:/basic/xm.do?qm=viewFlow&id="+flow.getId();
     }
 
     @ResponseBody
