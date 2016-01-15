@@ -1,6 +1,7 @@
 package com.efeiyi.ec.xwork.flow.controller;
 
 import com.efeiyi.ec.xw.flow.model.Flow;
+import com.efeiyi.ec.xw.flow.model.FlowActivity;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.ming800.core.base.service.BaseManager;
 import com.ming800.core.does.model.XQuery;
@@ -44,6 +45,19 @@ public class FlowHandle implements DoHandler {
         String id = request.getParameter("id");
         if (!StringTools.isEmpty(id)){
             flow = (Flow) baseManager.getObject(Flow.class.getName(),id);
+            List<FlowActivity> result = new ArrayList<FlowActivity>();
+            List<FlowActivity> afList = flow.getActivityList();
+            if (!StringTools.isEmpty(afList) && afList.size() > 0){
+                for (FlowActivity fa : afList){
+                    if ("0".equals(fa.getStatus())){
+                        result.add(fa);
+                        modelMap.addAttribute("identity","0");
+                    }
+                }
+                if (result.size() != afList.size()){
+                    modelMap.addAttribute("result","show");
+                }
+            }
         }
         if (!StringTools.isEmpty(list)) {
             for (User user : list) {
