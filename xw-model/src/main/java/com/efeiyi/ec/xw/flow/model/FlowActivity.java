@@ -4,6 +4,7 @@ import com.efeiyi.ec.xw.organization.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -67,7 +68,8 @@ public class FlowActivity implements Serializable {
 
 
 
-    @Column(name = "thestatus")
+    @Column(name = "status")
+    @Where(clause = "status = 1")
     public String getStatus() {
         return status;
     }

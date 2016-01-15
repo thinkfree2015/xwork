@@ -3,6 +3,7 @@ package com.efeiyi.ec.xw.flow.model;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
