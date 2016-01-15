@@ -35,6 +35,7 @@ public class TaskActivityInstanceExecutionHandle implements DoHandler {
                 projectList.add(project);
             }
         }
+        modelMap.addAttribute("myUser",user);
         modelMap.addAttribute("list",projectList);
         return modelMap;
     }
