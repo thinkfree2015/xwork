@@ -45,18 +45,18 @@ public class FlowHandle implements DoHandler {
         String id = request.getParameter("id");
         if (!StringTools.isEmpty(id)){
             flow = (Flow) baseManager.getObject(Flow.class.getName(),id);
-        }
-        List<FlowActivity> result = new ArrayList<FlowActivity>();
-        List<FlowActivity> afList = this.flow.getActivityList();
-        if (!StringTools.isEmpty(afList) && afList.size() > 0){
-            for (FlowActivity fa : afList){
-                if ("0".equals(fa.getStatus())){
-                    result.add(fa);
-                    modelMap.addAttribute("identity","0");
+            List<FlowActivity> result = new ArrayList<FlowActivity>();
+            List<FlowActivity> afList = flow.getActivityList();
+            if (!StringTools.isEmpty(afList) && afList.size() > 0){
+                for (FlowActivity fa : afList){
+                    if ("0".equals(fa.getStatus())){
+                        result.add(fa);
+                        modelMap.addAttribute("identity","0");
+                    }
                 }
-            }
-            if (result.size() != afList.size()){
-                modelMap.addAttribute("result","show");
+                if (result.size() != afList.size()){
+                    modelMap.addAttribute("result","show");
+                }
             }
         }
         if (!StringTools.isEmpty(list)) {
