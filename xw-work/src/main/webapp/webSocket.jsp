@@ -29,12 +29,12 @@
             }
 
             if ('WebSocket' in window) {
-                ws= new WebSocket("<c:url value='ws://192.168.1.80:8080/websck'/>");
+                ws= new WebSocket("<c:url value='ws://192.168.1.68:8080/websck'/>");
             }else if ('MozWebSocket' in window) {
                 alert("MozWebSocket");
                 ws = new MozWebSocket("ws://websck");
             }else {
-                ws = new SockJS("<c:url value='http://192.168.1.61:8082/sockjs/websck'/>");
+                ws = new SockJS("<c:url value='http://192.168.1.68:8082/sockjs/websck'/>");
             }
 
             ws.onopen = function () {

@@ -31,7 +31,6 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
  * @author kayson
  */
 @Component
@@ -50,51 +49,52 @@ public class SystemWebSocketHandler implements WebSocketHandler {
     private WebSocketService webSocketService;
     @Autowired
     private BaseManager baseManager;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.debug("connect to the websocket success......");
         users.add(session);
         String userName = (String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME);
-        if(userName!= null){
+        if (userName != null) {
             //查询未读消息
             int count = webSocketService.getUnReadNews((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
 
-            session.sendMessage(new TextMessage("您有"+count + "条未读消息！"));
+            session.sendMessage(new TextMessage("您有" + count + "条未读消息！"));
         }
     }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        try{
-        //这里做业务逻辑处理 1.即时消息 2.离线消息 3.通知页面改动
-        String msg = message.getPayload().toString();
-        JSONObject jasonObject = (JSONObject) JSONObject.parse(msg);
-        Message message1 = new Message();//对 message进行处理 转化
-        if(jasonObject.getString("content")!=null){
-            message1.setContent(jasonObject.getString("content"));
-        }else {
-            message1.setContent("");
-        }
-        message1.setCreateDatetime(new Date());
-        message1.setType("1");//暂时都默认为文本消息
-        User user =  webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
-        message1.setCreator(user);
-        String receiver= jasonObject.getString("receiver")==null?"":jasonObject.getString("receiver");
-        if(receiver!=null || !"".equals(receiver)){//消息不指定接收者，默认发送所有人
-            saveMessageForReceiver(receiver,message1);
-            sendMessageToUser(receiver,new TextMessage(message.getPayload()+""));
-        }else{
-            saveMessageToOffLineUsers(message1);
-            sendMessageToUsers(new TextMessage(message.getPayload()+""));
-        }
-        }catch (Exception e){
+        try {
+            //这里做业务逻辑处理 1.即时消息 2.离线消息 3.通知页面改动
+            String msg = message.getPayload().toString();
+            JSONObject jasonObject = (JSONObject) JSONObject.parse(msg);
+            Message message1 = new Message();//对 message进行处理 转化
+            if (jasonObject.getString("content") != null) {
+                message1.setContent(jasonObject.getString("content"));
+            } else {
+                message1.setContent("");
+            }
+            message1.setCreateDatetime(new Date());
+            message1.setType("1");//暂时都默认为文本消息
+            User user = webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
+            message1.setCreator(user);
+            String receiver = jasonObject.getString("receiver") == null ? "" : jasonObject.getString("receiver");
+            if (receiver != null || !"".equals(receiver)) {//消息不指定接收者，默认发送所有人
+                saveMessageForReceiver(receiver, message1);
+                sendMessageToUser(receiver, new TextMessage(message.getPayload() + ""));
+            } else {
+                saveMessageToOffLineUsers(message1);
+                sendMessageToUsers(new TextMessage(message.getPayload() + ""));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        if(session.isOpen()){
+        if (session.isOpen()) {
             session.close();
         }
         logger.debug("websocket connection closed......");
@@ -136,18 +136,22 @@ public class SystemWebSocketHandler implements WebSocketHandler {
      * @param message
      */
     public void sendMessageToUser(String userName, TextMessage message) {
-        for (WebSocketSession user : users) {
-           if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(userName)) {
-                try {
-                    if (user.isOpen()) {
-                        user.sendMessage(message);
+        String[] args = userName.substring(1, userName.length() - 1).split(",");
+        for (int i = 0; i < args.length; i++) {
+            for (WebSocketSession user : users) {
+                if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(args[i])) {
+                    try {
+                        if (user.isOpen()) {
+                            user.sendMessage(message);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    break;
                 }
-                break;
             }
         }
+
     }
 
 
@@ -156,26 +160,26 @@ public class SystemWebSocketHandler implements WebSocketHandler {
      *
      * @param message1
      */
-    public void saveMessageToOffLineUsers(Message message1)throws Exception{
+    public void saveMessageToOffLineUsers(Message message1) throws Exception {
 
         List<User> allUsers = webSocketService.getAllUsers();
         for (WebSocketSession user : users) {
-            for (User user1:allUsers){
+            for (User user1 : allUsers) {
                 try {
                     UserMessage userMessage = new UserMessage();
-                    if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(user1.getUsername())){
+                    if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(user1.getUsername())) {
                         if (user.isOpen()) {
                             message1.setStatus("2");
                         }
 
-                    }else{
+                    } else {
                         message1.setStatus("1");
 
                     }
                     userMessage.setUser(user1);
                     userMessage.setMessage(message1);
-                    baseManager.saveOrUpdate(Message.class.getName(),message1);
-                    baseManager.saveOrUpdate(UserMessage.class.getName(),userMessage);
+                    baseManager.saveOrUpdate(Message.class.getName(), message1);
+                    baseManager.saveOrUpdate(UserMessage.class.getName(), userMessage);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -190,33 +194,30 @@ public class SystemWebSocketHandler implements WebSocketHandler {
      *
      * @param message1
      */
-    public void saveMessageForReceiver(String username, Message message1)throws Exception{
+    public void saveMessageForReceiver(String username, Message message1) throws Exception {
 
-        User u= webSocketService.getUser(username);
-        UserMessage userMessage = new UserMessage();
-        for (WebSocketSession user : users) {
-            try {
-                 if (user.getAttributes().get(Constants.WEBSOCKET_USERNAME).equals(username)) {
-
-                     if (user.isOpen()) {
+        String[] args = username.substring(1, username.length() - 1).split(",");
+        for (int i = 0; i < args.length; i++) {
+            User u = webSocketService.getUser(args[i]);
+            UserMessage userMessage = new UserMessage();
+            for (WebSocketSession user : users) {
+                try {
+                    if (u.getUsername().equals(user.getAttributes().get(Constants.WEBSOCKET_USERNAME))) {
                         message1.setStatus("2");
-                         userMessage.setStatus("2");
-                     }
-
-                 }else {
-                      message1.setStatus("1");
-                     userMessage.setStatus("1");
+                        userMessage.setStatus("2");
+                    } else {
+                        message1.setStatus("1");
+                        userMessage.setStatus("1");
+                    }
+                    userMessage.setUser(u);
+                    userMessage.setMessage(message1);
+                    baseManager.saveOrUpdate(Message.class.getName(), message1);
+                    baseManager.saveOrUpdate(UserMessage.class.getName(), userMessage);
+                    break;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                userMessage.setUser(u);
-                userMessage.setMessage(message1);
-                baseManager.saveOrUpdate(Message.class.getName(),message1);
-                baseManager.saveOrUpdate(UserMessage.class.getName(),userMessage);
-                break;
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
-
-
     }
 }
