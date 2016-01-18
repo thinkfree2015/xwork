@@ -39,19 +39,19 @@
             <a href="<c:url value='/basic/xm.do?qm=formTask&id=${taskActivityInstanceExecution.task.id}'/>"
                class="am-comment-author">${taskActivityInstanceExecution.task.title}</a>
         </article>
-        <div id="webSocket" style="display: none;">
-            <div id="connect-container">
-                <div>
-                    <textarea id="message" style="width: 350px">{'type':'1','content':'Here is a message!','creator':'15538398530','receiver':'15538398530'}</textarea>
-                </div>
-                <div>
-                    <button id="echo" onclick="echo();" disabled="disabled">Echo message</button>
-                </div>
-            </div>
-            <div id="console-container">
-                <div id="console"></div>
-            </div>
-        </div>
+        <%--<div id="webSocket" style="display: none;">--%>
+            <%--<div id="connect-container">--%>
+                <%--<div>--%>
+                    <%--<textarea id="message" style="width: 350px">{'type':'1','content':'Here is a message!','creator':'15538398530','receiver':'15538398530'}</textarea>--%>
+                <%--</div>--%>
+                <%--<div>--%>
+                    <%--<button id="echo" onclick="echo();" disabled="disabled">Echo message</button>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<div id="console-container">--%>
+                <%--<div id="console"></div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
     </c:forEach>
 </div>
 <div style="clear: both">
@@ -163,12 +163,15 @@
             success: function (data) {
                 if (data && data.length > 0) {
                     var text_str = "[";
-                    for (var i in data) {
-                        text_str += data[i].username + ",";
+                    if(data.length > 1){
+                        for (var i in data) {
+                            text_str += data[i].username + ",";
+                        }
+                        text_str = text_str.substr(0, text_str.length - 1);
+                    }else{
+                        text_str += data.username;
                     }
-                    text_str = text_str.substr(0, text_str.length - 1);
                     text_str += "]";
-//                    var value = JSON.stringify(data[i]);
                     console.log(text_str);
                     var a_html = "{'receiver':'" + text_str + "','content':'" + userName + "完成了任务" + ($(o).next().html()) + "'}";
                     echo(a_html);
