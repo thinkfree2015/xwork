@@ -80,6 +80,10 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             message1.setType("1");//暂时都默认为文本消息
             User user = webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
             message1.setCreator(user);
+            //传参为id
+            if(jasonObject.getString("id")!=null&&!"".equals(jasonObject.getString("id"))) {
+                String[] ids = jasonObject.getString("id").substring(1, jasonObject.getString("id").length() - 1).split(",");
+            }
             String receiver = jasonObject.getString("receiver") == null ? "" : jasonObject.getString("receiver");
             if (receiver != null && !"".equals(receiver)) {//消息不指定接收者，默认发送所有人
                 saveMessageForReceiver(receiver, message1);

@@ -129,10 +129,15 @@ $(function(){
     }
 
 
-    <%--function forwardUrl(userId){--%>
-        <%--var message = "{'receiver':'"+userId+"','content':'你有一条未读任务','id':'["+userId+"]'}";--%>
-        <%--echo(message);--%>
-    <%--}--%>
+    function forwardUrl(userId){
+    var users = '';
+    if(userId.length!=0){
+     for(var i = 0 ; i<userId.length;i++)
+       users += i==userId.length-1?userId[i]:userId[i]+",";
+    }
+        var message = "{'receiver':'"+userId+"','content':'你有一条未读任务','id':'["+users+"]'}";
+        echo(message);
+    }
     function echo(message) {
         if (ws != null) {
             alert('Sent: ' + message);
@@ -390,7 +395,8 @@ $(function(){
                 data:{taskId:taskId,status:"4"},
                 dataType:"json",
                 success:function(data) {
-                   this.setState({style:"none",editStyle:"none",users:data,userId:"null"});
+                alert(data[0].id);
+                   this.setState({style:"none",editStyle:"none",users:data,userId:data[0].id});
                  }.bind(this)
                 });
               }
@@ -592,6 +598,9 @@ $(function(){
                 dataType:"json",
                 success:function(data) {
                    this.props.getCurrentUser(value);
+                   var userId = [];
+                   userId.push(value);
+                   forwardUrl(userId);
                  }.bind(this)
                 });
        },
