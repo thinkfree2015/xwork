@@ -58,8 +58,9 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         if (userName != null) {
             //查询未读消息
             int count = webSocketService.getUnReadNews((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
-
-            session.sendMessage(new TextMessage("您有" + count + "条未读消息！"));
+            if (count > 0){
+                session.sendMessage(new TextMessage("您有" + count + "条未读消息！"));
+            }
         }
     }
 
@@ -80,7 +81,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             User user = webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
             message1.setCreator(user);
             String receiver = jasonObject.getString("receiver") == null ? "" : jasonObject.getString("receiver");
-            if (receiver != null || !"".equals(receiver)) {//消息不指定接收者，默认发送所有人
+            if (receiver != null && !"".equals(receiver)) {//消息不指定接收者，默认发送所有人
                 saveMessageForReceiver(receiver, message1);
                 sendMessageToUser(receiver, new TextMessage(message.getPayload() + ""));
             } else {
