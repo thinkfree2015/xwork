@@ -105,6 +105,9 @@ public class TaskManagerImpl implements TaskManager {
             if(nextFlowActivity == null){
                 
             }else {
+                //下一个节点的所有人
+                task.setUsernotifyUserList(nextFlowActivity.getUser());
+                xdoDao.saveOrUpdateObject(task);
                 //创建下一节点的任务实例
                 TaskActivityInstance nextTaskActivityInstance = new TaskActivityInstance();
                 nextTaskActivityInstance.setActivate("1");
@@ -119,6 +122,8 @@ public class TaskManagerImpl implements TaskManager {
                 xdoDao.saveOrUpdateObject(task);
 
                 message += ",并进入下一个节点:"+nextFlowActivity.getTitle();
+
+
 
                 //问题
                 TaskActivityInstanceExecution taskActivityInstanceExecution1 = new TaskActivityInstanceExecution();
