@@ -67,45 +67,80 @@
     </style>
 </head>
 <body>
+<div id="sss">ssssssssss</div>
 <div id="all">
 </div>
+<script>
+
+</script>
 <!-- react测试-->
-
 <script type="text/babel">
-  <%-- 消息推送 --%>
-   var ws = null;
-      function connect(){}{
-       if ('WebSocket' in window) {
-                ws= new WebSocket("<c:url value='ws://192.168.1.80:8080/websck'/>");
-            }else if ('MozWebSocket' in window) {
-                alert("MozWebSocket");
-                ws = new MozWebSocket("ws://websck");
-            }else {
-                ws = new SockJS("<c:url value='http://192.168.1.80:8080/sockjs/websck'/>");
-            }
+function sx(){
+  $("#sss").text("ddd");
+}
+    var ws = null;
+    var url = null;
 
-           <%--ws = new WebSocket("<c:url value='ws://192.168.1.80:8080/websck'/>");--%>
-          ws.onopen=function(e){
-          };
-          ws.onmessage=function(e){
-
-          };
-          ws.onerror=function(e){
-
-          };
-          ws.onclose=function(e){
-
-          }
-      }
-<%-- 发送消息 --%>
-    function doSend(msg){
-        ws.send(msg);
+$(function(){
+    updateUrl('/websocket');
+    connect();
+});
+    function connect() {
+        if (!url) {
+            alert('Select whether to use W3C WebSocket or SockJS');
+            return;
+        }
+        if ('WebSocket' in window) {
+            ws = new WebSocket("ws://"+window.location.host+"/websck");
+        } else if ('MozWebSocket' in window) {
+            alert("MozWebSocket");
+            ws = new MozWebSocket("ws://websck");
+        } else {
+            ws = new SockJS(window.location.protocol+"://"+window.location.host+"/sockjs/websck");
+        }
+        ws.onopen = function () {
+        };
+        ws.onmessage = function (event) {
+            alert(event.lastEventId);
+        };
+        ws.onclose = function (event) {
+            alert('Info: connection closed.');
+        };
     }
 
-<%--初始化 --%>
-    $(function(){
-        connect();
-    });
+    function disconnect() {
+        if (ws != null) {
+            ws.close();
+            ws = null;
+        }
+    }
+
+    function updateUrl(urlPath) {
+        if (urlPath.indexOf('sockjs') != -1) {
+            url = urlPath;
+        }
+        else {
+            if (window.location.protocol == 'http:') {
+                url = 'ws://' + window.location.host + urlPath;
+            } else {
+                url = 'wss://' + window.location.host + urlPath;
+            }
+        }
+    }
+
+
+    <%--function forwardUrl(userId){--%>
+        <%--var message = "{'receiver':'"+userId+"','content':'你有一条未读任务','id':'["+userId+"]'}";--%>
+        <%--echo(message);--%>
+    <%--}--%>
+    function echo(message) {
+        if (ws != null) {
+            alert('Sent: ' + message);
+            ws.send(message);
+        } else {
+            alert('connection not established, please connect.');
+        }
+    }
 <%--任务操作 --%>
    var Task_tool = React.createClass({
       handleEdit:function(){
@@ -119,7 +154,7 @@
       },
       render:function(){
         var style1 = {"marginRight":"2px"};
-        var style2 = {"display":this.props.dataStyle,"position":"absolute","z-index":"99","left":"-55px","top":"3px"};
+        var style2 = {"display":this.props.dataStyle,"position":"absolute","zIndex":"99","left":"-55px","top":"3px"};
         return (
           <span style={style2}>
               <a style={style1} onClick={this.handleEdit} href="javascript:void (0);"><img src="<c:url value="/scripts/image/taskEdit.png"/>" alt="编辑"/></a>
@@ -242,7 +277,7 @@
        },
         render:function(){
           var listStyle= {
-            "padding-left":"5em",
+            "paddingLeft":"5em",
           };
            var createUL = this.state.ul.map(function(taskGroup){
                return <ul key={taskGroup.id} style={listStyle}>
@@ -545,7 +580,9 @@
           users:[]
          }
        },
-
+       onmessage:function(value){
+        this.props.getCurrentUser(value);
+       },
        handleChange:function(s){
            var value = s.target.value;
            $.ajax({
@@ -569,7 +606,6 @@
 
             <span>
                  <select value={this.props.userId} onChange={this.handleChange} style={style}>
-                     <option value="null">请分配人员</option>
                      {selectUser}
                  </select>
             </span>
@@ -710,9 +746,8 @@
                          </span>
                          <span>
                             <select style={style5} value={this.state.userId} onChange={this.handleUserChange}>
-                               <option value="null">请选择成员</option>
                                {user}
-                             </select>
+                            </select>
                          </span>
 
 
