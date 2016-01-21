@@ -146,6 +146,7 @@ public class TaskManagerImpl implements TaskManager {
             }
             taskDynamic.setMessage(message);
 
+
         }
         if("5".equals(status)){
             message = "已放弃任务";
