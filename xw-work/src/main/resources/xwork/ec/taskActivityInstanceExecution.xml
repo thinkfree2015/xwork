@@ -14,6 +14,11 @@
                         <condition label="主键" name="id" defaultValue="0" operation="ne"/>
                         <condition name="user.id" label="经纪人" defaultValue="${MY_USER}" operation="eq"/>
                     </query>
+                    <query name="byStatus" label="默认" type="auto" orderBy="id:desc">
+                        <condition label="主键" name="id" defaultValue="0" operation="ne"/>
+                        <condition name="user.id" label="经纪人" defaultValue="${MY_USER}" operation="eq"/>
+                        <condition label="执行状态" name="status" defaultValue="0" operation="eq"/>
+                    </query>
                 </do>
                 <do name="listTaskActivityInstanceExecution" access="" label="TaskActivityInstanceExecution列表"
                     result="json">
