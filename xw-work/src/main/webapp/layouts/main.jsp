@@ -1,3 +1,5 @@
+<%@ page import="com.efeiyi.ec.xw.organization.model.MyUser" %>
+<%@ page import="com.efeiyi.ec.xwork.organization.util.AuthorizationUtil" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -46,11 +48,86 @@
 
     <jsp:include flush="true"
                  page="/getMenu.do?jmenuId=commonMenu&resultPage=/jmenu/manageTemplateLeft&match=${requestScope['javax.servlet.forward.servlet_path']}%3F${fn:replace(pageContext.request.queryString,'&','%26')}"/>
-<div class="admin-content" style="height: auto;">
-<sitemesh:write property='body'/>
-</div>
+    <div class="admin-content" style="height: auto;">
+        <sitemesh:write property='body'/>
+    </div>
 
 </div>
+<script>
+    function connect() {
+        if ('WebSocket' in window) {
+            ws = new WebSocket("ws://192.168.1.68:8080/websck");
+        } else if ('MozWebSocket' in window) {
+            alert("MozWebSocket");
+            ws = new MozWebSocket("ws://websck");
+        } else {
+            ws = new SockJS("http://192.168.1.68:8080/sockjs/websck");
+        }
+        ws.onopen = function () {
+//            alert('Open 连接');
+        };
+        ws.onmessage = function (event) {
+            if ((event.data).indexOf("Hint") == 0) {//判断message是否为初始化的message
+                alert(event.data);
+            } else {
+                var obj = $.parseJSON(event.data);//把发送过来的消息转换成对象
+                var task = obj.content;
+                //根据消息中的参数来判断哪个页面需要刷新
+                if (obj.path == "problem") {
+                    //调用我的问题页面刷新方法
+//                    if(obj.qm == "plistTaskActivityInstanceExecution_default"){
+                    reload_my_problem(task);
+//                    }else{
+//                        alert(task);
+//                    }
+                } else if (obj.path == "") {
+                    //调用项目-->任务管理-->页面刷新方法
+                }
+//                alert('Received:' + obj.content);
+            }
+        };
+        ws.onclose = function (event) {
+            console.log("关闭连接")
+        };
+    }
+    $(document).ready(function () {
+        connect();
+    })
+    function reload_my_problem(task) {
+        var user_id;
+        <% MyUser user = AuthorizationUtil.getMyUser();
+            user.getId();
+        %>
+        var path_url = window.location.href;
+        if (path_url.indexOf("plistTaskActivityInstanceExecution_default") > -1) {
+            var box = $("#box");
+            $.ajax({
+                type: "get",//设置get请求方式
+                url: "<c:url value='/findTaskActivityInstanceExecution.do'/>",//设置请求的脚本地址
+                data: "",//设置请求的数据
+                async: true,
+                dataType: "json",//设置请求返回的数据格式
+                success: function (data) {
+                    console.log(data);
+                    if(data && data.length > 0){
+                        var sub = "";
+                        for(var i in data){
+                            sub += "<article class=\"am-comment\">"+
+                                    "        <a href=\"javascript:void (0);\" onclick=\"changeInput(this , \'\');\">编辑</a>"+
+                                    "        <a href=\"javascript:void (0);\" onclick=\"forwardUrl(this,'"+data[i].taskTitle+"','"+data[i].taskId+"');\">标记</a>"+
+                                    "       <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>"+data[i].taskId+"\" class=\"am-comment-author\">"+data[i].taskId+"</a>"+
+                                    "</article>";
+                        }
+                        box.append(sub);
+                    }
+                    alert(data);
+                }
+            })
+        } else {
+            alert(task);
+        }
+    }
+</script>
 </body>
 
 </html>
