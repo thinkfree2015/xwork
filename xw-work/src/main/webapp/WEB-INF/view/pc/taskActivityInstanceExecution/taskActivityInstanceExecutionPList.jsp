@@ -36,7 +36,7 @@
                 <a href="javascript:void (0);"
                    onclick="changeInput(this , '${taskActivityInstanceExecution.task.id}');">编辑</a>
                 <a href="javascript:void (0);"
-                   onclick="forwardUrl(this,'${myUser.name}','${taskActivityInstanceExecution.task.id}');">标记</a>
+                   onclick="forwardUrl(this,'${myUser.name}','${myUser.username}','${taskActivityInstanceExecution.task.id}');">标记</a>
                 <a href="<c:url value='/basic/xm.do?qm=formTask&id=${taskActivityInstanceExecution.task.id}'/>"
                    class="am-comment-author">${taskActivityInstanceExecution.task.title}</a>
             </article>
@@ -73,7 +73,7 @@
             }
         }
     }
-    function forwardUrl(o, userName, taskId) {
+    function forwardUrl(o,name, username, taskId) {
 //        updateUrl('/websocket');
 //        connect();
         $.ajax({
@@ -87,19 +87,19 @@
                     var text_str = "[";
                     if (data.length > 1) {
                         for (var i in data) {
-                            if(userName == data[i].username){
-                                text_str += userName;
-                            }
-//                            text_str += data[i].username + ",";
+//                            if(username == data[i].username){
+//                                text_str += data[i].username;
+//                            }
+                            text_str += data[i].username + ",";
                         }
-//                        text_str = text_str.substr(0, text_str.length - 1);
+                        text_str = text_str.substr(0, text_str.length - 1);
                     } else {
                         text_str += "" + data[0].username;
                     }
                     text_str += "]";
                     console.log(text_str);
 //                    var a_html = "{'type':'1','receiver':'" + text_str + "','content':'" + userName + "完成了任务" + ($(o).next().html()) + "','taskId':'" + taskId + "'}";
-                    var a_html = '{"type":"1","receiver":"'+text_str+'","content":"'+userName+'完成了任务'+$(o).next().html()+'","taskId":"'+taskId+'","path":"problem","qm":"plistTaskActivityInstanceExecution_default"}';
+                    var a_html = '{"type":"1","receiver":"'+text_str+'","content":"'+name+'完成了任务'+$(o).next().html()+'","taskId":"'+taskId+'","path":"problem","qm":"plistTaskActivityInstanceExecution_default"}';
                     echo(a_html);
 
                 }
