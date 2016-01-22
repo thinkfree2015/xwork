@@ -34,7 +34,7 @@
         <c:if test="${taskActivityInstanceExecution.status == 0}">
             <article class="am-comment" id="${taskActivityInstanceExecution.task.id}">
                 <a href="javascript:void (0);"
-                   onclick="changeInput(this ,'${taskActivityInstanceExecution.task.id}');">编辑</a>
+                   onclick="changeInput(this ,'${taskActivityInstanceExecution.task.id}','${taskActivityInstanceExecution.id}');">编辑</a>
                 <a href="javascript:void (0);"
                    onclick="forwardUrl(this,'${myUser.name}','${myUser.username}','${taskActivityInstanceExecution.task.id}');">标记</a>
                 <a href="<c:url value='/basic/xm.do?qm=formTask&id=${taskActivityInstanceExecution.task.id}'/>"
@@ -139,9 +139,36 @@
             }
         })
     }
-    function changeInput(o,taskId){
-        var html = $("#"+taskId).html();
-        alert(html);
+    function changeInput(o,taskId,childId){
+        var next_html = $(o).next().next().html();
+        var parent_html = $("#"+taskId);
+        parent_html.empty();
+        var sub_html = "<input type='text' style=\"width: 30%;display: inline;\" class=\"am-form-field am-round\" value='"+next_html+"'/>" +
+                "<input type='button' onclick=\"changeTaskTitle(this,'"+taskId+"','"+next_html+"','"+childId+"');\" style='display: inline;' class='am-btn am-btn-default am-round' value='保存'/>" +
+                "<input type='button' style='display: inline;' class='am-btn am-btn-default am-round' value='取消'/>";
+        parent_html.html(sub_html);
+    }
+    function changeTaskTitle(o,taskId,title,childId){
+        var prev = $(o).prev().val();
+        console.log(prev);
+        $.ajax({
+            type: "get",//设置get请求方式
+            url: "<c:url value='/task/editTaskTitle.do?'/>",//设置请求的脚本地址
+            data: "taskId="+taskId+"&title="+prev+"&childId="+childId,//设置请求的数据
+            async: true,
+            dataType: "json",//设置请求返回的数据格式
+            success: function (data) {
+                var parent_html = $("#"+taskId);
+                parent_html.empty();
+                var child_html = "<article class=\"am-comment\" id=\""+data.id+"\">"+
+                        "    <a href=\"javascript:void (0);\" onclick=\"changeInput(this ,'"+data.id+"','"+childId+"');\">编辑</a>"+
+                        "    <a href=\"javascript:void (0);\"  onclick=\"forwardUrl(this,'"+data.name+"','"+data.username+"','"+data.id+"');\">标记</a>"+
+                        "     <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>"+data.id+"\" class=\"am-comment-author\">"+data.title+"</a>"+
+                        "     <p style=\"display: inline\"></p>"+
+                        "</article>";
+                parent_html.html(child_html);
+            }
+        })
     }
 </script>
 </body>
