@@ -32,13 +32,14 @@
 <div class="am-form-group" id="box">
     <c:forEach items="${requestScope.pageInfo.list}" var="taskActivityInstanceExecution">
         <c:if test="${taskActivityInstanceExecution.status == 0}">
-            <article class="am-comment">
+            <article class="am-comment" id="${taskActivityInstanceExecution.task.id}">
                 <a href="javascript:void (0);"
-                   onclick="changeInput(this , '${taskActivityInstanceExecution.task.id}');">编辑</a>
+                   onclick="changeInput(this ,'${taskActivityInstanceExecution.task.id}');">编辑</a>
                 <a href="javascript:void (0);"
                    onclick="forwardUrl(this,'${myUser.name}','${myUser.username}','${taskActivityInstanceExecution.task.id}');">标记</a>
                 <a href="<c:url value='/basic/xm.do?qm=formTask&id=${taskActivityInstanceExecution.task.id}'/>"
                    class="am-comment-author">${taskActivityInstanceExecution.task.title}</a>
+                <p style="display: inline">${taskActivityInstanceExecution.createDatetime}</p>
             </article>
         </c:if>
     </c:forEach>
@@ -137,6 +138,10 @@
                 }
             }
         })
+    }
+    function changeInput(o,taskId){
+        var html = $("#"+taskId).html();
+        alert(html);
     }
 </script>
 </body>

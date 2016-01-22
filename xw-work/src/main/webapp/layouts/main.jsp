@@ -93,6 +93,7 @@
                                         "   <a href=\"javascript:void (0);\" onclick=\"changeInput(this , \'\');\">编辑</a>"+
                                         "   <a href=\"javascript:void (0);\" onclick=\"forwardUrl(this,'"+data[i].taskContent+"','"+data[i].taskId+"');\">标记</a>"+
                                         "   <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>"+data[i].taskId+"\" class=\"am-comment-author\">"+data[i].taskTitle+"</a>"+
+                                        "   <p style=\"display: inline\">"+data[i].createDateTime+"</p>"+
                                         "</article>";
                             }
                         }
