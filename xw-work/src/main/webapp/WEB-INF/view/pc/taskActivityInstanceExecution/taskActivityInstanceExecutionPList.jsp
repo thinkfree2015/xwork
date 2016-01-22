@@ -51,15 +51,15 @@
     </ming800:pcPageList>
 </div>
 <script type="text/javascript">
-    var ws = null;
-    var url = null;
+//    var ws = null;
+//    var url = null;
     var transports = [];
-    function disconnect() {
-        if (ws != null) {
-            ws.close();
-            ws = null;
-        }
-    }
+//    function disconnect() {
+//        if (ws != null) {
+//            ws.close();
+//            ws = null;
+//        }
+//    }
     function updateUrl(urlPath) {
         console.log("配置路径")
         if (urlPath.indexOf('sockjs') != -1) {
@@ -74,8 +74,8 @@
         }
     }
     function forwardUrl(o, userName, taskId) {
-        updateUrl('/websocket');
-        connect();
+//        updateUrl('/websocket');
+//        connect();
         $.ajax({
             type: "get",//设置get请求方式
             url: "<c:url value='/task/changeTaskStatus?taskId='/>" + taskId,//设置请求的脚本地址
@@ -87,9 +87,12 @@
                     var text_str = "[";
                     if (data.length > 1) {
                         for (var i in data) {
-                            text_str += data[i].username + ",";
+                            if(userName == data[i].username){
+                                text_str += userName;
+                            }
+//                            text_str += data[i].username + ",";
                         }
-                        text_str = text_str.substr(0, text_str.length - 1);
+//                        text_str = text_str.substr(0, text_str.length - 1);
                     } else {
                         text_str += "" + data[0].username;
                     }
