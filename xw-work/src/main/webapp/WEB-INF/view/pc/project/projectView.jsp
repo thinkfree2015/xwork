@@ -710,7 +710,7 @@ $(function(){
                 data:{flowId:s.target.value},
                 success:function(data) {
                 var obj = $.parseJSON(data);
-                   this.setState({style:"inherit",users:obj});
+                   this.setState({style:"inherit",users:obj,"userId":obj[0].id});
 
                  }.bind(this)
                 });
