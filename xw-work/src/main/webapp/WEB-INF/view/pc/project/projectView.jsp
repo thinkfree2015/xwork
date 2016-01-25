@@ -64,7 +64,6 @@
     </style>
 </head>
 <body>
-<div id="sss">ssssssssss</div>
 <div id="all">
 </div>
 <script>
@@ -85,13 +84,13 @@
     <%--);--%>
 
    <%--}--%>
-    function forwardUrl(userId){
-      var users = '';
+    function forwardUrl(userId,username,type){
+      var users = "";
       if(userId.length!=0){
        for(var i = 0 ; i<userId.length;i++)
        users += i==userId.length-1?userId[i]:userId[i]+",";
-    }
-        var message = '{"receiver":"'+userId+'","content":"你有一条未读任务","id":"['+users+']","path":"projectView"}';
+      }
+        var message = '{"receiver":"'+username+'","content":"你有一条未读任务","id":"['+users+']","path":"projectView","type":"'+type+'"}';
         echo(message);
     }
     function echo(message) {
@@ -351,7 +350,9 @@
                 data:{taskId:taskId,status:"4"},
                 dataType:"json",
                 success:function(data) {
-                alert(data[0].id);
+                var userId = [];
+                userId.push(data[0].id);
+                   forwardUrl(userId,"","1")
                    this.setState({style:"none",editStyle:"none",users:data,userId:data[0].id});
                  }.bind(this)
                 });
@@ -429,6 +430,7 @@
           var  editStyle = {"display":this.state.editStyle};
           var  editStyle2 = {"display":this.state.editStyle=="none"?"initial":"none"};
           var  removeStyle = {"display":this.state.removeStyle,"position":"relative"};
+          var  userStyle = {"display":this.props.task.currentUser==null?"none":"block"};
         return (
                       <li onMouseOver={this.onMouseOver}  onMouseOut={this.onMouseOut} style={removeStyle}>
                          <Task_tool dataStyle={this.state.style} handleEdit={this.handleEdit} handleRemove={this.handleRemove} handleCompleted={this.handleCompleted}/>
@@ -440,7 +442,7 @@
                             <a href="javascript:void (0);" onClick={this.handleClick} className="am-btn am-btn-primary am-btn-xs" style={style3}>保存</a>
                             <a href="javascript:void (0);" onClick={this.handleCancel} className="am-btn am-btn-primary am-btn-xs" style={style3}>取消</a>
                          </span>
-                         <Display_li_select_user userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.users} taskId={this.props.task.id} />
+                         <Display_li_select_user userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.users} taskId={this.props.task.id} userStyle={userStyle}/>
                          <Display_li_select_flow  taskId={this.props.task.id} />
                       </li>
 
@@ -466,7 +468,9 @@
                 });
        },
        addLi:function(data){
+              forwardUrl("",data[data.length-1].username,"1");
             this.setState({status:"0",li:data});
+
 
        },
         componentWillMount:function(){
@@ -556,7 +560,7 @@
                    this.props.getCurrentUser(value);
                    var userId = [];
                    userId.push(value);
-                   forwardUrl(userId);
+                   forwardUrl(userId,"","1");
                    <%--alert(ReactDOM.findDOMNode(this.refs.SelectUser).setAttribute("value",value));--%>
                  }.bind(this)
                 });
@@ -570,7 +574,7 @@
          var style = {fontSize:"10px"};
          return (
 
-            <span ref="SelectUser">
+            <span ref="SelectUser" style={this.props.userStyle}>
                  <select value={this.props.userId} onChange={this.handleChange} style={style}>
                      {selectUser}
                  </select>

@@ -90,11 +90,11 @@ public class TaskManagerImpl implements TaskManager {
             //所有节点
             List<FlowActivity> flowActivityList = task.getFlow().getActivityList();
             //当前所处节点位置
-            Integer group = taskActivityInstance.getFlowActivity().getGroup();
+            Integer sort = taskActivityInstance.getFlowActivity().getSort();
             //下一个节点
             FlowActivity nextFlowActivity = null;
             for(FlowActivity flowActivity : flowActivityList){
-                if(flowActivity.getGroup()==group+1){
+                if(flowActivity.getSort()==sort+1){
                     nextFlowActivity = flowActivity;
                     break;
                 }
@@ -103,7 +103,8 @@ public class TaskManagerImpl implements TaskManager {
             //判断是否为最后一个节点
 
             if(nextFlowActivity == null){
-                
+                 task.setCurrentUser(null);
+                 xdoDao.saveOrUpdateObject(task);
             }else {
                 //下一个节点的第一个人为默认
                 task.setCurrentUser(nextFlowActivity.getUser().get(0));

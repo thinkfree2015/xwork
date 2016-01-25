@@ -142,6 +142,7 @@ public class ProjectController extends BaseController {
             xQuery.put("taskGroup_id",taskGroupId);
             taskList = baseManager.listObject(xQuery);
             Task task = projectManager.saveTask(taskGroupId,title,flowId,userId);
+            task.setUsername(task.getCurrentUser().getUsername());
             taskList.add(task);
         }catch (Exception e){
             e.printStackTrace();
