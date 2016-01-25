@@ -83,12 +83,13 @@ public class FlowActivityController {
         List<User> users = flow.getNotifyUserList();
         if (users != null && users.size() > 0) {
             for (User user : users) {
+                String flag = "false";
                 if (user.getGroupName() == groupName) {
                     if (null != flowActivity && flowActivity.getId() != null) {
-                        equal(flowActivity, user, groupName);
-                        map.put(user.getId() + "true", user);
+                        flag = equal(flowActivity, user, groupName);
+                        map.put(user.getId() + flag, user);
                     } else {
-                        map.put(user.getId() + "false", user);
+                        map.put(user.getId() + flag, user);
                     }
                 }
             }
