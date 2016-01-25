@@ -1,7 +1,9 @@
 package com.efeiyi.ec.xwork.task.controller;
 
+import com.efeiyi.ec.xw.organization.model.MyUser;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.task.model.Task;
+import com.efeiyi.ec.xw.task.model.TaskActivityInstanceExecution;
 import com.efeiyi.ec.xw.task.model.TaskNote;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.task.service.TaskManager;
@@ -118,6 +120,20 @@ public class TaskController extends BaseController {
             e.printStackTrace();
         }
         return taskId;
+    }
+
+    @RequestMapping("/editTaskTitle.do")
+    @ResponseBody
+    public Task editTaskTitle(String taskId,String title,String childId){
+        Task task = (Task)baseManager.getObject(Task.class.getName(),taskId);
+        task.setTitle(title);
+        TaskActivityInstanceExecution execution = (TaskActivityInstanceExecution) baseManager.getObject(TaskActivityInstanceExecution.class.getName(),childId);
+        task.setCreateDateTime(execution.getCreateDatetime());
+        MyUser user = AuthorizationUtil.getMyUser();
+        task.setUsername(user.getUsername());
+        task.setName(user.getName());
+        baseManager.saveOrUpdate(Task.class.getName(),task);
+        return task;
     }
 
     @RequestMapping("/saveNote.do")
