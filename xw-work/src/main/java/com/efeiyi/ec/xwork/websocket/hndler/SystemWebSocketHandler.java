@@ -77,15 +77,16 @@ public class SystemWebSocketHandler implements WebSocketHandler {
                 message1.setContent("");
             }
             message1.setCreateDatetime(new Date());
+            //type jasonObject.getString("type")
             message1.setType("1");//暂时都默认为文本消息
             User user = webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
             message1.setCreator(user);
             String receiver = "";
             //传参为id
-            if(jasonObject.getString("id")!=null&&!"".equals(jasonObject.getString("id"))) {
+            if(jasonObject.getString("id")!=null&&!"[]".equals(jasonObject.getString("id"))) {
                 receiver =  "["+webSocketService.getUsername(jasonObject.getString("id"))+"]";
             }else {
-                receiver = jasonObject.getString("receiver") == null ? "" : jasonObject.getString("receiver");
+                receiver = jasonObject.getString("receiver") == null ? "" : "["+jasonObject.getString("receiver")+"]";
             }
             if (receiver != null && !"".equals(receiver)) {//消息不指定接收者，默认发送所有人
                 saveMessageForReceiver(receiver, message1);

@@ -154,7 +154,7 @@
                     <query name="default" label="默认" type="auto" orderBy="id:desc">
                         <condition label="菜单项主键" name="id" defaultValue="1" operation="eq"/>
                     </query>
-                    <query name="byGroup" label="默认" type="auto" orderBy="id:desc">
+                    <query name="byGroup" label="默认" type="auto" orderBy="id:asc">
                         <condition label="菜单项主键" name="taskGroup.id" defaultValue="1" operation="eq"/>
                         <condition label="菜单项主键" name="status" defaultValue="0" operation="ne"/>
                     </query>
