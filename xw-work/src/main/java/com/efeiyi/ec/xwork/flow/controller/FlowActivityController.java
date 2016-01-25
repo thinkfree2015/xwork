@@ -43,9 +43,10 @@ public class FlowActivityController {
         }
         if (flow != null && flow.getId() != null ){
             activity.setFlow(flow);
+            activity.setSort(flow.getActivityList().size() == 0 ? 1 : flow.getActivityList().size() + 1);
         }
         String title = request.getParameter("title");
-        String sort = request.getParameter("sort");
+        String group = request.getParameter("group");
         String type = request.getParameter("type");
         String[] args = request.getParameterValues("user");
         List<User> list = new ArrayList<>();
@@ -58,7 +59,7 @@ public class FlowActivityController {
         activity.setStatus("1");
         activity.setType(type);
         activity.setTitle(title);
-        activity.setGroup(Integer.parseInt(sort));
+        activity.setGroup(Integer.parseInt(group));
         activity.setUser(list);
         baseManager.saveOrUpdate(FlowActivity.class.getName(),activity);
         assert flow != null;

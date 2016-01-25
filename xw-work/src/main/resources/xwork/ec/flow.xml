@@ -29,8 +29,8 @@
                 basic="simple" others=""
                 model="com.efeiyi.ec.xw.flow.model.FlowActivity">
             <fields>
-                <field name="sort" label="类型" inputType="select">
-                    <statusType fieldName="sort">
+                <field name="group" label="类型" inputType="select">
+                    <statusType fieldName="group">
                         <item label="产品组" value="1"/>
                         <item label="UI设计组" value="2"/>
                         <item label="前端开发组" value="3"/>

@@ -36,7 +36,7 @@
         <div class="am-form-group">
             <label name="group"  class="am-u-sm-3 am-form-label">流程节点所属小组 <small>*</small></label>
             <div class="am-u-sm-9">
-                <ming800:status name="sort" dataType="FlowActivity.sort" checkedValue="${object.sort}" onchange="setCheckbox();" type="select"/>
+                <ming800:status name="group" dataType="FlowActivity.group" checkedValue="${object.group}" onchange="setCheckbox();" type="select"/>
             </div>
         </div>
         <div class="am-form-group">
