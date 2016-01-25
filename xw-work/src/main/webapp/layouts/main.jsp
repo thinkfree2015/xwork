@@ -30,6 +30,10 @@
     <script src="<c:url value='/resources/jquery/jquery-1.11.1.min.js'/>"></script>
     <script src="<c:url value='/resources/assets/js/amazeui.min.js'/>"></script>
     <script src="<c:url value='/resources/js/alert.js'/>"></script>
+    <script src="<c:url value="/scripts/react0.14.3/react.js"/> "></script>
+    <script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>
+    <script src="<c:url value="/scripts/react0.14.3/react-dom-server.js"/> "></script>
+    <script src="<c:url value="/scripts/react0.14.3/browser.min.js"/>"></script>
 
     <sitemesh:write property='head'/>
     <style>
@@ -40,16 +44,19 @@
     </style>
 </head>
 <body>
+<script type="text/babel">
+
+</script>
 <script>
     var ws = null;
     var url = null;
     function connect() {
         if ('WebSocket' in window) {
-            ws = new WebSocket("ws://192.168.1.68:8080/websck");
+            ws = new WebSocket("ws://"+window.location.host+"/websck");
         } else if ('MozWebSocket' in window) {
             ws = new MozWebSocket("ws://websck");
         } else {
-            ws = new SockJS("http://192.168.1.68:8080/sockjs/websck");
+            ws = new SockJS("http://"+window.location.host+"/sockjs/websck");
         }
         ws.onopen = function () {};
         ws.onmessage = function (event) {
@@ -61,8 +68,9 @@
                 //根据消息中的参数来判断哪个页面需要刷新
                 if (obj.path == "problem") {
                     reload_my_problem(task);//调用我的问题页面刷新方法
-                } else if (obj.path == "") {
+                } else if (obj.path == "projectView") {
                     //调用项目-->任务管理-->页面刷新方法
+                    alert(obj.content)
                 }
             }
         };

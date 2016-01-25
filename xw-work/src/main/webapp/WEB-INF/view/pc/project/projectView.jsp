@@ -16,10 +16,7 @@
     <title></title>
     <script src="<c:url value="/scripts/task.js" />"></script>
 
-    <script src="<c:url value="/scripts/react0.14.3/react.js"/> "></script>
-    <script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>
-    <script src="<c:url value="/scripts/react0.14.3/react-dom-server.js"/> "></script>
-    <script src="<c:url value="/scripts/react0.14.3/browser.min.js"/>"></script>
+
     <script src="<c:url value="/scripts/sockjs-0.3.min.js"/>"></script>
     <%--<script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>--%>
     <style type="text/css">
@@ -75,67 +72,26 @@
 </script>
 <!-- react测试-->
 <script type="text/babel">
-function sx(){
-  $("#sss").text("ddd");
-}
-    var ws = null;
-    var url = null;
+   <%--function updateView(){--%>
+      <%--ReactDOM.render(--%>
+            <%--(--%>
+              <%--<div>--%>
+               <%--<ProjectView  />--%>
+             <%--</div>--%>
+            <%--)--%>
+            <%--,--%>
+           <%--document.getElementById("all")--%>
 
-$(function(){
-    updateUrl('/websocket');
-    connect();
-});
-    function connect() {
-        if (!url) {
-            alert('Select whether to use W3C WebSocket or SockJS');
-            return;
-        }
-        if ('WebSocket' in window) {
-            ws = new WebSocket("ws://"+window.location.host+"/websck");
-        } else if ('MozWebSocket' in window) {
-            alert("MozWebSocket");
-            ws = new MozWebSocket("ws://websck");
-        } else {
-            ws = new SockJS(window.location.protocol+"://"+window.location.host+"/sockjs/websck");
-        }
-        ws.onopen = function () {
-        };
-        ws.onmessage = function (event) {
-            alert(event.lastEventId);
-        };
-        ws.onclose = function (event) {
-            alert('Info: connection closed.');
-        };
-    }
+    <%--);--%>
 
-    function disconnect() {
-        if (ws != null) {
-            ws.close();
-            ws = null;
-        }
-    }
-
-    function updateUrl(urlPath) {
-        if (urlPath.indexOf('sockjs') != -1) {
-            url = urlPath;
-        }
-        else {
-            if (window.location.protocol == 'http:') {
-                url = 'ws://' + window.location.host + urlPath;
-            } else {
-                url = 'wss://' + window.location.host + urlPath;
-            }
-        }
-    }
-
-
+   <%--}--%>
     function forwardUrl(userId){
-    var users = '';
-    if(userId.length!=0){
-     for(var i = 0 ; i<userId.length;i++)
+      var users = '';
+      if(userId.length!=0){
+       for(var i = 0 ; i<userId.length;i++)
        users += i==userId.length-1?userId[i]:userId[i]+",";
     }
-        var message = "{'receiver':'"+userId+"','content':'你有一条未读任务','id':'["+users+"]'}";
+        var message = '{"receiver":"'+userId+'","content":"你有一条未读任务","id":"['+users+']","path":"projectView"}';
         echo(message);
     }
     function echo(message) {
@@ -601,6 +557,7 @@ $(function(){
                    var userId = [];
                    userId.push(value);
                    forwardUrl(userId);
+                   <%--alert(ReactDOM.findDOMNode(this.refs.SelectUser).setAttribute("value",value));--%>
                  }.bind(this)
                 });
        },
@@ -613,7 +570,7 @@ $(function(){
          var style = {fontSize:"10px"};
          return (
 
-            <span>
+            <span ref="SelectUser">
                  <select value={this.props.userId} onChange={this.handleChange} style={style}>
                      {selectUser}
                  </select>
@@ -769,7 +726,6 @@ $(function(){
          }
     });
 
-
     ReactDOM.render(
             (
               <div>
@@ -780,7 +736,6 @@ $(function(){
            document.getElementById("all")
   
     );
-
 
 
 
