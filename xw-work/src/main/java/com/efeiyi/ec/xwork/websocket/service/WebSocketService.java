@@ -13,4 +13,5 @@ public interface WebSocketService {
     int getUnReadNews(String username)throws  Exception;
     void saveMessageForOffLineUser(Message message)throws  Exception;
     User getUser(String username)throws  Exception;
+    public String getUsername(String userIds) throws  Exception;
 }

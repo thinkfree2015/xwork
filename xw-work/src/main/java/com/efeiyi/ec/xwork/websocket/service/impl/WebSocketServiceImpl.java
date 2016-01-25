@@ -66,4 +66,14 @@ public class WebSocketServiceImpl implements WebSocketService {
         return user;
         return new User();
     }
+    @Override
+    public String getUsername(String userIds){
+        String usernames = "";
+        String [] ids = userIds.substring(1,userIds.length()-1).split(",");
+        for(int i=0;i<ids.length;i++){
+            User user = (User)xdoDao.getObject(User.class.getName(), ids[i]);
+            usernames += i==ids.length-1?user.getUsername():(user.getUsername()+",");
+        }
+        return  usernames;
+    }
 }
