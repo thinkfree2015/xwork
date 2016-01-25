@@ -139,6 +139,7 @@
     };
     function changeNowPage() {
         var box = $("#box");
+        box.empty();
         $.ajax({
             type: "get",//设置get请求方式
             url: "<c:url value='/findTaskActivityInstanceExecution.do'/>",//设置请求的脚本地址
