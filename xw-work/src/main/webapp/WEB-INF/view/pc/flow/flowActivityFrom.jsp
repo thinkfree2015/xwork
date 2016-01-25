@@ -72,7 +72,7 @@
         setCheckbox();
     })
     function setCheckbox(){
-        var value = $("select[name='sort']").val();
+        var value = $("select[name='group']").val();
         var id = $("#id").val();
         if(value == 6){
             $("a[name='tab1']").html("运营");
