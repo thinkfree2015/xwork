@@ -102,7 +102,7 @@ public class TaskActivityInstanceExecutionController {
     @ResponseBody
     @RequestMapping("/findTaskActivityInstanceExecution.do")
     public List<TaskActivityInstanceExecution> findTaskActivityInstanceExecution(HttpServletRequest request) throws Exception {
-        XQuery xQuery = new XQuery("plistTaskActivityInstanceExecution_default",request);
+        XQuery xQuery = new XQuery("listTaskActivityInstanceExecution_default",request);
         List<TaskActivityInstanceExecution> list = baseManager.listObject(xQuery);
         if (list.size() > 0){
             for (TaskActivityInstanceExecution execution : list){

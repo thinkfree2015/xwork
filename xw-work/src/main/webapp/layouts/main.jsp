@@ -51,7 +51,8 @@
         } else {
             ws = new SockJS("http://192.168.1.68:8080/sockjs/websck");
         }
-        ws.onopen = function () {};
+        ws.onopen = function () {
+        };
         ws.onmessage = function (event) {
             if ((event.data).indexOf("Hint") == 0) {//判断message是否为初始化的message
                 alert(event.data);
@@ -85,15 +86,16 @@
                 async: true,
                 dataType: "json",//设置请求返回的数据格式
                 success: function (data) {
-                    if(data && data.length > 0){
+                    if (data && data.length > 0) {
                         var sub = "";
-                        for(var i in data){
-                            if(data[i].status == 0){
-                                sub += "<article class=\"am-comment\">"+
-                                        "   <a href=\"javascript:void (0);\" onclick=\"changeInput(this , \'\');\">编辑</a>"+
-                                        "   <a href=\"javascript:void (0);\" onclick=\"forwardUrl(this,'"+data[i].taskContent+"','"+data[i].taskId+"');\">标记</a>"+
-                                        "   <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>"+data[i].taskId+"\" class=\"am-comment-author\">"+data[i].taskTitle+"</a>"+
-                                        "   <p style=\"display: inline\">"+data[i].createDateTime+"</p>"+
+                        for (var i in data) {
+                            if (data[i].status == 0) {
+                                var time = format(data[i].createDatetime, 'yyyy-MM-dd HH:mm:ss');
+                                sub += "<article class=\"am-comment\">" +
+                                        "   <a href=\"javascript:void (0);\" onclick=\"changeInput(this , \'\');\">编辑</a>" +
+                                        "   <a href=\"javascript:void (0);\" onclick=\"forwardUrl(this,'" + data[i].taskContent + "','" + data[i].taskId + "');\">标记</a>" +
+                                        "   <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>" + data[i].taskId + "\" class=\"am-comment-author\">" + data[i].taskTitle + "</a>" +
+                                        "   <p style=\"display: inline\">" + time + "</p>" +
                                         "</article>";
                             }
                         }
