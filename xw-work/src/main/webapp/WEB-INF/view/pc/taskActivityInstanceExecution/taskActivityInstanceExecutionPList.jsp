@@ -39,6 +39,7 @@
                    onclick="forwardUrl(this,'${myUser.name}','${myUser.username}','${taskActivityInstanceExecution.task.id}');">标记</a>
                 <a href="<c:url value='/basic/xm.do?qm=formTask&id=${taskActivityInstanceExecution.task.id}'/>"
                    class="am-comment-author">${taskActivityInstanceExecution.task.title}</a>
+
                 <p style="display: inline">${taskActivityInstanceExecution.createDatetime}</p>
             </article>
         </c:if>
@@ -52,15 +53,15 @@
     </ming800:pcPageList>
 </div>
 <script type="text/javascript">
-//    var ws = null;
-//    var url = null;
+    //    var ws = null;
+    //    var url = null;
     var transports = [];
-//    function disconnect() {
-//        if (ws != null) {
-//            ws.close();
-//            ws = null;
-//        }
-//    }
+    //    function disconnect() {
+    //        if (ws != null) {
+    //            ws.close();
+    //            ws = null;
+    //        }
+    //    }
     function updateUrl(urlPath) {
         console.log("配置路径")
         if (urlPath.indexOf('sockjs') != -1) {
@@ -74,7 +75,7 @@
             }
         }
     }
-    function forwardUrl(o,name, username, taskId) {
+    function forwardUrl(o, name, username, taskId) {
 //        updateUrl('/websocket');
 //        connect();
         $.ajax({
@@ -88,9 +89,6 @@
                     var text_str = "[";
                     if (data.length > 1) {
                         for (var i in data) {
-//                            if(username == data[i].username){
-//                                text_str += data[i].username;
-//                            }
                             text_str += data[i].username + ",";
                         }
                         text_str = text_str.substr(0, text_str.length - 1);
@@ -98,9 +96,7 @@
                         text_str += "" + data[0].username;
                     }
                     text_str += "]";
-                    console.log(text_str);
-//                    var a_html = "{'type':'1','receiver':'" + text_str + "','content':'" + userName + "完成了任务" + ($(o).next().html()) + "','taskId':'" + taskId + "'}";
-                    var a_html = '{"type":"1","receiver":"'+text_str+'","content":"'+name+'完成了任务'+$(o).next().html()+'","taskId":"'+taskId+'","path":"problem","qm":"plistTaskActivityInstanceExecution_default"}';
+                    var a_html = '{"type":"1","receiver":"' + text_str + '","content":"' + name + '完成了任务' + $(o).next().html() + '","taskId":"' + taskId + '","path":"problem","qm":"plistTaskActivityInstanceExecution_default"}';
                     echo(a_html);
 
                 }
@@ -110,9 +106,64 @@
     function echo(message) {
         if (ws != null) {
             ws.send(message);
+            changeNowPage();
         } else {
             alert('connection not established, please connect.');
         }
+    }
+    var format = function(time, format){
+        var t = new Date(time);
+        var tf = function(i){return (i < 10 ? '0' : '') + i};
+        return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a){
+            switch(a){
+                case 'yyyy':
+                    return tf(t.getFullYear());
+                    break;
+                case 'MM':
+                    return tf(t.getMonth() + 1);
+                    break;
+                case 'mm':
+                    return tf(t.getMinutes());
+                    break;
+                case 'dd':
+                    return tf(t.getDate());
+                    break;
+                case 'HH':
+                    return tf(t.getHours());
+                    break;
+                case 'ss':
+                    return tf(t.getSeconds());
+                    break;
+            };
+        });
+    };
+    function changeNowPage() {
+        var box = $("#box");
+        box.empty();
+        $.ajax({
+            type: "get",//设置get请求方式
+            url: "<c:url value='/findTaskActivityInstanceExecution.do'/>",//设置请求的脚本地址
+            data: "",//设置请求的数据
+            async: true,
+            dataType: "json",//设置请求返回的数据格式
+            success: function (data) {
+                if (data && data.length > 0) {
+                    var sub = "";
+                    for (var i in data) {
+                        var time = format(data[i].createDatetime, 'yyyy-MM-dd HH:mm:ss');
+                        if (data[i].status == 0) {
+                            sub += "<article class=\"am-comment\" id=\""+data[i].taskId+"\">" +
+                                    "   <a href=\"javascript:void (0);\" onclick=\"changeInput(this , '"+data[i].taskId+"','"+data[i].id+"');\">编辑</a>" +
+                                    "   <a href=\"javascript:void (0);\" onclick=\"forwardUrl(this,'" + data[i].taskContent + "','" + data[i].taskId + "');\">标记</a>" +
+                                    "   <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>" + data[i].taskId + "\" class=\"am-comment-author\">" + data[i].taskTitle + "</a>" +
+                                    "   <p style=\"display: inline\">" + time + "</p>" +
+                                    "</article>";
+                        }
+                    }
+                    box.append(sub);
+                }
+            }
+        })
     }
     function changeData(o) {
         var checkVal = $(o).val();
@@ -128,8 +179,8 @@
                 var sub = "";
                 if (data && data.length > 0) {
                     for (var i in data) {
-                        sub += "<article class=\"am-comment\">" +
-                                "        <a onclick=\"changeInput(this,'" + data[i].taskId + "')\">编辑</a>" +
+                        sub += "<article class=\"am-comment\" id='"+data[i].taskId+"'>" +
+                                "        <a onclick=\"changeInput(this,'" + data[i].taskId + "','"+data[i].id+"')\">编辑</a>" +
                                 "        <a onclick=\"\">标记</a>" +
                                 "        <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>" + data[i].taskId + "\" class=\"am-comment-author\">" + data[i].taskContent + " </a>" +
                                 "</article>";
@@ -139,32 +190,32 @@
             }
         })
     }
-    function changeInput(o,taskId,childId){
+    function changeInput(o, taskId, childId) {
         var next_html = $(o).next().next().html();
-        var parent_html = $("#"+taskId);
+        var parent_html = $("#" + taskId);
         parent_html.empty();
-        var sub_html = "<input type='text' style=\"width: 30%;display: inline;\" class=\"am-form-field am-round\" value='"+next_html+"'/>" +
-                "<input type='button' onclick=\"changeTaskTitle(this,'"+taskId+"','"+next_html+"','"+childId+"');\" style='display: inline;' class='am-btn am-btn-default am-round' value='保存'/>" +
+        var sub_html = "<input type='text' style=\"width: 30%;display: inline;\" class=\"am-form-field am-round\" value='" + next_html + "'/>" +
+                "<input type='button' onclick=\"changeTaskTitle(this,'" + taskId + "','" + next_html + "','" + childId + "');\" style='display: inline;' class='am-btn am-btn-default am-round' value='保存'/>" +
                 "<input type='button' style='display: inline;' class='am-btn am-btn-default am-round' value='取消'/>";
         parent_html.html(sub_html);
     }
-    function changeTaskTitle(o,taskId,title,childId){
+    function changeTaskTitle(o, taskId, title, childId) {
         var prev = $(o).prev().val();
         console.log(prev);
         $.ajax({
             type: "get",//设置get请求方式
             url: "<c:url value='/task/editTaskTitle.do?'/>",//设置请求的脚本地址
-            data: "taskId="+taskId+"&title="+prev+"&childId="+childId,//设置请求的数据
+            data: "taskId=" + taskId + "&title=" + prev + "&childId=" + childId,//设置请求的数据
             async: true,
             dataType: "json",//设置请求返回的数据格式
             success: function (data) {
-                var parent_html = $("#"+taskId);
+                var parent_html = $("#" + taskId);
                 parent_html.empty();
-                var child_html = "<article class=\"am-comment\" id=\""+data.id+"\">"+
-                        "    <a href=\"javascript:void (0);\" onclick=\"changeInput(this ,'"+data.id+"','"+childId+"');\">编辑</a>"+
-                        "    <a href=\"javascript:void (0);\"  onclick=\"forwardUrl(this,'"+data.name+"','"+data.username+"','"+data.id+"');\">标记</a>"+
-                        "     <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>"+data.id+"\" class=\"am-comment-author\">"+data.title+"</a>"+
-                        "     <p style=\"display: inline\"></p>"+
+                var child_html = "<article class=\"am-comment\" id=\"" + data.id + "\">" +
+                        "    <a href=\"javascript:void (0);\" onclick=\"changeInput(this ,'" + data.id + "','" + childId + "');\">编辑</a>" +
+                        "    <a href=\"javascript:void (0);\"  onclick=\"forwardUrl(this,'" + data.name + "','" + data.username + "','" + data.id + "');\">标记</a>" +
+                        "     <a href=\"<c:url value='/basic/xm.do?qm=formTask&id='/>" + data.id + "\" class=\"am-comment-author\">" + data.title + "</a>" +
+                        "     <p style=\"display: inline\"></p>" +
                         "</article>";
                 parent_html.html(child_html);
             }
