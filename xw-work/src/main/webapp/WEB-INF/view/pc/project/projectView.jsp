@@ -71,35 +71,85 @@
 </script>
 <!-- react测试-->
 <script type="text/babel">
-   <%--function updateView(){--%>
-      <%--ReactDOM.render(--%>
-            <%--(--%>
-              <%--<div>--%>
-               <%--<ProjectView  />--%>
-             <%--</div>--%>
-            <%--)--%>
-            <%--,--%>
-           <%--document.getElementById("all")--%>
+<%--推送消息--%>
+    var ws2 = null;
+ <%--通知页面改变--%>
+    var ws1 = null;
+    var url = null;
+    function connect() {
+        if ('WebSocket' in window) {
+            ws2 = new WebSocket("ws://192.168.1.80:8001/websck");
+            ws1 = new WebSocket("ws://192.168.1.80:8001/websck");
+        } else if ('MozWebSocket' in window) {
+            ws2 = new MozWebSocket("ws://websck");
+            ws1 = new MozWebSocket("ws://websck");
+        } else {
+            ws2 = new SockJS("http://192.168.1.80:8001/sockjs/websck");
+            ws1 = new SockJS("http://192.168.1.80:8001/sockjs/websck");
+        }
+        ws2.onopen = function () {
+        };
+        ws1.onopen = function () {
+        };
 
-    <%--);--%>
-
-   <%--}--%>
+        ws2.onmessage = function (event) {
+         if ((event.data).indexOf("Hint") == 0){
+              alert(event.data);
+            }else{
+               var obj = $.parseJSON(event.data);
+               if(obj.type=="1"){
+                  alert(obj.content);
+               }
+            }
+        };
+        ws2.onclose = function (event) {
+            console.log("关闭连接")
+        }
+        ws1.onclose = function (event) {
+            console.log("关闭连接")
+        }
+    }
+    function disconnect() {
+        if (ws2 != null) {
+            ws2.close();
+            ws2 = null;
+        }
+        if (ws1 != null) {
+            ws1.close();
+            ws1 = null;
+        }
+    }
+    $(document).ready(function () {
+        connect();
+    });
     function forwardUrl(userId,username,type){
       var users = "";
       if(userId.length!=0){
        for(var i = 0 ; i<userId.length;i++)
        users += i==userId.length-1?userId[i]:userId[i]+",";
       }
-        var message = '{"receiver":"'+username+'","content":"你有一条未读任务","id":"['+users+']","path":"projectView","type":"'+type+'"}';
-        echo(message);
+        var message = '{"receiver":"'+username+'","content":"你有一条新消息","id":"['+users+']","path":"projectView","type":"'+type+'"}';
+        echo(message,type);
     }
-    function echo(message) {
-        if (ws != null) {
-            alert('Sent: ' + message);
-            ws.send(message);
+    function echo(message,type) {
+    if(type=="1"){
+        if (ws2 != null) {
+            <%--alert('Sent: ' + message);--%>
+
+                  ws2.send(message);
+
         } else {
             alert('connection not established, please connect.');
         }
+      }
+      if(type=="3"){
+        if (ws1 != null) {
+            <%--alert('Sent: ' + message);--%>
+            ws1.send(message);
+         } else {
+            alert('connection not established, please connect.');
+         }
+      }
     }
 <%--任务操作 --%>
    var Task_tool = React.createClass({
@@ -155,10 +205,9 @@
                 });
        },
        componentWillMount:function(){
-            if(this.state.status=="0"){
                 this.loadCommentsFromServer();
                 this.setState({status:"1"});
-             }
+
        },
        render:function(){
          return (
@@ -211,7 +260,6 @@
         getInitialState:function(){
            return {
               ul:[],
-              status:"0"
            }
         },
         loadCommentsFromServer:function(){
@@ -230,10 +278,15 @@
                this.props.saveOrCancelTaskGroup(data);
        },
        componentWillMount:function(){
-            if(this.state.status=="0"){
                 this.loadCommentsFromServer();
-                this.setState({status:"1"});
-             }
+                  ws1.onmessage=function(event){
+                      <%--alert(event.data);--%>
+                      var that = this;
+                   setTimeout(function(){
+                      that.setState({ul:[]});
+                      that.loadCommentsFromServer();
+                      },5000);
+                   }.bind(this)
        },
         render:function(){
           var listStyle= {
@@ -353,6 +406,7 @@
                 var userId = [];
                 userId.push(data[0].id);
                    forwardUrl(userId,"","1")
+                    forwardUrl(userId,"","3")
                    this.setState({style:"none",editStyle:"none",users:data,userId:data[0].id});
                  }.bind(this)
                 });
@@ -395,8 +449,13 @@
        },
           getCurrentUser:function(data){
             this.setState({userId:data});
+
           },
+          updateView:function(data){
+
+         },
           defaultCurrentUser:function(e){
+
           $.ajax({
                 type:"post",
                 url:"<c:url value="/project/getCurrentUser.do"/>",
@@ -421,8 +480,10 @@
        componentWillMount:function(){
 
                 this.setState({value:this.props.task.title});
-                this.loadCommentsFromServer()
-                this.defaultCurrentUser()
+                this.loadCommentsFromServer();
+                this.defaultCurrentUser();
+
+
        },
 
       render:function(){
@@ -469,6 +530,7 @@
        },
        addLi:function(data){
               forwardUrl("",data[data.length-1].username,"1");
+              forwardUrl("",data[data.length-1].username,"3");
             this.setState({status:"0",li:data});
 
 
@@ -546,6 +608,7 @@
           users:[]
          }
        },
+
        onmessage:function(value){
         this.props.getCurrentUser(value);
        },
@@ -561,6 +624,7 @@
                    var userId = [];
                    userId.push(value);
                    forwardUrl(userId,"","1");
+                   forwardUrl(userId,"","3");
                    <%--alert(ReactDOM.findDOMNode(this.refs.SelectUser).setAttribute("value",value));--%>
                  }.bind(this)
                 });
@@ -574,7 +638,7 @@
          var style = {fontSize:"10px"};
          return (
 
-            <span ref="SelectUser" style={this.props.userStyle}>
+            <span ref="SelectUser" >
                  <select value={this.props.userId} onChange={this.handleChange} style={style}>
                      {selectUser}
                  </select>

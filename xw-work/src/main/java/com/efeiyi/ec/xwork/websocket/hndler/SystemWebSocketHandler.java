@@ -70,6 +70,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             //这里做业务逻辑处理 1.即时消息 2.离线消息 3.通知页面改动
             String msg = message.getPayload().toString();
             JSONObject jasonObject = (JSONObject) JSONObject.parse(msg);
+            String type = jasonObject.getString("type");
             Message message1 = new Message();//对 message进行处理 转化
             if (jasonObject.getString("content") != null) {
                 message1.setContent(jasonObject.getString("content"));
@@ -78,7 +79,8 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             }
             message1.setCreateDatetime(new Date());
             //type jasonObject.getString("type")
-            message1.setType("1");//暂时都默认为文本消息
+
+            message1.setType(type);//暂时都默认为文本消息
             User user = webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
             message1.setCreator(user);
             String receiver = "";
@@ -88,11 +90,16 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             }else {
                 receiver = jasonObject.getString("receiver") == null ? "" : "["+jasonObject.getString("receiver")+"]";
             }
-            if (receiver != null && !"".equals(receiver)) {//消息不指定接收者，默认发送所有人
-                saveMessageForReceiver(receiver, message1);
-                sendMessageToUser(receiver, new TextMessage(message.getPayload() + ""));
-            } else {
-                saveMessageToOffLineUsers(message1);
+            if("1".equals(type)) {
+                if (receiver != null && !"".equals(receiver)) {//消息不指定接收者，默认发送所有人
+                    saveMessageForReceiver(receiver, message1);
+                    sendMessageToUser(receiver, new TextMessage(message.getPayload() + ""));
+                } else {
+                    saveMessageToOffLineUsers(message1);
+                    sendMessageToUsers(new TextMessage(message.getPayload() + ""));
+                }
+            }
+            else if("3".equals(type)){
                 sendMessageToUsers(new TextMessage(message.getPayload() + ""));
             }
         } catch (Exception e) {

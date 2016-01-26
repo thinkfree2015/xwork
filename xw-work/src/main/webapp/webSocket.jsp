@@ -13,6 +13,7 @@
     <script type="text/javascript">
 
         var ws = null;
+        var ws1 = null;
         var url = null;
         var transports = [];
 
@@ -29,29 +30,33 @@
             }
 
             if ('WebSocket' in window) {
-                ws= new WebSocket("<c:url value='ws://192.168.1.68:8080/websck'/>");
+                ws= new WebSocket("<c:url value='ws://192.168.1.80:8001/websck'/>");
+                ws1= new WebSocket("<c:url value='ws://192.168.1.80:8001/websck'/>");
             }else if ('MozWebSocket' in window) {
                 alert("MozWebSocket");
                 ws = new MozWebSocket("ws://websck");
             }else {
-                ws = new SockJS("<c:url value='http://192.168.1.68:8082/sockjs/websck'/>");
+                ws = new SockJS("<c:url value='http://192.168.1.80:8001/sockjs/websck'/>");
             }
-
+            ws1.onopen = function () {
+                alert('open');
+                setConnected(true);
+                //log('Info: connection opened.');
+            };
             ws.onopen = function () {
                 alert('open');
                 setConnected(true);
                 //log('Info: connection opened.');
             };
+
             ws.onmessage = function (event) {
                 alert('Received:' + event.data);
                 log('Received: ' + event.data);
-               /* if(window.URL){
-                    URL = window.URL;
-                }
-                var uri = URL.createObjectURL(event.data)
-                var img = document.createElement("img");
-                img.src = uri;
-                document.body.appendChild(img);*/
+                 ws1.onmessage = function (event) {
+                    alert('Received:' + event.data);
+                    log('Received: ' + event.data);
+
+                };
             };
             ws.onclose = function (event) {
                 setConnected(false);
@@ -59,7 +64,6 @@
                 log(event);
             };
         }
-
         function disconnect() {
             if (ws != null) {
                 ws.close();
