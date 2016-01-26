@@ -51,6 +51,10 @@ public class TaskController extends BaseController {
             task = taskManager.changeTaskInstanceStatus(taskId,"4");
             if(task.getCurrentInstance()!=null){
                 userList = task.getCurrentInstance().getFlowActivity().getUser();
+            }else {
+                User user = new User();
+                user.setId("0");
+                userList.add(user);
             }
 
         }catch (Exception e){

@@ -97,7 +97,7 @@
               alert(event.data);
             }else{
                var obj = $.parseJSON(event.data);
-               if(obj.type=="1"){
+               if(obj.type=="1" && obj.id!="[0]"){
                   alert(obj.content);
                }
             }
@@ -405,9 +405,9 @@
                 success:function(data) {
                 var userId = [];
                 userId.push(data[0].id);
-                   forwardUrl(userId,"","1")
+                    forwardUrl(userId,"","1")
                     forwardUrl(userId,"","3")
-                   this.setState({style:"none",editStyle:"none",users:data,userId:data[0].id});
+                   this.setState({style:"none",editStyle:"none",users:data,userId:data[0].id=="0"?"null":data[0].id});
                  }.bind(this)
                 });
               }
@@ -491,7 +491,6 @@
           var  editStyle = {"display":this.state.editStyle};
           var  editStyle2 = {"display":this.state.editStyle=="none"?"initial":"none"};
           var  removeStyle = {"display":this.state.removeStyle,"position":"relative"};
-          var  userStyle = {"display":this.props.task.currentUser==null?"none":"block"};
         return (
                       <li onMouseOver={this.onMouseOver}  onMouseOut={this.onMouseOut} style={removeStyle}>
                          <Task_tool dataStyle={this.state.style} handleEdit={this.handleEdit} handleRemove={this.handleRemove} handleCompleted={this.handleCompleted}/>
@@ -503,7 +502,7 @@
                             <a href="javascript:void (0);" onClick={this.handleClick} className="am-btn am-btn-primary am-btn-xs" style={style3}>保存</a>
                             <a href="javascript:void (0);" onClick={this.handleCancel} className="am-btn am-btn-primary am-btn-xs" style={style3}>取消</a>
                          </span>
-                         <Display_li_select_user userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.users} taskId={this.props.task.id} userStyle={userStyle}/>
+                         <Display_li_select_user userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.users} taskId={this.props.task.id} />
                          <Display_li_select_flow  taskId={this.props.task.id} />
                       </li>
 
@@ -636,9 +635,10 @@
               return <option key={user.id} value={user.id}>{user.name}</option>
          });
          var style = {fontSize:"10px"};
+         var userStyle={"display":this.props.userId=="null"?"none":"initial"}
          return (
 
-            <span ref="SelectUser" >
+            <span ref="SelectUser" style={userStyle}>
                  <select value={this.props.userId} onChange={this.handleChange} style={style}>
                      {selectUser}
                  </select>

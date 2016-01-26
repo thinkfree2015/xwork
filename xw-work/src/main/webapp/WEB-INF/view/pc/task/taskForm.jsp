@@ -79,7 +79,12 @@
               <span>项目:${object.taskGroup.project.title}</span>
               <span>清单:${object.taskGroup.title}</span>
               <span>流程:${object.flow.title}</span>
-              <span>当前节点:${object.currentInstance.flowActivity.title}</span>
+                <c:if test="${empty object.currentInstance}">
+                    <span><small>(已完成)</small></span>
+                </c:if>
+                <c:if test="${not empty object.currentInstance}">
+                    <span>当前节点:${object.currentInstance.flowActivity.title}</span>
+                </c:if>
             </small>
         </div>
         <hr/>

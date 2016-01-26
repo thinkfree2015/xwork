@@ -228,7 +228,9 @@ public class ProjectController extends BaseController {
         List<User> userList = null;
         try {
            Task  task = (Task)baseManager.getObject(Task.class.getName(),id);
-            userList = task.getCurrentInstance().getFlowActivity().getUser();
+            if(task.getCurrentInstance()!=null) {
+                userList = task.getCurrentInstance().getFlowActivity().getUser();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
