@@ -52,17 +52,17 @@
     var url = null;
     function connect() {
         if ('WebSocket' in window) {
-            ws = new WebSocket("ws://192.168.1.80:8001/websck");
+            ws = new WebSocket("ws://192.168.1.68:8080/websck");
         } else if ('MozWebSocket' in window) {
             ws = new MozWebSocket("ws://websck");
         } else {
-            ws = new SockJS("http://192.168.1.80:8001/sockjs/websck");
+            ws = new SockJS("http://192.168.1.68:8080/sockjs/websck");
         }
         ws.onopen = function () {
         };
         ws.onmessage = function (event) {
             if ((event.data).indexOf("Hint") == 0) {//判断message是否为初始化的message
-                alert(event.data);
+//                alert(event.data);
             } else {
                 var obj = $.parseJSON(event.data);//把发送过来的消息转换成对象
                 var task = obj.content;
