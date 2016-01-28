@@ -25,6 +25,7 @@
     <link rel="icon" type="image/png" href="<c:url value='/resources/assets/i/favicon.png'/>"/>
     <link rel="apple-touch-icon-precomposed" href="<c:url value='/resources/assets/i/app-icon72x72@2x.png'/>"/>
     <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="<c:url value='/resources/assets/css/amazeui.min.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/assets/css/admin.css'/>"/>
     <script src="<c:url value='/resources/jquery/jquery-1.11.1.min.js'/>"></script>
@@ -62,7 +63,8 @@
         };
         ws.onmessage = function (event) {
             if ((event.data).indexOf("Hint") == 0) {//判断message是否为初始化的message
-//                alert(event.data);
+                var count = event.data.toString().split(",");
+                $("#message-number").find(".admin-fullText").html(count[1]);
             } else {
                 var obj = $.parseJSON(event.data);//把发送过来的消息转换成对象
                 var task = obj.content;

@@ -22,10 +22,6 @@
     </div>
 </div>
 
-<div class="am-cf am-padding">
-    <a onclick="return false;" href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}"/> "
-       class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
-</div>
 <hr/>
 <div class="am-g">
     <form action="<c:url value="/flow/createFlow.do"/>" method="post" class="am-form am-form-horizontal">
@@ -197,6 +193,10 @@
 </div>
 <!-- content end -->
 <hr/>
+<div class="am-cf am-padding">
+    <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}"/> "
+       class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
+</div>
 <c:if test="${!empty object.activityList && result == 'show'}">
     <div class="am-cf am-padding">
         <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">流程节点列表</strong> /
