@@ -22,6 +22,8 @@ function connect() {
     ws.onmessage = function (event) {
         if ((event.data).indexOf("Hint") == 0) {//判断message是否为初始化的message
 //                alert(event.data);
+            var count = event.data.toString().split(",");
+            $("#message-number").find(".admin-fullText").html(count[1]);
         } else {
             var obj = $.parseJSON(event.data);//把发送过来的消息转换成对象
             var task = obj.content;
