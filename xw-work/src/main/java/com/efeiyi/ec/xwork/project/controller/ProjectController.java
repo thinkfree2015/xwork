@@ -271,6 +271,7 @@ public class ProjectController extends BaseController {
             List<Flow> flowList = baseManager.listObject(xQuery);
             modelMap.put("flowList",flowList);
             modelMap.put("id",request.getParameter("id"));
+            modelMap.put("loginUsername",AuthorizationUtil.getMyUser().getUsername());
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -77,7 +77,7 @@
        for(var i = 0 ; i<userId.length;i++)
        users += i==userId.length-1?userId[i]:userId[i]+",";
       }
-        var message = '{"receiver":"'+username+'","content":"你有一条新消息","id":"['+users+']","path":"projectView","type":"'+type+'"}';
+        var message = '{"receiver":"'+username+'","content":"你有一条新消息","id":"['+users+']","path":"projectView","type":"'+type+'","loginUsername":"${loginUsername}"}';
         echo(message,type);
     }
     function echo(message,type) {

@@ -109,7 +109,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             else if(type.indexOf("1")!=-1){
                 if (receiver != null && !"".equals(receiver)) {
                     saveMessageForReceiver(receiver, message1);
-                    sendMessageToUsers(msg,receiver);
+                    sendMessageToUsers(msg,receiver,jasonObject.getString("loginUsername"));
                 }
 
             }else {
@@ -144,21 +144,22 @@ public class SystemWebSocketHandler implements WebSocketHandler {
      *
      * @param payload
      */
-    public void sendMessageToUsers(String payload,String receiver) {
+    public void sendMessageToUsers(String payload,String receiver,String loginUsername) {
 
         TextMessage message = null;
         for (WebSocketSession user : users) {
             try {
                 String username = (String)user.getAttributes().get(Constants.WEBSOCKET_USERNAME);
-                System.out.println(receiver.indexOf(username));
-                if(receiver.indexOf(username)==1){
-                    message = new TextMessage("{"+payload.substring(1,payload.indexOf("}"))+",\"message\":\"true\"}");
-                }else {
-                    message = new TextMessage("{"+payload.substring(1,payload.indexOf("}"))+",\"message\":\"false\"}");
-                }
-                if (user.isOpen()) {
-                    user.sendMessage(message);
-                    message = null;
+                if(!username.equals(loginUsername)) {
+                    if (receiver.indexOf(username) != -1) {
+                        message = new TextMessage("{" + payload.substring(1, payload.indexOf("}")) + ",\"message\":\"true\"}");
+                    } else {
+                        message = new TextMessage("{" + payload.substring(1, payload.indexOf("}")) + ",\"message\":\"false\"}");
+                    }
+                    if (user.isOpen()) {
+                        user.sendMessage(message);
+                        message = null;
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
