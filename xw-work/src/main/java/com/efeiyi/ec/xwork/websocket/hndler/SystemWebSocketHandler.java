@@ -8,6 +8,7 @@ package com.efeiyi.ec.xwork.websocket.hndler;
 import com.alibaba.fastjson.JSONObject;
 import com.efeiyi.ec.xw.message.model.Message;
 import com.efeiyi.ec.xw.message.model.UserMessage;
+import com.efeiyi.ec.xw.organization.model.MyUser;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.util.Constants;
@@ -59,7 +60,9 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             //查询未读消息
             int count = webSocketService.getUnReadNews((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
             if (count > 0){
-                session.sendMessage(new TextMessage("Hint,您有" + count + "条未读消息！"));
+                session.sendMessage(new TextMessage("Hint" + count));
+            }else {
+                session.sendMessage(new TextMessage("Hint" + 0));
             }
         }
     }
@@ -80,7 +83,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             message1.setCreateDatetime(new Date());
             //type jasonObject.getString("type")
 
-            message1.setType(type);//暂时都默认为文本消息
+            message1.setType("1");//暂时都默认为文本消息
             User user = webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
             message1.setCreator(user);
             String receiver = "";
@@ -90,7 +93,11 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             }else {
                 receiver = jasonObject.getString("receiver") == null ? "" : "["+jasonObject.getString("receiver")+"]";
             }
-            if("1".equals(type)) {
+            //解决 推送消息给某个人 通知页面改变给所有人 的问题
+            // type : 1 则推送消息和通知页面改变给某个人 ;
+            // type : 1,3 推送消息给某个人 通知页面改变给所有人
+            // type : 3 只通知页面改变给所有人 不用推送消息
+            if(type.indexOf("3")==-1) {
                 if (receiver != null && !"".equals(receiver)) {//消息不指定接收者，默认发送所有人
                     saveMessageForReceiver(receiver, message1);
                     sendMessageToUser(receiver, new TextMessage(message.getPayload() + ""));
@@ -99,7 +106,13 @@ public class SystemWebSocketHandler implements WebSocketHandler {
                     sendMessageToUsers(new TextMessage(message.getPayload() + ""));
                 }
             }
-            else if("3".equals(type)){
+            else if(type.indexOf("1")!=-1){
+                if (receiver != null && !"".equals(receiver)) {
+                    saveMessageForReceiver(receiver, message1);
+                    sendMessageToUsers(msg,receiver);
+                }
+
+            }else {
                 sendMessageToUsers(new TextMessage(message.getPayload() + ""));
             }
         } catch (Exception e) {
@@ -126,7 +139,32 @@ public class SystemWebSocketHandler implements WebSocketHandler {
     public boolean supportsPartialMessages() {
         return false;
     }
+    /**
+     * 推送消息给某个人 通知页面改变给所有人
+     *
+     * @param payload
+     */
+    public void sendMessageToUsers(String payload,String receiver) {
 
+        TextMessage message = null;
+        for (WebSocketSession user : users) {
+            try {
+                String username = (String)user.getAttributes().get(Constants.WEBSOCKET_USERNAME);
+                System.out.println(receiver.indexOf(username));
+                if(receiver.indexOf(username)==1){
+                    message = new TextMessage("{"+payload.substring(1,payload.indexOf("}"))+",\"message\":\"true\"}");
+                }else {
+                    message = new TextMessage("{"+payload.substring(1,payload.indexOf("}"))+",\"message\":\"false\"}");
+                }
+                if (user.isOpen()) {
+                    user.sendMessage(message);
+                    message = null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * 给所有在线用户发送消息
      *
@@ -143,7 +181,22 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             }
         }
     }
-
+    /**
+     * 给所有在线用户发通知 页面改变 除了当前用户
+     *
+     * @param message
+     */
+    public void sendMessageUpdateToUsers(TextMessage message,WebSocketSession session) {
+        for (WebSocketSession user : users) {
+            try {
+                if (user.isOpen()&&!user.getId().equals( webSocketService.getUser((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME)))) {
+                    user.sendMessage(message);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * 给某个用户发送消息
      *

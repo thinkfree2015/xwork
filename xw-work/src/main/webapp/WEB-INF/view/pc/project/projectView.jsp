@@ -17,7 +17,7 @@
     <script src="<c:url value="/scripts/task.js" />"></script>
 
 
-    <script src="<c:url value="/scripts/sockjs-0.3.min.js"/>"></script>
+
     <%--<script src="<c:url value='/resources/plugins/ckeditor/ckeditor.js'/>" ></script>--%>
     <style type="text/css">
         .todo-content {
@@ -71,57 +71,6 @@
 </script>
 <!-- react测试-->
 <script type="text/babel">
-<%--推送消息--%>
-    var ws2 = null;
- <%--通知页面改变--%>
-    var ws1 = null;
-    var url = null;
-    function connect() {
-        if ('WebSocket' in window) {
-            ws2 = new WebSocket("ws://192.168.1.80:8001/websck");
-            ws1 = new WebSocket("ws://192.168.1.80:8001/websck");
-        } else if ('MozWebSocket' in window) {
-            ws2 = new MozWebSocket("ws://websck");
-            ws1 = new MozWebSocket("ws://websck");
-        } else {
-            ws2 = new SockJS("http://192.168.1.80:8001/sockjs/websck");
-            ws1 = new SockJS("http://192.168.1.80:8001/sockjs/websck");
-        }
-        ws2.onopen = function () {
-        };
-        ws1.onopen = function () {
-        };
-
-        ws2.onmessage = function (event) {
-         if ((event.data).indexOf("Hint") == 0){
-              alert(event.data);
-            }else{
-               var obj = $.parseJSON(event.data);
-               if(obj.type=="1" && obj.id!="[0]"){
-                  alert(obj.content);
-               }
-            }
-        };
-        ws2.onclose = function (event) {
-            console.log("关闭连接")
-        }
-        ws1.onclose = function (event) {
-            console.log("关闭连接")
-        }
-    }
-    function disconnect() {
-        if (ws2 != null) {
-            ws2.close();
-            ws2 = null;
-        }
-        if (ws1 != null) {
-            ws1.close();
-            ws1 = null;
-        }
-    }
-    $(document).ready(function () {
-        connect();
-    });
     function forwardUrl(userId,username,type){
       var users = "";
       if(userId.length!=0){
@@ -132,24 +81,12 @@
         echo(message,type);
     }
     function echo(message,type) {
-    if(type=="1"){
         if (ws2 != null) {
-            <%--alert('Sent: ' + message);--%>
-
-                  ws2.send(message);
-
-        } else {
-            alert('connection not established, please connect.');
-        }
-      }
-      if(type=="3"){
-        if (ws1 != null) {
-            <%--alert('Sent: ' + message);--%>
-            ws1.send(message);
+            ws2.send(message);
          } else {
             alert('connection not established, please connect.');
          }
-      }
+      <%--}--%>
     }
 <%--任务操作 --%>
    var Task_tool = React.createClass({
@@ -279,13 +216,17 @@
        },
        componentWillMount:function(){
                 this.loadCommentsFromServer();
-                  ws1.onmessage=function(event){
-                      <%--alert(event.data);--%>
-                      var that = this;
-                   setTimeout(function(){
-                      that.setState({ul:[]});
-                      that.loadCommentsFromServer();
+                  ws2.onmessage=function(event){
+                      if ((event.data).indexOf("Hint") == -1){
+                       var obj = $.parseJSON(event.data);
+                       if(obj.type.indexOf("3") != -1){
+                       var that = this;
+                       setTimeout(function(){
+                       that.setState({ul:[]});
+                       that.loadCommentsFromServer();
                       },5000);
+                      }
+                      }
                    }.bind(this)
        },
         render:function(){
@@ -622,8 +563,8 @@
                    this.props.getCurrentUser(value);
                    var userId = [];
                    userId.push(value);
-                   forwardUrl(userId,"","1");
-                   forwardUrl(userId,"","3");
+                   forwardUrl(userId,"","1,3");
+                   <%--forwardUrl(userId,"","3");--%>
                    <%--alert(ReactDOM.findDOMNode(this.refs.SelectUser).setAttribute("value",value));--%>
                  }.bind(this)
                 });

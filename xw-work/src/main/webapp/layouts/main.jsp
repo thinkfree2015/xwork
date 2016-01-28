@@ -34,7 +34,7 @@
     <script src="<c:url value="/scripts/react0.14.3/react-dom.js"/> "></script>
     <script src="<c:url value="/scripts/react0.14.3/react-dom-server.js"/> "></script>
     <script src="<c:url value="/scripts/react0.14.3/browser.min.js"/>"></script>
-
+    <script src="<c:url value="/scripts/sockjs-0.3.min.js"/>"></script>
     <sitemesh:write property='head'/>
     <style>
 
@@ -44,44 +44,9 @@
     </style>
 </head>
 <body>
-<script type="text/babel">
-
-</script>
+<script type="text/javascript" src="<c:url value="/scripts/websocket.js" />"></script>
 <script>
-    var ws = null;
-    var url = null;
-    function connect() {
-        if ('WebSocket' in window) {
-            ws = new WebSocket("ws://192.168.1.68:8080/websck");
-        } else if ('MozWebSocket' in window) {
-            ws = new MozWebSocket("ws://websck");
-        } else {
-            ws = new SockJS("http://192.168.1.68:8080/sockjs/websck");
-        }
-        ws.onopen = function () {
-        };
-        ws.onmessage = function (event) {
-            if ((event.data).indexOf("Hint") == 0) {//判断message是否为初始化的message
-//                alert(event.data);
-            } else {
-                var obj = $.parseJSON(event.data);//把发送过来的消息转换成对象
-                var task = obj.content;
-                //根据消息中的参数来判断哪个页面需要刷新
-                if (obj.path == "problem") {
-                    reload_my_problem(task);//调用我的问题页面刷新方法
-                } else if (obj.path == "projectView") {
-                    //调用项目-->任务管理-->页面刷新方法
-                    alert(obj.content)
-                }
-            }
-        };
-        ws.onclose = function (event) {
-            console.log("关闭连接")
-        };
-    }
-    $(document).ready(function () {
-        connect();
-    })
+
     function reload_my_problem(task) {
         var path_url = window.location.href;
         if (path_url.indexOf("plistTaskActivityInstanceExecution_default") > -1) {
@@ -116,12 +81,7 @@
             alert(task);
         }
     }
-    function disconnect() {
-        if (ws != null) {
-            ws.close();
-            ws = null;
-        }
-    }
+
 </script>
 <jsp:include flush="true"
              page="/getMenu.do?jmenuId=commonMenu&resultPage=/jmenu/manageTemplateHeader&match=${requestScope['javax.servlet.forward.servlet_path']}%3F${fn:replace(pageContext.request.queryString,'&','%26')}"/>
