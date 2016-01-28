@@ -60,9 +60,9 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             //查询未读消息
             int count = webSocketService.getUnReadNews((String) session.getAttributes().get(Constants.WEBSOCKET_USERNAME));
             if (count > 0){
-                session.sendMessage(new TextMessage("Hint" + count));
+                session.sendMessage(new TextMessage("Hint," + count));
             }else {
-                session.sendMessage(new TextMessage("Hint" + 0));
+                session.sendMessage(new TextMessage("Hint," + 0));
             }
         }
     }

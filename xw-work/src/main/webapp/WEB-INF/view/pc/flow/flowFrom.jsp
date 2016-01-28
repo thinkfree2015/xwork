@@ -18,9 +18,9 @@
     <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">新建/编辑流程</strong> / <small>New/Edit Flow</small></div>
 </div>
 
-<div class="am-cf am-padding">
-    <a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}" /> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>
-</div>
+<%--<div class="am-cf am-padding">--%>
+    <%--<a href="<c:url value="/basic/xm.do?qm=formFlowActivity&flowId=${object.id}" /> " class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新建节点</a>--%>
+<%--</div>--%>
 <hr/>
 <div class="am-g">
     <form action="<c:url value="/flow/createFlow.do"/>" method="post"  class="am-form am-form-horizontal">
