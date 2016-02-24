@@ -2,8 +2,10 @@ package com.efeiyi.ec.xwork.flow.controller;
 
 import com.efeiyi.ec.xw.flow.model.Flow;
 import com.efeiyi.ec.xw.flow.model.FlowActivity;
+import com.efeiyi.ec.xw.organization.model.MyUser;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xwork.model.Flow.FlowParamBean;
+import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.process.ProcessEngine;
 import com.ming800.core.base.dao.XdoDao;
 import com.ming800.core.base.service.BaseManager;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.Authenticator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +47,7 @@ public class FlowActivityController {
             activity.setFlow(flow);
             activity.setSort(flow.getActivityList().size() == 0 ? 1 : flow.getActivityList().size() + 1);
         }
+        String createType = request.getParameter("createType");
         String title = request.getParameter("title");
         String group = request.getParameter("group");
         String type = request.getParameter("type");
@@ -56,6 +60,7 @@ public class FlowActivityController {
             }
         }
         activity.setStatus("1");
+        activity.setCreateType(createType);
         activity.setType(type);
         activity.setTitle(title);
         activity.setGroup(Integer.parseInt(group));
@@ -95,6 +100,14 @@ public class FlowActivityController {
             }
         }
         return map;
+    }
+
+    @ResponseBody
+    @RequestMapping({"/flow/findCreator"})
+    private User findCreator(){
+        MyUser myUser = AuthorizationUtil.getMyUser();
+        User user = (User) baseManager.getObject(User.class.getName(),myUser.getId());
+        return user;
     }
 
     public String equal(FlowActivity flowActivity, User user, int groupName) {

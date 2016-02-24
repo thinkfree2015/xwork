@@ -59,6 +59,17 @@
             </div>
         </div>
         <div class="am-form-group">
+            <label name="roleId" class="am-u-sm-3 am-form-label">用户类型
+                <small>*</small>
+            </label>
+            <div class="am-radio-inline">
+                <input type="radio" name="createType" checked="checked" onclick="changeMethod('0');" value="0">发起人
+            </div>
+            <div class="am-radio-inline">
+                <input type="radio" name="createType" onclick="changeMethod('1');" value="1">成员
+            </div>
+        </div>
+        <div class="am-form-group" id="box_parent">
             <label name="context" class="am-u-sm-3 am-form-label">成员 </label>
 
             <div class="am-u-sm-9">
@@ -84,7 +95,38 @@
 <script>
     $(document).ready(function () {
         setCheckbox();
+        changeMethod('0');
     })
+    function changeMethod(data){
+        if(data == '0'){
+            findCreator();
+        }else{
+            $("select[name='group']").val('1');
+            setCheckbox();
+        }
+    }
+    function findCreator(){
+        $.ajax({
+            type: "post",//设置get请求方式
+            url: "<c:url value='/flow/findCreator'/>",//设置请求的脚本地址
+            data: "",
+            async: false,
+            dataType: "json",//设置请求返回的数据格式
+            success: function (data) {
+                console.log(data);
+                var box = $("#box");
+                box.empty();
+                var sub = "<div class=\"am-tab-panel am-fade am-in am-active\" id=\"tab1\" style=\"height: 30%;\">";
+                if(data && data.id != null){
+                    $("select[name='group']").val(data.groupName);
+                    sub += "<input name=\"user\" readonly='readonly' checked='checked' type=\"checkbox\" value=\"" + data.id + "\"/>";
+                    sub += "<a href=\"javascript:void (0)\">" + data.name + "</a>";
+                }
+                sub += "</div>";
+                box.append(sub);
+            }
+        })
+    }
     function setCheckbox() {
         var value = $("select[name='group']").val();
         var id = $("#id").val();

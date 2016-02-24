@@ -26,6 +26,17 @@ public class FlowActivity implements Serializable {
     private Integer sort;
     private Flow flow;
     private Integer group;
+    private String createType; //  0流程发起人/1成员
+
+    @Column(name = "create_type")
+    public String getCreateType() {
+        return createType;
+    }
+
+    public void setCreateType(String createType) {
+        this.createType = createType;
+    }
+
     @Id
     @GenericGenerator(name = "id", strategy = "com.ming800.core.p.model.M8idGenerator")
     @GeneratedValue(generator = "id")
