@@ -208,11 +208,11 @@
             <table class="am-table am-table-bordered">
                 <tbody>
                 <tr>
-                    <td class="am-primary am-u-md-3">节点操作</td>
-                    <td class="am-primary am-u-md-3">节点标题</td>
-                    <td class="am-primary am-u-md-3">所属小组</td>
-                    <td class="am-primary am-u-md-3">节点成员</td>
-                    <td class="am-primary am-u-md-3">节点类型</td>
+                    <td class="am-primary am-u-md-2">节点操作</td>
+                    <td class="am-primary am-u-md-2">节点标题</td>
+                    <td class="am-primary am-u-md-2">所属小组</td>
+                    <td class="am-primary am-u-md-2">节点成员</td>
+                    <td class="am-primary am-u-md-2">节点类型</td>
                 </tr>
                 <c:forEach items="${object.activityList}" var="pop">
                     <tr id="${pop.id}">

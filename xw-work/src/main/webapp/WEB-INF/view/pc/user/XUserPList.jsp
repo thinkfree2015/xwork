@@ -28,9 +28,9 @@
 <table class="am-table am-table-bordered am-table-radius am-table-striped" >
   <tr style="text-align: left">
     <td  width="25%">操作</td>
+    <td  width="25%">中文姓名</td>
     <td  width="25%">组别名称</td>
     <td  width="25%">用户名称</td>
-    <td  width="25%">中文姓名</td>
   </tr>
 
   <c:forEach items="${requestScope.pageInfo.list}" var="object">
@@ -42,6 +42,9 @@
             <button onclick="window.location.href='<c:url value="/basic/xm.do?qm=formUser&param=formUser&id=${object.id}"/>'" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-search"></span> 编辑</button>
           </div>
         </div>
+      </td>
+      <td width="25%">
+          ${object.name}
       </td>
       <td width="25%">
         <c:if test="${!empty object.groupName}">
@@ -60,10 +63,6 @@
       <td width="25%">
           ${object.username}
       </td>
-      <td width="25%">
-          ${object.name}
-      </td>
-
     </tr>
   </c:forEach>
 </table>
