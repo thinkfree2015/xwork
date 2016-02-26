@@ -76,6 +76,10 @@ public class JmenuManagerImpl implements JmenuManager {
             //遍历第一层Jnode
             for (Node jnodeXmlNode : jnodeNodeList) {
                 Jnode jnode = new Jnode();
+                List<Node> firstLayerList = jnodeXmlNode.selectNodes("jnode");
+                if(firstLayerList.size()==0){
+                    jnode = JmenuManagerImpl.parseXmlNodeToJavaBean(jnodeXmlNode);
+                }
                 jnode.setChildren(new ArrayList<Jnode>());
                 String id = jnodeXmlNode.selectSingleNode("@id").getText();
                 String url = jnodeXmlNode.selectSingleNode("@url").getText();
@@ -90,7 +94,7 @@ public class JmenuManagerImpl implements JmenuManager {
                 jnode.setUrl(url);
 
                 jnode.setText_zh_CN(text_zh_CN);
-                List<Node> firstLayerList = jnodeXmlNode.selectNodes("jnode");
+
                 //便利第二层jnode
                 for (Node firstLayerXmlNode : firstLayerList) {
                     Jnode firstLayerJnode = JmenuManagerImpl.parseXmlNodeToJavaBean(firstLayerXmlNode);

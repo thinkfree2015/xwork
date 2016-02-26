@@ -1,6 +1,7 @@
 package com.efeiyi.ec.xw.task.model;
 
 import com.efeiyi.ec.xw.flow.model.Flow;
+import com.efeiyi.ec.xw.flow.model.FlowActivity;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,6 +35,7 @@ public class Task implements Serializable {
     private Date createDatetime;
     private TaskActivityInstance currentInstance;
     private String status;
+    private FlowActivity currentActivity;//当前节点实例
 
     //临时变量
     private Date createDateTime;
@@ -221,5 +223,15 @@ public class Task implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
+    @JoinColumn(name="current_activity_id")
+    public FlowActivity getCurrentActivity() {
+        return currentActivity;
+    }
+
+    public void setCurrentActivity(FlowActivity currentActivity) {
+        this.currentActivity = currentActivity;
     }
 }

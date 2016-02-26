@@ -120,4 +120,10 @@ public class User implements Serializable {
     public void setGroupName(Integer groupName) {
         this.groupName = groupName;
     }
+
+    @Override
+    public String toString() {
+        return id;
+
+    }
 }

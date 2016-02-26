@@ -63,7 +63,7 @@
                         <div class="am-tab-panel am-fade am-in am-active" id="tab0" style="height: 50%;">
 
                            <input  name="user" onclick="return false;"  type="checkbox" checked="checked" value="${myUser.id}">
-                            <a href="javascript:void (0)">${myUser.username}</a>
+                            <a href="javascript:void (0)">${myUser.name}</a>
                         </div>
 
                         <div class="am-tab-panel am-fade am-in am-active" id="tab1" style="height: 50%;">
@@ -165,7 +165,7 @@
                 html += ' <input type="checkbox" name="user" value="${user.id}">';
             }
 
-           html += ' <a href="javascript:void (0)">${user.username}</a>'+
+           html += ' <a href="javascript:void (0)">${user.name}</a>'+
            '</span>';
       <c:if test="${user.groupName==1}">
          $("#tab1").append(html);

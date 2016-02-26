@@ -94,65 +94,72 @@ public class ProjectManagerImpl implements ProjectManager {
 //            task.setUsernotifyUserList(flowActivity.getUser());
             task.setTaskGroup((TaskGroup)xdoDao.getObject(TaskGroup.class.getName(),taskGroupId));
             //当前任务处理人
-            task.setCurrentUser(user);
+//            task.setCurrentUser(user);
             //创建人
             task.setAuthor(AuthorizationUtil.getUser());
+            //当前流程节点
+            task.setCurrentActivity(flowActivity);
             //添加新任务
             xdoDao.saveOrUpdateObject(Task.class.getName(),task);
 
 
-            //创建任务实例
-            TaskActivityInstance taskActivityInstance = new TaskActivityInstance();
-            //加入任务
-            taskActivityInstance.setTask(task);
-            //加入流程节点 (第一个节点)
-            taskActivityInstance.setFlowActivity(flowActivity);
-            //设置实例状态 1 :未处理    2:正在处理      3:搁置    4:已完成   5:已放弃
-            taskActivityInstance.setStatus("1");
-            //设置激活状态
-            taskActivityInstance.setActivate("1");
-            //创建时间
-            taskActivityInstance.setCreateDatetime(new Date());
-            // 任务实例处理人
-            taskActivityInstance.setExcutor(user);
+            //创建任务实例  节点类型type：2 xor 3 and  节点几个人创建几个当前节点的任务实例
+            //task flowActivity
+             for(User instanceUser : flowActivity.getUser()) {
+
+                 TaskActivityInstance taskActivityInstance = new TaskActivityInstance();
+                 //加入任务
+                 taskActivityInstance.setTask(task);
+                 //加入流程节点 (第一个节点)
+                 taskActivityInstance.setFlowActivity(flowActivity);
+                 //设置实例状态 1 :未处理    2:正在处理      3:搁置    4:已完成   5:已放弃
+                 taskActivityInstance.setStatus("1");
+                 //设置激活状态
+                 taskActivityInstance.setActivate("1");
+                 //创建时间
+                 taskActivityInstance.setCreateDatetime(new Date());
+                 // 任务实例处理人
+                 taskActivityInstance.setExcutor(instanceUser);
 
 //            //问题
 //            taskActivityInstance.setIssue(task.getTitle());
 //            //动态
 //            taskActivityInstance.setContent(AuthorizationUtil.getUser().getUsername()+"创建了任务: "+task.getTitle());
-            //添加实例
-            xdoDao.saveOrUpdateObject(taskActivityInstance);
+                 //添加实例
+                 xdoDao.saveOrUpdateObject(taskActivityInstance);
 
 
-            //问题
-            TaskActivityInstanceExecution taskActivityInstanceExecution = new TaskActivityInstanceExecution();
-            taskActivityInstanceExecution.setTaskActivityInstance(taskActivityInstance);
-            taskActivityInstanceExecution.setTask(task);
-            taskActivityInstanceExecution.setCreateDatetime(new Date());
-            taskActivityInstanceExecution.setStatus("0");
-            taskActivityInstanceExecution.setUser(user);
-            xdoDao.saveOrUpdateObject(taskActivityInstanceExecution);
+                 //问题
+                 TaskActivityInstanceExecution taskActivityInstanceExecution = new TaskActivityInstanceExecution();
+                 taskActivityInstanceExecution.setTaskActivityInstance(taskActivityInstance);
+                 taskActivityInstanceExecution.setTask(task);
+                 taskActivityInstanceExecution.setCreateDatetime(new Date());
+                 taskActivityInstanceExecution.setStatus("0");
+                 taskActivityInstanceExecution.setUser(instanceUser);
+                 xdoDao.saveOrUpdateObject(taskActivityInstanceExecution);
 
-            //动态
-            TaskDynamic taskDynamic = new TaskDynamic();
-            taskDynamic.setTask(task);
-            taskDynamic.setCreateDatetime(new Date());
-            //当前用户
-            taskDynamic.setCreator(AuthorizationUtil.getUser());
-            taskDynamic.setTaskActivityInstance(taskActivityInstance);
-            taskDynamic.setMessage("创建了任务" );
-            xdoDao.saveOrUpdateObject(taskDynamic);
-            //user null 则只创建，未分配  不为null 则两条动态:创建任务 分配人员
-            if(user!=null){
-                TaskDynamic taskDynamic1 = new TaskDynamic();
-                taskDynamic1.setTask(task);
-                taskDynamic1.setCreateDatetime(new Date());
-                //当前用户
-                taskDynamic1.setCreator(AuthorizationUtil.getUser());
-                taskDynamic1.setTaskActivityInstance(taskActivityInstance);
-                taskDynamic1.setMessage(" 给 " + user.getName() + " 指派了任务");
-                xdoDao.saveOrUpdateObject(taskDynamic1);
-            }
+                 //动态
+//                 TaskDynamic taskDynamic = new TaskDynamic();
+//                 taskDynamic.setTask(task);
+//                 taskDynamic.setCreateDatetime(new Date());
+//                 //当前用户
+//                 taskDynamic.setCreator(AuthorizationUtil.getUser());
+//                 taskDynamic.setTaskActivityInstance(taskActivityInstance);
+//                 taskDynamic.setMessage("创建了任务");
+//                 xdoDao.saveOrUpdateObject(taskDynamic);
+
+                 //user null 则只创建，未分配  不为null 则两条动态:创建任务 分配人员
+//                 if (user != null) {
+                     TaskDynamic taskDynamic1 = new TaskDynamic();
+                     taskDynamic1.setTask(task);
+                     taskDynamic1.setCreateDatetime(new Date());
+                     //当前用户
+                     taskDynamic1.setCreator(AuthorizationUtil.getUser());
+                     taskDynamic1.setTaskActivityInstance(taskActivityInstance);
+                     taskDynamic1.setMessage(" 给 " + instanceUser.getName() + " 指派了任务");
+                     xdoDao.saveOrUpdateObject(taskDynamic1);
+//                 }
+             }
 
 
 

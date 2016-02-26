@@ -7,11 +7,13 @@
         <match url="/basic/xm.do?qm=plistTaskDynamic_default" />
         <!--<match url="/basic/xm.do?qm=formTaskDynamic" />-->
     </jnode>
-    <jnode id="EfyProject" access="admin,operational,c_operational,o_operational,financial,product_manager" url="/basic/xm.do?qm=plistProjectUser_default" text_zh_CN="项目列表">
-        <match url="/basic/xm.do?qm=plistProjectUser_default" />
-        <match url="/basic/xm.do?qm=formProject" />
-        <match url="/basic/xm.do?qm=viewProject" />
-        <match url="/project/projectView.do" />
+    <jnode id="EfyProject" access="admin,operational,c_operational,o_operational,financial,product_manager" url="/basic/xm.do?qm=plistProjectUser_default&amp;jnodeId=EfyProject" text_zh_CN="项目列表">
+          <match url="/basic/xm.do?qm=plistProjectUser_default" />
+          <match url="/basic/xm.do?qm=formProject" />
+          <match url="/basic/xm.do?qm=viewProject" />
+          <match url="/project/projectView.do" />
+          <match url="/basic/xm.do?qm=formTask" />
+          <match url="/project/view.do" />
     </jnode>
 
     <jnode id="ttManager" access="admin,operational,c_operational,product_manager" url="/main.do?jnodeId=ttManager" text_zh_CN="系统设置">

@@ -89,6 +89,10 @@ public class JmenuController extends BaseController {
                     }
                 }
             }
+        }else {
+            if(jnode.contain(match)){
+                resultJnode = jnode;
+            }
         }
         return resultJnode;
     }

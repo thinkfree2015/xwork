@@ -224,7 +224,7 @@
                        setTimeout(function(){
                        that.setState({ul:[]});
                        that.loadCommentsFromServer();
-                      },5000);
+                      },0);
                       }
                       }
                    }.bind(this)
@@ -443,7 +443,7 @@
                             <a href="javascript:void (0);" onClick={this.handleClick} className="am-btn am-btn-primary am-btn-xs" style={style3}>保存</a>
                             <a href="javascript:void (0);" onClick={this.handleCancel} className="am-btn am-btn-primary am-btn-xs" style={style3}>取消</a>
                          </span>
-                         <Display_li_select_user userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.users} taskId={this.props.task.id} />
+                         <%--<Display_li_select_user userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.users} taskId={this.props.task.id} />--%>
                          <Display_li_select_flow  taskId={this.props.task.id} />
                       </li>
 
@@ -650,8 +650,12 @@
                     data:{"title":this.state.title,"userId":this.state.userId,"flowId":this.state.flowId,"taskGroupId":this.props.taskGroupId},
                     dataType:"json",
                     success:function(data){
+                    if(data==null){
+                      alert("你完成了别人的任务,别人怎么办...");
+                    }else{
                        this.setState({title:"",userId:"null",flowId:"null"});
                        this.props.li(data);
+                    }
                      }.bind(this)
                 });
                }
@@ -665,24 +669,27 @@
        },
 
        handleFlowChange:function(s){
-          if(s.target.value=="null"){
-           this.setState({flowId:s.target.value,style:"none",userId:"null"});
-          }else{
-            this.setState({flowId:s.target.value});
-           var userTemp;
-           $.ajax({
-                type:"post",
-                url:"<c:url value="/project/changeActivity.do"/>",
-                data:{flowId:s.target.value},
-                success:function(data) {
-                var obj = $.parseJSON(data);
-                   this.setState({style:"inherit",users:obj,"userId":obj[0].id});
 
-                 }.bind(this)
-                });
+       this.setState({flowId:s.target.value});
+
+          <%--if(s.target.value=="null"){--%>
+           <%--this.setState({flowId:s.target.value,style:"none",userId:"null"});--%>
+          <%--}else{--%>
+            <%--this.setState({flowId:s.target.value});--%>
+           <%--var userTemp;--%>
+           <%--$.ajax({--%>
+                <%--type:"post",--%>
+                <%--url:"<c:url value="/project/changeActivity.do"/>",--%>
+                <%--data:{flowId:s.target.value},--%>
+                <%--success:function(data) {--%>
+                <%--var obj = $.parseJSON(data);--%>
+                   <%--this.setState({style:"inherit",users:obj,"userId":obj[0].id});--%>
+
+                 <%--}.bind(this)--%>
+                <%--});--%>
 
 
-          }
+          <%--}--%>
 
        },
        componentWillMount:function(){
@@ -719,11 +726,11 @@
                                          </c:forEach>
                               </select>
                          </span>
-                         <span>
-                            <select style={style5} value={this.state.userId} onChange={this.handleUserChange}>
-                               {user}
-                            </select>
-                         </span>
+                         <%--<span>--%>
+                            <%--<select style={style5} value={this.state.userId} onChange={this.handleUserChange}>--%>
+                               <%--{user}--%>
+                            <%--</select>--%>
+                         <%--</span>--%>
 
 
               </div>
