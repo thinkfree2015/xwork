@@ -61,5 +61,18 @@
                 <do name="formFlowActivity" label="查看" execute="com.efeiyi.ec.xwork.flow.controller.FlowActivityHandle" access="" result="/flow/flowActivityFrom"/>
             </does>
         </entity>
+
+        <entity name="TaskActivityInstance" label="流程"
+                basic="simple" others=""
+                model="com.efeiyi.ec.xw.task.model.TaskActivityInstance">
+            <does>
+                <do name="listTaskActivityInstance" label="用户列表" access="" result="/user/userList">
+                    <query name="default" label="默认" type="auto" orderBy="id:desc">
+                        <condition label="节点id" name="flowActivity.id" defaultValue="1" operation="eq"/>
+                        <condition label="任务id" name="task.id" defaultValue="1" operation="eq"/>
+                    </query>
+                </do>
+            </does>
+        </entity>
     </entities>
 </module>

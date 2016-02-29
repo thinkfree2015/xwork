@@ -50,10 +50,10 @@ public class TaskManagerImpl implements TaskManager {
               FlowActivity currentActivity = task.getCurrentActivity();
 
         //当前任务实例列表   参数 task.id flowActivity.id
-               Map<String,Object> map = new LinkedHashMap<>();
+              LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
                map.put("taskId",taskId);
                map.put("flowActivityId",currentActivity.getId());
-               List<TaskActivityInstance> taskActivityInstanceList = (List<TaskActivityInstance>)xdoDao.getObjectList("FROM TaskActivityInstance WHERE 1=1 AND task.id=:taskId AND flowActivity.id = :flowActivityId ORDER BY createDatetime",map);
+               List<TaskActivityInstance> taskActivityInstanceList = (List<TaskActivityInstance>)xdoDao.getObjectList("select m FROM TaskActivityInstance m WHERE  task.id = :taskId AND flowActivity.id= :flowActivityId ORDER BY createDatetime", map);
         //判断当前用户 有没有权限完成任务
               if(currentActivity.getUser().indexOf(user)==-1){
                   return  null;
@@ -162,6 +162,7 @@ public class TaskManagerImpl implements TaskManager {
 
                 if (nextFlowActivity == null) {
                     task.setCurrentUser(null);
+                    task.setCurrentActivity(null);
                     xdoDao.saveOrUpdateObject(task);
                 } else {
                     //下一个节点的第一个人为默认

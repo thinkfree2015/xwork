@@ -3,12 +3,14 @@ package com.efeiyi.ec.xwork.task.controller;
 import com.efeiyi.ec.xw.organization.model.MyUser;
 import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.task.model.Task;
+import com.efeiyi.ec.xw.task.model.TaskActivityInstance;
 import com.efeiyi.ec.xw.task.model.TaskActivityInstanceExecution;
 import com.efeiyi.ec.xw.task.model.TaskNote;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.task.service.TaskManager;
 import com.ming800.core.base.controller.BaseController;
 import com.ming800.core.base.service.BaseManager;
+import com.ming800.core.does.model.XQuery;
 import com.ming800.core.p.service.AliOssUploadManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,23 +46,34 @@ public class TaskController extends BaseController {
 
     @RequestMapping("/changeTaskStatus")
     @ResponseBody
-    public  List changeTaskStatus(String taskId,String status){
+    public  List changeTaskStatus(String taskId,String status,HttpServletRequest request){
         Task task = null;
         List<User> userList = null;
+        List<TaskActivityInstance> taskActivityInstanceList = new ArrayList<>();
         try {
             task = taskManager.changeTaskInstanceStatus(taskId,"4");
-            if(task.getCurrentInstance()!=null){
-                userList = task.getCurrentInstance().getFlowActivity().getUser();
+            if(task!=null) {
+                XQuery xQuery = new XQuery("listTaskActivityInstance_default", request);
+                xQuery.put("flowActivity_id", task.getCurrentActivity().getId());
+                xQuery.put("task_id", task.getId());
+                taskActivityInstanceList = (List<TaskActivityInstance>) baseManager.listObject(xQuery);
             }else {
-                User user = new User();
-                user.setId("0");
-                userList.add(user);
+                TaskActivityInstance taskActivityInstance = new TaskActivityInstance();
+                taskActivityInstance.setId("000000");
+                taskActivityInstanceList.add(taskActivityInstance);
             }
+//            if(task.getCurrentInstance()!=null){
+//                userList = task.getCurrentInstance().getFlowActivity().getUser();
+//            }else {
+//                User user = new User();
+//                user.setId("0");
+//                userList.add(user);
+//            }
 
         }catch (Exception e){
            e.printStackTrace();
         }
-        return userList;
+        return taskActivityInstanceList;
     }
 
     @RequestMapping("/img.do")

@@ -216,18 +216,18 @@
        },
        componentWillMount:function(){
                 this.loadCommentsFromServer();
-                  ws2.onmessage=function(event){
-                      if ((event.data).indexOf("Hint") == -1){
-                       var obj = $.parseJSON(event.data);
-                       if(obj.type.indexOf("3") != -1){
-                       var that = this;
-                       setTimeout(function(){
-                       that.setState({ul:[]});
-                       that.loadCommentsFromServer();
-                      },0);
-                      }
-                      }
-                   }.bind(this)
+                  <%--ws2.onmessage=function(event){--%>
+                      <%--if ((event.data).indexOf("Hint") == -1){--%>
+                       <%--var obj = $.parseJSON(event.data);--%>
+                       <%--if(obj.type.indexOf("3") != -1){--%>
+                       <%--var that = this;--%>
+                       <%--setTimeout(function(){--%>
+                       <%--that.setState({ul:[]});--%>
+                       <%--that.loadCommentsFromServer();--%>
+                      <%--},0);--%>
+                      <%--}--%>
+                      <%--}--%>
+                   <%--}.bind(this)--%>
        },
         render:function(){
           var listStyle= {
@@ -318,6 +318,8 @@
            editStyle:"none",
            removeStyle:"block",
            users:[],
+           instances:[],
+           userStyle:"initial",
            userId:"null"
          }
       },
@@ -344,11 +346,18 @@
                 data:{taskId:taskId,status:"4"},
                 dataType:"json",
                 success:function(data) {
-                var userId = [];
-                userId.push(data[0].id);
-                    forwardUrl(userId,"","1")
-                    forwardUrl(userId,"","3")
-                   this.setState({style:"none",editStyle:"none",users:data,userId:data[0].id=="0"?"null":data[0].id});
+                <%--var userId = [];--%>
+                <%--userId.push(data[0].id);--%>
+                    <%--forwardUrl(userId,"","1")--%>
+                    <%--forwardUrl(userId,"","3")--%>
+                   <%--this.setState({style:"none",editStyle:"none",users:data,userId:data[0].id=="0"?"null":data[0].id});--%>
+                     if(data.length==1 && data[0].id=="000000"){
+                      alert("你完成了别人的任务,别人怎么办...");
+                    }else if(data.length==0){
+                        this.setState({userStyle:"none"});
+                    }else{
+                       this.setState({style:"none",editStyle:"none",users:data,instances:data});
+                    }
                  }.bind(this)
                 });
               }
@@ -395,26 +404,30 @@
           updateView:function(data){
 
          },
-          defaultCurrentUser:function(e){
+          <%--defaultCurrentUser:function(e){--%>
 
-          $.ajax({
-                type:"post",
-                url:"<c:url value="/project/getCurrentUser.do"/>",
-                data:{id:this.props.task.id},
-                dataType:"json",
-                success:function(data) {
-                      this.setState({userId:data});
-                 }.bind(this)
-                });
-       },
+          <%--$.ajax({--%>
+                <%--type:"post",--%>
+                <%--url:"<c:url value="/project/getCurrentUser.do"/>",--%>
+                <%--data:{id:this.props.task.id},--%>
+                <%--dataType:"json",--%>
+                <%--success:function(data) {--%>
+                      <%--this.setState({userId:data});--%>
+                 <%--}.bind(this)--%>
+                <%--});--%>
+       <%--},--%>
         loadCommentsFromServer:function(){
           $.ajax({
                 type:"post",
-                url:"<c:url value="/project/getCurrentInstanceUsers.do"/>",
+                url:"<c:url value="/project/getTaskInstance.do"/>",
                 data:{id:this.props.task.id},
                 dataType:"json",
                 success:function(data) {
-                   this.setState({users:data});
+                   <%--this.setState({users:data});--%>
+                   if(data.length == 0){
+                      this.setState({userStyle:"none"});
+                   }
+                   this.setState({instances:data});
                  }.bind(this)
                 });
        },
@@ -422,7 +435,7 @@
 
                 this.setState({value:this.props.task.title});
                 this.loadCommentsFromServer();
-                this.defaultCurrentUser();
+                <%--this.defaultCurrentUser();--%>
 
 
        },
@@ -443,8 +456,8 @@
                             <a href="javascript:void (0);" onClick={this.handleClick} className="am-btn am-btn-primary am-btn-xs" style={style3}>保存</a>
                             <a href="javascript:void (0);" onClick={this.handleCancel} className="am-btn am-btn-primary am-btn-xs" style={style3}>取消</a>
                          </span>
-                         <%--<Display_li_select_user userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.users} taskId={this.props.task.id} />--%>
-                         <Display_li_select_flow  taskId={this.props.task.id} />
+                         <Display_li_select_user userStyle={this.state.userStyle} userId={this.state.userId} getCurrentUser={this.getCurrentUser}  users={this.state.instances} taskId={this.props.task.id} />
+                         <Display_li_select_flow userStyle={this.state.userStyle} taskId={this.props.task.id} />
                       </li>
 
         )
@@ -469,8 +482,8 @@
                 });
        },
        addLi:function(data){
-              forwardUrl("",data[data.length-1].username,"1");
-              forwardUrl("",data[data.length-1].username,"3");
+              <%--forwardUrl("",data[data.length-1].username,"1");--%>
+              <%--forwardUrl("",data[data.length-1].username,"3");--%>
             this.setState({status:"0",li:data});
 
 
@@ -531,9 +544,14 @@
              }
        },
        render:function(){
+         var style = {color:"red"};
+          var isCompleted = "";
+          if(this.props.userStyle == "none"){
+             isCompleted = "已完成";
+          }
          return (
             <span>
-               <small>{this.state.title}</small>
+               <small>({this.state.title} <span style={style}>{isCompleted}</span>)</small>
             </span>
          )
        }
@@ -541,49 +559,59 @@
    });
      <%--展示任务流程人员组件 --%>
    var Display_li_select_user = React.createClass({
-       getInitialState:function(){
-       return {
-          status:"0",
-          value:"null",
-          users:[]
-         }
-       },
+       <%--getInitialState:function(){--%>
+       <%--return {--%>
+          <%--status:"0",--%>
+          <%--value:"null",--%>
+          <%--users:[]--%>
+         <%--}--%>
+       <%--},--%>
 
-       onmessage:function(value){
-        this.props.getCurrentUser(value);
-       },
-       handleChange:function(s){
-           var value = s.target.value;
-           $.ajax({
-                type:"post",
-                url:"<c:url value="/project/sendUser.do"/>",
-                data:{taskId:this.props.taskId,userId:value},
-                dataType:"json",
-                success:function(data) {
-                   this.props.getCurrentUser(value);
-                   var userId = [];
-                   userId.push(value);
-                   forwardUrl(userId,"","1,3");
-                   <%--forwardUrl(userId,"","3");--%>
-                   <%--alert(ReactDOM.findDOMNode(this.refs.SelectUser).setAttribute("value",value));--%>
-                 }.bind(this)
-                });
-       },
+       <%--onmessage:function(value){--%>
+        <%--this.props.getCurrentUser(value);--%>
+       <%--},--%>
+       <%--handleChange:function(s){--%>
+           <%--var value = s.target.value;--%>
+           <%--$.ajax({--%>
+                <%--type:"post",--%>
+                <%--url:"<c:url value="/project/sendUser.do"/>",--%>
+                <%--data:{taskId:this.props.taskId,userId:value},--%>
+                <%--dataType:"json",--%>
+                <%--success:function(data) {--%>
+                   <%--this.props.getCurrentUser(value);--%>
+                   <%--var userId = [];--%>
+                   <%--userId.push(value);--%>
+                   <%--forwardUrl(userId,"","1,3");--%>
+                   <%--&lt;%&ndash;forwardUrl(userId,"","3");&ndash;%&gt;--%>
+                   <%--&lt;%&ndash;alert(ReactDOM.findDOMNode(this.refs.SelectUser).setAttribute("value",value));&ndash;%&gt;--%>
+                 <%--}.bind(this)--%>
+                <%--});--%>
+       <%--},--%>
 
        render:function(){
-
+         var style =  {color:"red"};
          var selectUser = this.props.users.map(function(user){
-              return <option key={user.id} value={user.id}>{user.name}</option>
-         });
-         var style = {fontSize:"10px"};
-         var userStyle={"display":this.props.userId=="null"?"none":"initial"}
-         return (
+              <%--return <option key={user.id} value={user.id}>{user.name}</option>--%>
+              if(user.activate=="0"){
+               return <small style={style} key={user.excutor.id}>{user.excutor.name}<span> √</span>  </small>
+              }else{
+               return <small key={user.excutor.id}>{user.excutor.name}   </small>
+              }
 
-            <span ref="SelectUser" style={userStyle}>
-                 <select value={this.props.userId} onChange={this.handleChange} style={style}>
-                     {selectUser}
-                 </select>
-            </span>
+         });
+         <%--var style = {fontSize:"10px"};--%>
+         <%--var userStyle={"display":this.props.userId=="null"?"none":"initial"}--%>
+         return (
+             <span>
+               <span  style={{display:this.props.userStyle}}>
+                  (<small>执行人</small>:{selectUser})
+               </span>
+             </span>
+            <%--<span ref="SelectUser" style={userStyle}>--%>
+                 <%--<select value={this.props.userId} onChange={this.handleChange} style={style}>--%>
+                     <%--{selectUser}--%>
+                 <%--</select>--%>
+            <%--</span>--%>
 
          )
 
@@ -650,12 +678,10 @@
                     data:{"title":this.state.title,"userId":this.state.userId,"flowId":this.state.flowId,"taskGroupId":this.props.taskGroupId},
                     dataType:"json",
                     success:function(data){
-                    if(data==null){
-                      alert("你完成了别人的任务,别人怎么办...");
-                    }else{
+
                        this.setState({title:"",userId:"null",flowId:"null"});
                        this.props.li(data);
-                    }
+
                      }.bind(this)
                 });
                }

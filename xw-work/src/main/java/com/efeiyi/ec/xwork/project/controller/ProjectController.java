@@ -5,6 +5,7 @@ import com.efeiyi.ec.xw.organization.model.User;
 import com.efeiyi.ec.xw.project.model.Project;
 import com.efeiyi.ec.xw.project.model.ProjectUser;
 import com.efeiyi.ec.xw.task.model.Task;
+import com.efeiyi.ec.xw.task.model.TaskActivityInstance;
 import com.efeiyi.ec.xw.task.model.TaskGroup;
 import com.efeiyi.ec.xwork.organization.util.AuthorizationUtil;
 import com.efeiyi.ec.xwork.project.service.ProjectManager;
@@ -142,7 +143,7 @@ public class ProjectController extends BaseController {
             xQuery.put("taskGroup_id",taskGroupId);
             taskList = baseManager.listObject(xQuery);
             Task task = projectManager.saveTask(taskGroupId,title,flowId,userId);
-            task.setUsername(task.getCurrentUser().getUsername());
+//            task.setUsername(task.getCurrentUser().getUsername());
             taskList.add(task);
         }catch (Exception e){
             e.printStackTrace();
@@ -235,6 +236,31 @@ public class ProjectController extends BaseController {
             e.printStackTrace();
         }
         return userList;
+    }
+
+    /**
+     * 获取当前节点的任务实例
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getTaskInstance.do")
+    @ResponseBody
+    public   List getTaskInstance(String id,HttpServletRequest request){
+        List<TaskActivityInstance> taskActivityInstanceList = null;
+        try {
+            Task  task = (Task)baseManager.getObject(Task.class.getName(),id);
+            if(task.getCurrentActivity()!=null) {
+                XQuery xQuery = new XQuery("listTaskActivityInstance_default", request);
+                xQuery.put("flowActivity_id", task.getCurrentActivity().getId());
+                xQuery.put("task_id", task.getId());
+                taskActivityInstanceList = (List<TaskActivityInstance>) baseManager.listObject(xQuery);
+            }else {
+                taskActivityInstanceList = new ArrayList<>();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return taskActivityInstanceList;
     }
     @RequestMapping("/getCurrentUser.do")
     @ResponseBody
